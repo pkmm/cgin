@@ -1,5 +1,6 @@
 .idea/
 conf/conf.json
+conf/app.conf
 tmp/
 *.exe
 *.log

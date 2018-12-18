@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/astaxie/beego/logs"
 	"github.com/gin-gonic/gin"
-	"image/gif"
 	"net/http"
-	"pkmm_gin/utility"
+	"pkmm_gin/utility/zf"
 	"time"
 
 	"os"
@@ -15,6 +15,24 @@ import (
 	"pkmm_gin/model"
 	_ "pkmm_gin/task"
 )
+
+var err error
+
+func init() {
+	//log.SetFlags(log.Ldate | log.Ltime | log.LUTC | log.Lshortfile)
+
+	// 设置beego logs
+	logs.SetLogger(logs.AdapterFile, `{"filename":"logs/pkmm_gin.log","level":7,"daily":true,"maxdays":2}`)
+	logs.EnableFuncCallDepth(true)
+	logs.Async(1e3)
+
+	gin.SetMode(gin.ReleaseMode)
+
+
+	// Usage like this. (beego myConfig model)
+	//appName := AppConfig.String("appName")
+	//fmt.Println(appName)
+}
 
 func main() {
 
@@ -45,7 +63,7 @@ func main() {
 		// Will output  :   {"user": "Lena", "Message": "hey", "Number": 123}
 
 		// DB code
-		var user [] model.Student
+		var user []model.Student
 		db := model.GetDB()
 		db.Find(&user)
 		c.JSON(http.StatusOK, user)
@@ -80,27 +98,57 @@ func main() {
 	// 自己定义的restFul路由设计
 	v1 := r.Group("/v1", middleware.ApiAuth())
 	{
-		v1.POST("/student/login", controller.Login)
-		v1.POST("/student", controller.AddStudent)
-		//v1.GET("/student/:id", controller.GetStudent)
+		v1.POST("/wx/wx_login", controller.WxLogin)
 		v1.GET("/student/:id/scores", controller.GetStudentScores)
+		v1.GET("/get_scores", controller.GetScores)
+		v1.POST("/student/update_zcmu_account", controller.UpdateZcmuAccount)
+	}
+	//r.Group("/v1")
+	{
+		// not need middleware
+		//r.POST("/v1/student/update_zcmu_account", controller.UpdateZcmuAccount)
 	}
 
 	r.GET("/zxx", func(context *gin.Context) {
-		rep, err := http.Get("http://zfxk.zjtcm.net/CheckCode.aspx?")
-		if err != nil {
-			fmt.Println(err)
-		}
-		defer rep.Body.Close()
-		im, err := gif.Decode(rep.Body)
+		c := zf.NewCrawl("201412200903014", "ZYPzhouyaping123")
+		t, err := c.LoginScorePage()
 		fmt.Println(err)
-		r, err := utility.Predict(im, false)
-		fmt.Println(r, err)
-		context.String(200, r)
+		//t := model.GetScore(11)
+		context.JSON(200, gin.H{
+			"scores": t,
+		})
+		//rep, err := http.Get("http://zfxk.zjtcm.net/CheckCode.aspx?")
+		//if err != nil {
+		//	fmt.Println(err)
+		//}
+		//defer rep.Body.Close()
+		//im, err := gif.Decode(rep.Body)
+		//fmt.Println(err)
+		//r, err := utility.Predict(im, false)
+		//fmt.Println(r, err)
+		//context.String(200, r)
+	})
+
+
+	r.GET("/test", func(c *gin.Context) {
+		//var student model.Student
+		//student.Openid = "23"
+		//student.City = "233333"
+		//student.AvatarUrl = "https://www.baidu.com/we"
+		//r := model.UpdateUserWeChatInfo(student, "23")
+		//c.JSON(200, gin.H{
+		//	"w": r,
+		//})
+		stu := model.Student{Id: 21}
+		//var scores []model.Score
+		model.GetDB().Debug().Model(&stu).Preload("Scores").Where("id = ?", 21).First(&stu)
+		c.JSON(200, gin.H{
+			"w": stu,
+		})
 	})
 
 	r.Static("/static", "./static")
 
 	// Listen and serve on 0.0.0.0:8080
-	r.Run(":80")
+	r.Run(":8056")
 }

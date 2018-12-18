@@ -1,13 +1,17 @@
 package utility
 
 import (
+	"bytes"
 	"crypto/md5"
-	"fmt"
-	"net"
 	"encoding/hex"
+	"fmt"
+	"github.com/bwmarrin/snowflake"
+	"math/rand"
+	"net"
 	"os"
 	"sort"
-	"github.com/bwmarrin/snowflake"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -35,11 +39,15 @@ func Signature(params map[string]string) string {
 		keys = append(keys, key)
 	}
 	sort.Strings(keys)
-	var ans string
-	for _, key := range keys {
-		ans += key + "=" + params[key]
+	var buffer bytes.Buffer
+	for i, key := range keys {
+		if i == 0 {
+			buffer.WriteString(fmt.Sprintf("%s=%s", key, params[key]))
+		} else {
+			buffer.WriteString(fmt.Sprintf("&%s=%s", key, params[key]))
+		}
 	}
-	return Md5String(ans)
+	return strings.ToUpper(Md5String(buffer.String()))
 }
 
 func GenerateSignatureAndId(params map[string]string) (string, string) {
@@ -67,4 +75,19 @@ func IpAddressOfLocal() string {
 func SourceCodePath() string {
 	path, _ := os.Getwd()
 	return path
+}
+
+func Decimal(value float64) float64 {
+	value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", value), 64)
+	return value
+}
+
+func RandomString(length int) string {
+	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210")
+	N := len(letters)
+	ans := make([]rune, length)
+	for i := 0; i < length; i++ {
+		ans = append(ans, letters[rand.Intn(N)])
+	}
+	return string(ans)
 }

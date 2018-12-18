@@ -1,0 +1,8 @@
+使用gin框架  
+orm使用gorm  
+三方依赖使用gvendor
+
+安装govendor 
+`go get -u github.com/kardianos/govendor`  
+govendor sync 同步所有使用依赖包
+

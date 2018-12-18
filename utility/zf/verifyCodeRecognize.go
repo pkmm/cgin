@@ -1,4 +1,4 @@
-package utility
+package zf
 
 import (
 	"fmt"
@@ -8,15 +8,16 @@ import (
 	"math/rand"
 	"os"
 	"path"
+	"pkmm_gin/utility"
 	"strconv"
 )
 
 var (
-	model *libSvm.Model
+	svmModel *libSvm.Model
 )
 
 func init() {
-	model = libSvm.NewModelFromFile(path.Join(path.Join(SourceCodePath(), "utility"), "zf.model"))
+	svmModel = libSvm.NewModelFromFile(path.Join(path.Join(utility.SourceCodePath(), "utility/zf"), "zf.model"))
 }
 
 // recognize verify code.
@@ -48,12 +49,12 @@ func Predict(im image.Image, save bool) (string, error) {
 		for index, value := range vec[fmt.Sprintf("loc-%d", ind)] {
 			x[index+1] = value
 		}
-		predictLabel := model.Predict(x)
+		predictLabel := svmModel.Predict(x)
 		ans := byte(predictLabel)
 		ret = append(ret, ans)
 	}
 	if save {
-		fp, err := os.Create(path.Join(path.Join(SourceCodePath(), "static"), string(ret) + strconv.Itoa(rand.Int())+".png"))
+		fp, err := os.Create(path.Join(path.Join(utility.SourceCodePath(), "static"), string(ret)+strconv.Itoa(rand.Int())+".png"))
 		defer fp.Close()
 		if err == nil {
 			gif.Encode(fp, im, nil)

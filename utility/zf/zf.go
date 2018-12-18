@@ -1,4 +1,4 @@
-package utility
+package zf
 
 import (
 	"bytes"
@@ -10,29 +10,77 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
-	"pkmm/models"
+	"pkmm_gin/utility"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
 
-// login zf system.
+// 登录正方教务系统
+// 密码错误五次后 当天是不能登录的
+// 目前只支持查询成绩，其他的功能后期在做
+
 const (
 	BASE_URL        = "http://zfxk.zjtcm.net/"
-	LOGIN_URL       = "default2.aspx"
-	VERIFY_CODE_URL = "CheckCode.aspx"
+	VERIFY_CODE_URL = "CheckCode.aspx" // 验证码
+	DEFAULT_URL     = "default2.aspx"
+	HOST            = "zfxk.zjtcm.net"
+	USER_ARENT      = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36"
 
 	POST      = "POST"
 	GET       = "GET"
 	VIEWSTATE = "__VIEWSTATE"
+
+	LOGIN_ERROR_MSG_WRONG_PASSWORD          = "密码错误"
+	LOGIN_ERROR_MSG_WRONG_CHECK_CODE        = "验证码不正确！！"
+	LOGIN_ERROR_MSG_NOT_VALID_USER          = "用户名不存在或未按照要求参加教学活动"
+	LOGIN_ERROR_MSG_DECODE_VIEW_STATE_ERROR = "解析viewstate失败"
+
+	LOGIN_ERROR_CODE_WRONG_PASSWORD          = 1001
+	LOGIN_ERROR_CODE_WRONG_VERIFY_CODE       = 1002
+	LOGIN_ERROR_CODE_NOT_VALID_USER          = 1003
+	LOGIN_ERROR_CODE_DECODE_VIEW_STATE_ERROR = 1004
 )
 
 type Crawl struct {
 	Client    *http.Client
 	Num       string
 	Pwd       string
+	Name      string
 	MainPage  string // 登陆成功后的mainPage页面 utf8编码
 	ScorePage []byte // 成绩界面
+	LoginUrl  string // 提交数据登录页 : => http://zfxk.zjtcm.net/(dbn5dgq4jveyap4525jo5j45)/default2.aspx ps: ()中的值可能存在
+	BaseURL   string // loginurl前半段 : => http://zfxk.zjtcm.net/(dbn5dgq4jveyap4525jo5j45)/
+}
+
+func NewCrawl(num, pwd string) *Crawl {
+	timeout := time.Duration(30 * time.Second) // 超时30s
+	crawl := &Crawl{}
+	tmpJar, err := cookiejar.New(nil)
+	if err != nil {
+		panic("初始化cookiejar失败")
+	}
+	crawl.Client = &http.Client{
+		Jar:     tmpJar,
+		Timeout: timeout,
+	}
+	crawl.Num = num
+	crawl.Pwd = pwd
+	return crawl
+}
+
+// 成绩结构
+type Score struct {
+	Xn   string  // 学年
+	Xq   uint8   // 学期
+	Kcmc string  // 课程名称
+	Type string  // 课程性质
+	Xf   float64 // 学分
+	Jd   float64 // 绩点
+	Cj   string  // 成绩
+	Bkcj string  // 补考成绩
+	Cxcj string  // 重修成绩
 }
 
 func getViewState(html []byte) (string, error) {
@@ -41,7 +89,7 @@ func getViewState(html []byte) (string, error) {
 	if len(viewstate) > 0 {
 		return string(viewstate[1]), nil
 	}
-	return "", errors.New("解析 viewstate 失败")
+	return "", errors.New(LOGIN_ERROR_MSG_DECODE_VIEW_STATE_ERROR)
 }
 
 func GbkToUtf8(s []byte) ([]byte, error) {
@@ -53,11 +101,11 @@ func GbkToUtf8(s []byte) ([]byte, error) {
 	return d, nil
 }
 
-func (this *Crawl) retrieveScores() []*models.Score {
+func (this *Crawl) retrieveScores() []*Score {
 	// 使用(?s)标记表示.可以匹配换行符
 	pattern := regexp.MustCompile(`(?s)<table .+?id="Datagrid1"[\s\S]*?>(.*?)</table>`)
 	ret := pattern.FindSubmatch(this.ScorePage)
-	var scores []*models.Score
+	var scores []*Score
 	if len(ret) == 0 {
 		return scores
 	}
@@ -77,13 +125,17 @@ func (this *Crawl) retrieveScores() []*models.Score {
 		if string(row[9]) == "&nbsp;" {
 			row[9] = nil
 		}
-		score := &models.Score{
+		xq, _ := strconv.Atoi(string(row[2]))
+		xf, _ := strconv.ParseFloat(string(row[5]), 64)
+		jd, _ := strconv.ParseFloat(string(row[6]), 64)
+
+		score := &Score{
 			Xn:   string(row[1]),
-			Xq:   string(row[2]),
+			Xq:   uint8(xq),
 			Kcmc: string(row[3]),
 			Type: string(row[4]),
-			Xf:   string(row[5]),
-			Jd:   string(row[6]),
+			Xf:   utility.Decimal(xf),
+			Jd:   utility.Decimal(jd),
 			Cj:   string(row[7]),
 			Bkcj: string(row[8]),
 			Cxcj: string(row[9]),
@@ -108,13 +160,22 @@ func (this *Crawl) openLoginPage() (string, error) {
 	if err != nil {
 		return "", errors.New("解析登录页的viewstate失败")
 	}
+	this.LoginUrl = rep.Request.URL.String()
+
+	// 服务端有可能开启 地址加入了(xxxxxxxxxx)这样的情况
+	if this.LoginUrl == BASE_URL {
+		this.BaseURL = BASE_URL
+	} else {
+		this.BaseURL = this.LoginUrl[:len(this.LoginUrl)-len(DEFAULT_URL)]
+	}
+	//fmt.Println(this.LoginUrl, this.BaseURL)
 	return viewState, nil
 }
 
 // 2. 获取验证码
 func (this *Crawl) getCode() (string, error) {
-	rep, err := this.Client.Get(BASE_URL + VERIFY_CODE_URL)
-	if err != err {
+	rep, err := this.Client.Get(this.BaseURL + VERIFY_CODE_URL)
+	if err != nil {
 		return "", errors.New("加载验证码失败")
 	}
 	defer rep.Body.Close()
@@ -151,7 +212,17 @@ func (this *Crawl) GetMainPage() (string, error) {
 		"hidPdrs":          {""},
 		"hidsc":            {""},
 	}
-	rep, err := this.Client.PostForm(BASE_URL+LOGIN_URL, formData)
+	request, _ := http.NewRequest(
+		"POST",
+		this.LoginUrl,
+		strings.NewReader(formData.Encode()),
+	)
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("Referer", this.LoginUrl)
+	request.Header.Set("Host", HOST)
+	request.Header.Set("User-Agent", USER_ARENT)
+
+	rep, err := this.Client.Do(request)
 	if err != nil {
 		return "", err
 	}
@@ -168,6 +239,21 @@ func (this *Crawl) GetMainPage() (string, error) {
 	return this.MainPage, nil
 }
 
+func (this *Crawl) checkLoginResult() (ok bool, value string) {
+	if ok, ret := this.regHelper(LOGIN_ERROR_MSG_WRONG_CHECK_CODE); !ok {
+		return ok, ret
+	}
+
+	if ok, ret := this.regHelper(LOGIN_ERROR_MSG_WRONG_PASSWORD); !ok {
+		return ok, ret
+	}
+
+	if ok, ret := this.regHelper(LOGIN_ERROR_MSG_NOT_VALID_USER); !ok {
+		return ok, ret
+	}
+	return true, ""
+}
+
 func (this *Crawl) regHelper(value string) (bool, string) {
 	reg := regexp.MustCompile(value)
 	if reg.FindString(this.MainPage) != "" {
@@ -176,65 +262,36 @@ func (this *Crawl) regHelper(value string) (bool, string) {
 	return true, ""
 }
 
-func CheckAccount(num, pwd string) (bool, string) {
-	var (
-		err error
-	)
-	crawl := NewCrawl(num, pwd)
-	if _, err = crawl.GetMainPage(); err != nil {
-		return false, err.Error()
-	}
-	if ok, ret := crawl.regHelper("验证码不正确"); !ok {
-		return ok, ret
-	}
-
-	if ok, ret := crawl.regHelper("密码错误"); !ok {
-		return ok, ret
-	}
-
-	if ok, ret := crawl.regHelper("用户名不存在或未按照要求参加教学活动"); !ok {
-		return ok, ret
-	}
-
-	if ok, ret := crawl.regHelper("用户名不存在或未按照要求参加教学活动"); !ok {
-		return ok, ret
-	}
-
-	return true, ""
-}
-
-func NewCrawl(num, pwd string) *Crawl {
-	timeout := time.Duration(3 * time.Second) // 超时3s
-	crawl := &Crawl{}
-	tmpJar, _ := cookiejar.New(nil)
-	crawl.Client = &http.Client{
-		Jar:     tmpJar,
-		Timeout: timeout,
-	}
-	crawl.Num = num
-	crawl.Pwd = pwd
-	return crawl
-}
-
-func (this *Crawl) LoginScorePage() ([]*models.Score, error) {
+func (this *Crawl) LoginScorePage() ([]*Score, error) {
 	var (
 		err          error
-		scores       []*models.Score
+		scores       []*Score
 		req          *http.Request
 		rep          *http.Response
 		newViewState string
 	)
 
 	this.GetMainPage()
+	if ok, msg := this.checkLoginResult(); !ok {
+		return scores, errors.New(msg)
+	}
+	// 获取 查询成绩 的按钮地址
+	// (?=)正则表达式 顺序环视
+	var re = regexp.MustCompile(`(?s)xscj_gc\.aspx\?xh=(.*?)\&xm=(.*?)\&gnmkdm=(.*?)"`)
+	matches := re.FindAllStringSubmatch(this.MainPage, -1)
+	if matches == nil {
+		return scores, errors.New("获取成绩按钮连接失败" + this.Num + this.Name)
+	}
 
+	this.Name = matches[0][2] // "re", num, name, gnmkdm
 	req, err = http.NewRequest(GET,
-		"http://zfxk.zjtcm.net/xscj_gc.aspx?xh="+this.Num+"&xm=%D5%C5%B4%AB%B3%C9&gnmkdm=N121605",
+		this.BaseURL+matches[0][0][:len(matches[0][0])-1],
 		nil,
 	)
 	if err != nil {
 		return scores, err
 	}
-	req.Header.Set("Referer", "http://zfxk.zjtcm.net/xs_main.aspx?xh="+this.Num)
+	req.Header.Set("Referer", this.BaseURL+"xs_main.aspx?xh="+this.Num)
 	if rep, err = this.Client.Do(req); err != nil {
 		return scores, err
 	}
@@ -262,14 +319,14 @@ func (this *Crawl) LoginScorePage() ([]*models.Score, error) {
 
 	req, err = http.NewRequest(
 		POST,
-		"http://zfxk.zjtcm.net/xscj_gc.aspx?xh="+this.Num+"&xm=%D5%C5%B4%AB%B3%C9&gnmkdm=N121605",
+		this.BaseURL+"xscj_gc.aspx?xh="+this.Num+"&xm="+url.QueryEscape(this.Name)+"&gnmkdm=N121605",
 		strings.NewReader(formData.Encode()),
 	)
 	if err != nil {
 		return scores, err
 	}
-	req.Header.Set("Referer", "http://zfxk.zjtcm.net/xs_main.aspx?xh="+this.Num)
-	req.Header.Set("Host", "zfxk.zjtcm.net")
+	req.Header.Set("Referer", this.BaseURL+"/xs_main.aspx?xh="+this.Num)
+	req.Header.Set("Host", HOST)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded") // 很重要
 	rep, err = this.Client.Do(req)
 
