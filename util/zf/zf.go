@@ -162,6 +162,8 @@ func (this *Crawl) mapCode2Msg(code int) string {
 		return loginErrorMsgDecodeViewStateError
 	case loginErrorCanNotOpenZcmuSystem:
 		return loginErrorMsgCanNotConnectZcmuSystem
+	case loginErrorCanNotLoginIn:
+		return loginErrorMsgCanNotLoginIn
 	default:
 		return loginErrorMsgUnknown
 	}
