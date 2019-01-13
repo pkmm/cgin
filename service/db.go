@@ -1,8 +1,9 @@
-package model
+package service
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/astaxie/beego/logs"
 	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -10,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"pkmm_gin/model"
 	"time"
 )
 
@@ -73,11 +75,13 @@ func init() {
 	db.DB().SetMaxOpenConns(100)
 	//f, _ := os.Create("gin.log")
 	//db.SetLogger(log.New(f, "\r\n", 0))
-	//db.LogMode(true)
+	db.LogMode(true)
 
 	// == Redis == 配置
 	// redis 连接池 设置
 	pool = newPool("127.0.0.1:6379")
+
+	ConnectDB()
 
 }
 
@@ -101,4 +105,13 @@ func GetRedis() redis.Conn {
 
 func GetConfig() Config {
 	return config
+}
+
+func ConnectDB() {
+	var err error
+
+	if err = db.Set("gorm:table_options", "ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;").
+		AutoMigrate(model.Models...).Error; err != nil {
+		logs.Error("auto migrate tables failed, " + err.Error())
+	}
 }

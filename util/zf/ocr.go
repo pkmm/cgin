@@ -4,12 +4,8 @@ import (
 	"fmt"
 	"github.com/ewalker544/libsvm-go"
 	"image"
-	"image/gif"
-	"math/rand"
 	"os"
 	"path"
-	"pkmm_gin/utility"
-	"strconv"
 )
 
 var (
@@ -17,7 +13,10 @@ var (
 )
 
 func init() {
-	svmModel = libSvm.NewModelFromFile(path.Join(path.Join(utility.SourceCodePath(), "utility/zf"), "zf.model"))
+	wd, _ := os.Getwd()
+	fmt.Println(wd)
+	svmModel = libSvm.NewModelFromFile(path.Join(path.Join(wd, "util/zf"), "zf.model"))
+	//svmModel = libSvm.NewModelFromFile(path.Join(wd, "zf.model"))
 }
 
 // recognize verify code.
@@ -41,7 +40,7 @@ func crop(src image.Image, name string) map[string][]float64 {
 	return vec
 }
 
-func Predict(im image.Image, save bool) (string, error) {
+func Predict(im image.Image) (string, error) {
 	vec := crop(im, "loc")
 	ret := make([]byte, 0)
 	x := make(map[int]float64)
@@ -52,13 +51,6 @@ func Predict(im image.Image, save bool) (string, error) {
 		predictLabel := svmModel.Predict(x)
 		ans := byte(predictLabel)
 		ret = append(ret, ans)
-	}
-	if save {
-		fp, err := os.Create(path.Join(path.Join(utility.SourceCodePath(), "static"), string(ret)+strconv.Itoa(rand.Int())+".png"))
-		defer fp.Close()
-		if err == nil {
-			gif.Encode(fp, im, nil)
-		}
 	}
 	return string(ret), nil
 }

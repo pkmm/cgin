@@ -1,4 +1,4 @@
-package utility
+package util
 
 import (
 	"bytes"
@@ -8,7 +8,6 @@ import (
 	"github.com/bwmarrin/snowflake"
 	"math/rand"
 	"net"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -50,13 +49,6 @@ func Signature(params map[string]string) string {
 	return strings.ToUpper(Md5String(buffer.String()))
 }
 
-func GenerateSignatureAndId(params map[string]string) (string, string) {
-	node, _ := snowflake.NewNode(1)
-	uniqueId := node.Generate().String()
-	ans := Signature(params)
-	return Md5String(ans + uniqueId + "salt(can random it)"), uniqueId
-}
-
 func IpAddressOfLocal() string {
 	netInfos, err := net.InterfaceAddrs()
 	if err != nil {
@@ -72,11 +64,6 @@ func IpAddressOfLocal() string {
 	return ""
 }
 
-func SourceCodePath() string {
-	path, _ := os.Getwd()
-	return path
-}
-
 func Decimal(value float64) float64 {
 	value, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", value), 64)
 	return value
@@ -90,4 +77,12 @@ func RandomString(length int) string {
 		ans = append(ans, letters[rand.Intn(N)])
 	}
 	return string(ans)
+}
+
+func GenerateToken(key uint64) string {
+	now := time.Now().Unix()
+	str := RandomString(100)
+	newKey := fmt.Sprintf("%s_%s_%d_%d", str, Md5String(str), now, key)
+
+	return Md5String(newKey)
 }
