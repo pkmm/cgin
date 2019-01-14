@@ -1,8 +1,10 @@
 package service
 
 import (
+	"bytes"
 	"github.com/astaxie/beego/logs"
 	"pkmm_gin/model"
+	"strings"
 	"sync"
 )
 
@@ -12,6 +14,26 @@ type scoreService struct {
 
 var ScoreService = &scoreService{
 	mutex: &sync.Mutex{},
+}
+
+func (serv *scoreService) BatchCreate(scores []*model.Score) {
+	sql := bytes.Buffer{}
+	sql.WriteString("INSERT IGNORE INTO scores(user_id, xn, xq, kcmc, type, xf, jd, cj, bkcj, cxcj) ")
+	binds := make([]interface{}, 0)
+	for i, score := range scores {
+		//fmt.Printf("%#v", score)
+		if i == 0 {
+			sql.WriteString("VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+		} else {
+			sql.WriteString(" ,(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+		}
+		binds = append(binds, score.UserId, score.Xn, score.Xq, score.Kcmc,
+			score.Type, score.Xf, score.Jd, score.Cj, score.Bkcj, score.Cxcj)
+	}
+	sqls := strings.Trim(sql.String(), ",")
+	//fmt.Println(sqls, binds)
+	//return
+	db.Exec(sqls, binds...)
 }
 
 func (serv *scoreService) UpdateOrCreateScore(score *model.Score) *model.Score {

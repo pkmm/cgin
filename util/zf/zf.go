@@ -34,19 +34,12 @@ const (
 	viewState = "__VIEWSTATE"
 
 	loginErrorMsgWrongPassword           = "密码错误！！"
-	loginErrorMsgWrongCheckCode          = "验证码不正确！！"
+	loginErrorMsgWrongVerifyCode         = "验证码不正确！！"
 	loginErrorMsgCanNotLoginIn           = "密码错误，您密码输入错误已达5次，账号已锁定无法登录，次日自动解锁！如忘记密码，请与学院教学秘书联系!"
 	loginErrorMsgNotValidUser            = "用户名不存在或未按照要求参加教学活动！！"
 	loginErrorMsgDecodeViewStateError    = "解析viewstate失败"
 	loginErrorMsgCanNotConnectZcmuSystem = "无法访问到教务系统"
 	loginErrorMsgUnknown                 = "未知错误"
-
-	loginErrorCodeWrongPassword        = 1001
-	loginErrorCodeWrongVerifyCode      = 1002
-	loginErrorCodeNotValidUser         = 1003
-	loginErrorCodeDecodeViewStateError = 1004
-	loginErrorCanNotOpenZcmuSystem     = 1005
-	loginErrorCanNotLoginIn            = 1006
 )
 
 // 成绩结构
@@ -72,27 +65,23 @@ type Crawl struct {
 	scorePage                []byte // 点击了查看成绩的按钮之后 显示的页面， 这个页面就是包括了成绩的table的页面
 	loginUrl                 string // 提交数据登录页 : => http://zfxk.zjtcm.net/(dbn5dgq4jveyap4525jo5j45)/default2.aspx ps: ()中的值可能存在
 	baseURL                  string // loginurl前半段 : => http://zfxk.zjtcm.net/(dbn5dgq4jveyap4525jo5j45)/
-	errorCode                int    // 登陆过程的错误代码
+	errorMsg                 string // 登陆过程的错误信息
 
 	scores []*score //成绩结果
 }
 
-func (this *Crawl) GetErrorCode() int {
-	return this.errorCode
-}
-
 func (this *Crawl) GetErrorMsg() string {
-	return this.mapCode2Msg(this.errorCode)
+	return this.errorMsg
 }
 
 func (this *Crawl) IsPassWordWrong() bool {
-	return this.errorCode == loginErrorCodeWrongPassword
+	return this.errorMsg == loginErrorMsgWrongPassword || this.errorMsg == loginErrorMsgCanNotLoginIn
 }
 
 // 是不是可以继续同步
 func (this *Crawl) CanContinue() bool {
-	return this.errorCode != loginErrorCodeWrongPassword && this.errorCode != loginErrorCodeNotValidUser &&
-		this.errorCode != loginErrorCanNotLoginIn
+	return this.errorMsg != loginErrorMsgCanNotLoginIn && this.errorMsg != loginErrorMsgWrongPassword &&
+		this.errorMsg != loginErrorMsgNotValidUser
 }
 
 // 检测账号的状态
@@ -103,37 +92,20 @@ func (this *Crawl) CheckAccount() (errorMsg string) {
 
 	html := this.mainPage
 	regs := map[string]*regexp.Regexp{
-		loginErrorMsgWrongPassword:  regexp.MustCompile(loginErrorMsgWrongPassword),
-		loginErrorMsgWrongCheckCode: regexp.MustCompile(loginErrorMsgWrongCheckCode),
-		loginErrorMsgNotValidUser:   regexp.MustCompile(loginErrorMsgNotValidUser),
-		loginErrorMsgCanNotLoginIn:  regexp.MustCompile(loginErrorMsgCanNotLoginIn),
+		loginErrorMsgWrongPassword:   regexp.MustCompile(loginErrorMsgWrongPassword),
+		loginErrorMsgWrongVerifyCode: regexp.MustCompile(loginErrorMsgWrongVerifyCode),
+		loginErrorMsgNotValidUser:    regexp.MustCompile(loginErrorMsgNotValidUser),
+		loginErrorMsgCanNotLoginIn:   regexp.MustCompile(loginErrorMsgCanNotLoginIn),
 	}
 
 	for key, reg := range regs {
 		if reg.FindString(html) != "" {
-			this.errorCode = this.convertMsg2Code(key)
+			this.errorMsg = key
 			return key
 		}
 	}
 
 	return ""
-}
-
-func (this *Crawl) convertMsg2Code(msg string) int {
-	switch msg {
-	case loginErrorMsgWrongPassword:
-		return loginErrorCodeWrongPassword
-	case loginErrorMsgWrongCheckCode:
-		return loginErrorCodeWrongVerifyCode
-	case loginErrorMsgNotValidUser:
-		return loginErrorCodeNotValidUser
-	case loginErrorMsgDecodeViewStateError:
-		return loginErrorCodeDecodeViewStateError
-	case loginErrorMsgCanNotLoginIn:
-		return loginErrorCanNotLoginIn
-	default:
-		return loginErrorCanNotOpenZcmuSystem
-	}
 }
 
 // 获取成绩的接口
@@ -148,25 +120,6 @@ func (this *Crawl) GetScores() ([]*score, error) {
 	}
 
 	return this.retrieveScores(), nil
-}
-
-func (this *Crawl) mapCode2Msg(code int) string {
-	switch code {
-	case loginErrorCodeWrongPassword:
-		return loginErrorMsgWrongPassword
-	case loginErrorCodeWrongVerifyCode:
-		return loginErrorMsgWrongCheckCode
-	case loginErrorCodeNotValidUser:
-		return loginErrorMsgNotValidUser
-	case loginErrorCodeDecodeViewStateError:
-		return loginErrorMsgDecodeViewStateError
-	case loginErrorCanNotOpenZcmuSystem:
-		return loginErrorMsgCanNotConnectZcmuSystem
-	case loginErrorCanNotLoginIn:
-		return loginErrorMsgCanNotLoginIn
-	default:
-		return loginErrorMsgUnknown
-	}
 }
 
 func NewCrawl(num, pwd string) (*Crawl, error) {
@@ -225,10 +178,10 @@ func (this *Crawl) retrieveScores() []*score {
 			continue
 		}
 		if string(row[8]) == "&nbsp;" {
-			row[8] = nil
+			row[8] = []byte("")
 		}
 		if string(row[9]) == "&nbsp;" {
-			row[9] = nil
+			row[9] = []byte("")
 		}
 		xq, _ := strconv.Atoi(string(row[2]))
 		xf, _ := strconv.ParseFloat(string(row[5]), 64)

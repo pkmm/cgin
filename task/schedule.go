@@ -2,6 +2,7 @@ package task
 
 // 后台运行的任务
 import (
+	"fmt"
 	"github.com/astaxie/beego/logs"
 	"github.com/robfig/cron"
 	"pkmm_gin/model"
@@ -62,7 +63,7 @@ func init() {
 	// 定义任务列表
 
 	// 同步学生的成绩
-	c.AddFunc("*/1 * * * * *", taskWrapper(syncStudentScore, flagSyncStudentScore))
+	c.AddFunc("0 */10 * * * *", taskWrapper(syncStudentScore, flagSyncStudentScore))
 
 	// 在每天即将结束的时候，复位user的can_sync字段
 	c.AddFunc("0 55 11 * * *", func() {
@@ -125,50 +126,65 @@ func syncStudentScore() {
 				}
 				beginTime := time.Now()
 				var usedTime time.Duration
-				var syncCount = 0
+				var syncedCount = 0
 				retry := 5
-				//var scores []*zf.score
 				for i := 0; i < retry; i++ {
-					scores, err2 := worker.GetScores()
-					err = err2
-					log.Error(err.Error())
-					syncCount = len(scores)
-					if err == nil && syncCount != 0 {
-						currentCount := service.ScoreService.GetUserScoreCount(user.ID)
-						if currentCount == uint64(syncCount) { // 当前成绩的数量没有发生变化
-							// todo.
-						} else {
-							for _, s := range scores {
-								score := &model.Score{
-									Xn:     s.Xn,
-									Xq:     s.Xq,
-									Kcmc:   s.Kcmc,
-									Cj:     s.Cj,
-									Jd:     s.Jd,
-									Cxcj:   s.Cxcj,
-									Bkcj:   s.Bkcj,
-									Xf:     s.Xf,
-									Type:   s.Type,
-									UserId: user.ID,
-								}
-								service.ScoreService.UpdateOrCreateScore(score)
-							}
+					scores, err := worker.GetScores()
+					if err != nil {
+						log.Error(fmt.Sprintf("同步学生: %d %s", user.ID, err.Error()))
+						// 如果是密码错误，当天就不再同步信息了，因为密码错误五次会锁定账号一天
+						if worker.CanContinue() == false {
+							service.User.SetUserAutoSyncStatus(user.ID, 0)
+							usedTime = time.Since(beginTime)
+							resCh <- &SyncStudentScoreResult{User: user,
+								UseTime: usedTime.String(), SyncCount: syncedCount, FailedReason: err.Error()}
+							return
 						}
-						usedTime = time.Since(beginTime)
-						resCh <- &SyncStudentScoreResult{User: user,
-							UseTime: usedTime.String(), SyncCount: syncCount}
+						continue
 					}
-					// 如果是密码错误，当天就不再同步信息了，因为密码错误五次会锁定账号一天
-					if worker.CanContinue() == false {
-						service.User.SetUserAutoSyncStatus(user.ID, 0)
-						usedTime = time.Since(beginTime)
-						resCh <- &SyncStudentScoreResult{User: user,
-							UseTime: usedTime.String(), SyncCount: syncCount, FailedReason: err.Error()}
-						return
+					syncedCount = len(scores)
+					currentCount := service.ScoreService.GetUserScoreCount(user.ID)
+					if 0 == currentCount {
+						modelScores := make([]*model.Score, 0)
+						for _, s := range scores {
+							score := &model.Score{
+								Xn:     s.Xn,
+								Xq:     s.Xq,
+								Kcmc:   s.Kcmc,
+								Cj:     s.Cj,
+								Jd:     s.Jd,
+								Cxcj:   s.Cxcj,
+								Bkcj:   s.Bkcj,
+								Xf:     s.Xf,
+								Type:   s.Type,
+								UserId: user.ID,
+							}
+							modelScores = append(modelScores, score)
+						}
+						service.ScoreService.BatchCreate(modelScores)
+						break
+					}
+					if uint64(syncedCount) != currentCount {
+						for _, s := range scores {
+							score := &model.Score{
+								Xn:     s.Xn,
+								Xq:     s.Xq,
+								Kcmc:   s.Kcmc,
+								Cj:     s.Cj,
+								Jd:     s.Jd,
+								Cxcj:   s.Cxcj,
+								Bkcj:   s.Bkcj,
+								Xf:     s.Xf,
+								Type:   s.Type,
+								UserId: user.ID,
+							}
+							service.ScoreService.UpdateOrCreateScore(score)
+						}
+						break
 					}
 				}
 				resCh <- &SyncStudentScoreResult{User: user,
-					UseTime: time.Since(beginTime).String(), SyncCount: 0, FailedReason: err.Error()}
+					UseTime: time.Since(beginTime).String(), SyncCount: syncedCount, FailedReason: ""}
 			}
 		}()
 	}
