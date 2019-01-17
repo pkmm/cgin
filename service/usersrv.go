@@ -16,13 +16,14 @@ type userService struct {
 }
 
 func (serv *userService) CheckAndGetUserByUserIdAndAccessToken(userId uint64, accessToken string) *model.User {
-	user := &model.User{}
-	if err := db.Where("`user_id` = ? AND `access_token` = ?", userId, accessToken).First(user).Error; err != nil {
+	userSession := &model.UserSession{}
+	if err := db.Where("`user_id` = ? AND `access_token` = ?", userId, accessToken).
+		First(userSession).Error; err != nil {
 		// todo log
 		return nil
 	}
 
-	return serv.GetUser(userId)
+	return serv.GetUser(userSession.UserId)
 }
 
 func (serv *userService) GetUser(id uint64) *model.User {

@@ -6,6 +6,7 @@ import (
 	"pkmm_gin/model"
 	"strings"
 	"sync"
+	"time"
 )
 
 type scoreService struct {
@@ -18,17 +19,18 @@ var ScoreService = &scoreService{
 
 func (serv *scoreService) BatchCreate(scores []*model.Score) {
 	sql := bytes.Buffer{}
-	sql.WriteString("INSERT IGNORE INTO scores(user_id, xn, xq, kcmc, type, xf, jd, cj, bkcj, cxcj) ")
+	sql.WriteString("INSERT IGNORE INTO scores(user_id, xn, xq, kcmc, type, xf, jd, cj, bkcj, cxcj, created_at, updated_at) ")
 	binds := make([]interface{}, 0)
 	for i, score := range scores {
 		//fmt.Printf("%#v", score)
 		if i == 0 {
-			sql.WriteString("VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			sql.WriteString("VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 		} else {
-			sql.WriteString(" ,(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			sql.WriteString(" ,(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 		}
 		binds = append(binds, score.UserId, score.Xn, score.Xq, score.Kcmc,
-			score.Type, score.Xf, score.Jd, score.Cj, score.Bkcj, score.Cxcj)
+			score.Type, score.Xf, score.Jd, score.Cj, score.Bkcj, score.Cxcj,
+			time.Now().Unix(), time.Now().Unix())
 	}
 	sqls := strings.Trim(sql.String(), ",")
 	//fmt.Println(sqls, binds)
@@ -64,4 +66,12 @@ func (serv *scoreService) GetUserScoreCount(userId uint64) (count uint64) {
 	}
 
 	return
+}
+
+func (serv *scoreService) GetOwnScores(userId uint64) (scores []*model.Score) {
+	if err := db.Where(&model.Score{UserId: userId}).Find(&scores).Error; err != nil {
+		return
+	}
+
+	return scores
 }

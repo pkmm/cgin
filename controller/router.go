@@ -9,13 +9,17 @@ import (
 func MapRoute() *gin.Engine {
 
 	ret := gin.New()
-	ret.Use(gin.Recovery())
+	ret.Use(middleware.MyRecovery(), middleware.ErrorHandle)
 
-	ret.Static("/static", "./static")
+	ret.Static("/static", "/static")
 
 	api := ret.Group(util.PathAPI)
-	api.Use(middleware.Auth)
-	api.POST("/login", loginAction)
+	{
+		api.Use(middleware.Auth)
+		api.POST("/login", loginAction)
+		api.POST("/get_scores", getScoresAction)
+		api.POST("/set_account", setAccountAction)
+	}
 
 	return ret
 }

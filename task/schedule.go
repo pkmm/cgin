@@ -92,6 +92,7 @@ func taskWrapper(cmd func(), flag string) func() {
 
 func syncStudentScore() {
 
+	startAt := time.Now()
 	// 同步学生成绩 消费者线程产生的结果数据
 	type SyncStudentScoreResult struct {
 		User         *model.User
@@ -110,7 +111,7 @@ func syncStudentScore() {
 
 	goroutine := 10
 	reqCh := make(chan *model.User, pageSize)
-	resCh := make(chan *SyncStudentScoreResult, goroutine<<1)
+	resCh := make(chan *SyncStudentScoreResult, goroutine<<2)
 	closeCh := make(chan int)
 
 	// 消费者
@@ -222,10 +223,12 @@ func syncStudentScore() {
 			// TODO.
 			log.Info("no users need sync.")
 			break
-		case <-time.After(time.Duration(600 * time.Second)): // 600s超时的时间
+		case <-time.After(time.Duration(500 * time.Second)): // 500s超时的时间
 			log.Error("同步学生成绩 发生阻塞, 超时结束")
 			break
 		}
 	}
+
+	log.Info("%d 用户 花费时间, %s", total, time.Since(startAt).String())
 
 }

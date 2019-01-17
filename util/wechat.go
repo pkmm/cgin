@@ -56,6 +56,7 @@ func code2Session(code string) (*code2SessionResp, error) {
 		"https://api.weixin.qq.com/sns/jscode2session?appId=%s&secret=%s&js_code=%s&grant_type=authorization_code",
 		conf.AppConfig.String("miniprogram_app_id"),
 		conf.AppConfig.String("miniprogram_secret"),
+		code,
 	)
 
 	sess := &code2SessionResp{}

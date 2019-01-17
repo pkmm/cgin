@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"github.com/jinzhu/gorm"
 	"pkmm_gin/model"
 	"pkmm_gin/util"
 	"sync"
@@ -18,7 +19,7 @@ var UserSessionService = &userSessionService{
 func (srv *userSessionService) GetUserSession(userId uint64) *model.UserSession {
 	ret := &model.UserSession{}
 	if err := db.Where("`user_id` = ? AND `active` = 1", userId).First(&ret).Error; err != nil {
-		if db.RecordNotFound() {
+		if err == gorm.ErrRecordNotFound {
 			ret = srv.CreateUserSession(userId)
 			if ret != nil {
 				return ret

@@ -1,5 +1,5 @@
 package util
 
 const (
-	PathAPI = "/api"
+	PathAPI = "/zf"
 )

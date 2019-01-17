@@ -1,35 +1,29 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"pkmm_gin/errno"
 	"pkmm_gin/model"
 	"pkmm_gin/service"
 	"pkmm_gin/util"
+	"pkmm_gin/util/zf"
 )
 
 func loginAction(c *gin.Context) {
-	result := util.NewResult()
-	defer c.JSON(http.StatusOK, result)
-
 	arg := map[string]interface{}{}
 	if err := c.BindJSON(&arg); err != nil {
-		result.Msg = "preses login requests failed."
-		result.Code = util.InvalidRequstParamter
+		service.SendResponse(c, errno.ErrBind, nil)
 		return
 	}
 
 	iv := arg["iv"].(string)
 	code := arg["code"].(string)
 	encryptedData := arg["encrypted_data"].(string)
-	fmt.Println(iv, code, encryptedData)
 
 	wechatUserInfo, err := util.DecodeWchatUserInfo(iv, code, encryptedData)
 
 	if err != nil {
-		result.Code = util.InvalidRequstParamter
-		result.Msg = err.Error()
+		service.SendResponse(c, errno.ErrBind.UpdateErrnoWithMsg(err.Error()), nil)
 		return
 	}
 
@@ -40,8 +34,7 @@ func loginAction(c *gin.Context) {
 			Nickname: wechatUserInfo.NickName,
 		}
 		if err = service.User.UpdateUser(user); err != nil {
-			result.Code = util.InternalError
-			result.Msg = "server internal error"
+			service.SendResponse(c, errno.InternalServerError, nil)
 			return
 		}
 	}
@@ -50,8 +43,50 @@ func loginAction(c *gin.Context) {
 
 	data := map[string]interface{}{}
 	data["user"] = user
-	data["session"] = sess
+	data["token"] = sess
 
-	result.Data = data
-
+	service.SendResponse(c, errno.Success, data)
 }
+
+func getScoresAction(c *gin.Context) {
+	defer func() {
+		service.SendResponse(c, errno.InternalServerError, nil)
+	}()
+
+	data, exist := c.Get("user")
+	if exist == false {
+		service.SendResponse(c, errno.ErrUserNotFound, nil)
+		return
+	}
+	user := data.(*model.User)
+
+	scores := service.ScoreService.GetOwnScores(user.ID)
+	service.SendResponse(c, errno.Success, scores)
+}
+
+func setAccountAction(c *gin.Context) {
+	defer func() {
+		service.SendResponse(c, errno.InternalServerError, nil)
+	}()
+
+	args := map[string]interface{}{}
+	if err := c.BindJSON(&args); err != nil {
+		service.SendResponse(c, errno.ErrBind, nil)
+		return
+	}
+	num := args["num"].(string)
+	pwd := args["pwd"].(string)
+
+	checker, err := zf.NewCrawl(num, pwd)
+	if err != nil {
+		service.SendResponse(c, errno.ErrCheckZfAccountFailed.UpdateErrnoWithMsg(err.Error()), nil)
+		return
+	}
+
+	if errMsg := checker.CheckAccount(); errMsg == "" {
+		service.SendResponse(c, errno.Success.UpdateErrnoWithMsg("通过验证"), nil)
+	} else  {
+		service.SendResponse(c, errno.ErrCheckZfAccountFailed.UpdateErrnoWithMsg(errMsg), nil)
+	}
+}
+
