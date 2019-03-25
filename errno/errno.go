@@ -11,11 +11,13 @@ func (e *Errno) Error() string {
 	return e.Msg
 }
 
-func (e *Errno) UpdateErrnoWithMsg(newMsg string) *Errno {
-	e.Msg = newMsg
-	return e
+func (e *Errno) ReplaceErrnoMsgWith(newMsg string) *Errno {
+	return &Errno{e.Code, newMsg}
 }
 
+func (e *Errno) AppendErrorMsg(appendMsg string) *Errno {
+	return &Errno{e.Code, e.Msg + " [" + appendMsg + "]"}
+}
 
 //// next.
 
@@ -55,6 +57,5 @@ func DecodeErr(err error) (int, string) {
 	default:
 
 	}
-
 	return InternalServerError.Code, err.Error()
 }

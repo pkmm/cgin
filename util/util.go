@@ -8,6 +8,10 @@ import (
 	"github.com/bwmarrin/snowflake"
 	"math/rand"
 	"net"
+	"os"
+	"path"
+	"path/filepath"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
@@ -85,4 +89,15 @@ func GenerateToken(key uint64) string {
 	newKey := fmt.Sprintf("%s_%s_%d_%d", str, Md5String(str), now, key)
 
 	return Md5String(newKey)
+}
+
+/// 路径函数
+func GetSourceCodePath() string {
+	_, filename, _, _ := runtime.Caller(1)
+	return path.Dir(filename)
+}
+
+func GetExecPath() string {
+	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
+	return dir
 }

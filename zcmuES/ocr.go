@@ -1,4 +1,4 @@
-package zf
+package zcmuES
 
 import (
 	"fmt"
@@ -14,9 +14,9 @@ var (
 
 func init() {
 	wd, _ := os.Getwd()
-	fmt.Println(wd)
-	svmModel = libSvm.NewModelFromFile(path.Join(path.Join(wd, "util/zf"), "zf.model"))
-	//svmModel = libSvm.NewModelFromFile(path.Join(wd, "zf.model"))
+	modelPath := path.Join(wd, "zcmuES", "zf.model")
+	fmt.Println("zcmuES model load in ", modelPath)
+	svmModel = libSvm.NewModelFromFile(modelPath)
 }
 
 // recognize verify code.

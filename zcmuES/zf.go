@@ -1,4 +1,4 @@
-package zf
+package zcmuES
 
 import (
 	"bytes"
@@ -43,7 +43,7 @@ const (
 )
 
 // 成绩结构
-type score struct {
+type Score struct {
 	Xn   string  // 学年
 	Xq   uint8   // 学期
 	Kcmc string  // 课程名称
@@ -67,30 +67,34 @@ type Crawl struct {
 	baseURL                  string // loginurl前半段 : => http://zfxk.zjtcm.net/(dbn5dgq4jveyap4525jo5j45)/
 	errorMsg                 string // 登陆过程的错误信息
 
-	scores []*score //成绩结果
+	scores []*Score //成绩结果
 }
 
-func (this *Crawl) GetErrorMsg() string {
-	return this.errorMsg
+func (c *Crawl) GetStudentName() string {
+	return c.name
 }
 
-func (this *Crawl) IsPassWordWrong() bool {
-	return this.errorMsg == loginErrorMsgWrongPassword || this.errorMsg == loginErrorMsgCanNotLoginIn
+func (c *Crawl) GetErrorMsg() string {
+	return c.errorMsg
+}
+
+func (c *Crawl) IsPassWordWrong() bool {
+	return c.errorMsg == loginErrorMsgWrongPassword || c.errorMsg == loginErrorMsgCanNotLoginIn
 }
 
 // 是不是可以继续同步
-func (this *Crawl) CanContinue() bool {
-	return this.errorMsg != loginErrorMsgCanNotLoginIn && this.errorMsg != loginErrorMsgWrongPassword &&
-		this.errorMsg != loginErrorMsgNotValidUser
+func (c *Crawl) CanContinue() bool {
+	return c.errorMsg != loginErrorMsgCanNotLoginIn && c.errorMsg != loginErrorMsgWrongPassword &&
+		c.errorMsg != loginErrorMsgNotValidUser
 }
 
 // 检测账号的状态
-func (this *Crawl) CheckAccount() (errorMsg string) {
-	if err := this.prepareToLoginSystem(); err != nil {
+func (c *Crawl) CheckAccount() (errorMsg string) {
+	if err := c.prepareToLoginSystem(); err != nil {
 		return err.Error()
 	}
 
-	html := this.mainPage
+	html := c.mainPage
 	regs := map[string]*regexp.Regexp{
 		loginErrorMsgWrongPassword:   regexp.MustCompile(loginErrorMsgWrongPassword),
 		loginErrorMsgWrongVerifyCode: regexp.MustCompile(loginErrorMsgWrongVerifyCode),
@@ -100,7 +104,7 @@ func (this *Crawl) CheckAccount() (errorMsg string) {
 
 	for key, reg := range regs {
 		if reg.FindString(html) != "" {
-			this.errorMsg = key
+			c.errorMsg = key
 			return key
 		}
 	}
@@ -109,17 +113,17 @@ func (this *Crawl) CheckAccount() (errorMsg string) {
 }
 
 // 获取成绩的接口
-func (this *Crawl) GetScores() ([]*score, error) {
+func (c *Crawl) GetScores() ([]*Score, error) {
 
-	if msg := this.CheckAccount(); msg != "" {
+	if msg := c.CheckAccount(); msg != "" {
 		return nil, errors.New(msg)
 	}
 
-	if err := this.doLoginScorePage(); err != nil {
+	if err := c.doLoginScorePage(); err != nil {
 		return nil, err
 	}
 
-	return this.retrieveScores(), nil
+	return c.retrieveScores(), nil
 }
 
 func NewCrawl(num, pwd string) (*Crawl, error) {
@@ -140,7 +144,7 @@ func NewCrawl(num, pwd string) (*Crawl, error) {
 	return crawl, nil
 }
 
-func (this *Crawl) getViewState(html []byte) (string, error) {
+func (c *Crawl) getViewState(html []byte) (string, error) {
 	pattern := regexp.MustCompile(`<input type="hidden" name="__VIEWSTATE" value="(.*?)" />`)
 	viewstate := pattern.FindSubmatch(html)
 	if len(viewstate) > 0 {
@@ -150,7 +154,7 @@ func (this *Crawl) getViewState(html []byte) (string, error) {
 	return "", errors.New(loginErrorMsgDecodeViewStateError)
 }
 
-func (this *Crawl) gbkToUtf8(s []byte) ([]byte, error) {
+func (c *Crawl) gbkToUtf8(s []byte) ([]byte, error) {
 	reader := transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewDecoder())
 	d, e := ioutil.ReadAll(reader)
 	if e != nil {
@@ -159,16 +163,16 @@ func (this *Crawl) gbkToUtf8(s []byte) ([]byte, error) {
 	return d, nil
 }
 
-func (this *Crawl) retrieveScores() []*score {
+func (c *Crawl) retrieveScores() []*Score {
 	// 使用(?s)标记表示.可以匹配换行符
 	pattern := regexp.MustCompile(`(?s)<table .+?id="Datagrid1"[\s\S]*?>(.*?)</table>`)
-	ret := pattern.FindSubmatch(this.scorePage)
-	var scores []*score
+	ret := pattern.FindSubmatch(c.scorePage)
+	var scores []*Score
 	if len(ret) == 0 {
 		return scores
 	}
 	table := ret[0]
-	table, _ = this.gbkToUtf8(table)
+	table, _ = c.gbkToUtf8(table)
 	// <td>学年</td><td>学期</td><td>课程代码</td><td>课程名称</td><td>课程性质</td><td>课程归属</td><td>学分</td><td>绩点</td><td>成绩</td><td>辅修标记</td><td>补考成绩</td><td>重修成绩</td><td>学院名称</td><td>备注</td><td>重修标记</td><td>课程英文名称</td>
 	pattern = regexp.MustCompile(`(?s)<td>(.*?)</td><td>(.*?)</td><td>.*?</td><td>(.*?)</td><td>(.*?)</td><td>.*?</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>.*?</td><td>(.*?)</td><td>(.*?)</td><td>.*?</td><td>.*?</td><td>.*?</td><td>.*?</td>`)
 	tds := pattern.FindAllSubmatch(table, -1)
@@ -187,7 +191,7 @@ func (this *Crawl) retrieveScores() []*score {
 		xf, _ := strconv.ParseFloat(string(row[5]), 64)
 		jd, _ := strconv.ParseFloat(string(row[6]), 64)
 
-		score := &score{
+		score := &Score{
 			Xn:   string(row[1]),
 			Xq:   uint8(xq),
 			Kcmc: string(row[3]),
@@ -204,8 +208,8 @@ func (this *Crawl) retrieveScores() []*score {
 }
 
 // 未登录时, 访问系统首页 获取登陆的viewstate
-func (this *Crawl) touchIndexPageForGetViewState() (string, error) {
-	rep, err := this.client.Get(baseUrl)
+func (c *Crawl) touchIndexPageForGetViewState() (string, error) {
+	rep, err := c.client.Get(baseUrl)
 	if err != nil {
 		return "", err
 	}
@@ -214,25 +218,25 @@ func (this *Crawl) touchIndexPageForGetViewState() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	viewState, err := this.getViewState(html)
+	viewState, err := c.getViewState(html)
 	if err != nil {
 		return "", err
 	}
-	this.loginUrl = rep.Request.URL.String()
+	c.loginUrl = rep.Request.URL.String()
 
 	// 服务端有可能开启 地址加入了(xxxxxxxxxx)这样的情况
-	if this.loginUrl == baseUrl {
-		this.baseURL = baseUrl
+	if c.loginUrl == baseUrl {
+		c.baseURL = baseUrl
 	} else {
-		this.baseURL = this.loginUrl[:len(this.loginUrl)-len(defaultUrl)]
+		c.baseURL = c.loginUrl[:len(c.loginUrl)-len(defaultUrl)]
 	}
 
 	return viewState, nil
 }
 
 // 解析验证码
-func (this *Crawl) verifyCode2String() (string, error) {
-	rep, err := this.client.Get(this.baseURL + verifyCodeUrl)
+func (c *Crawl) verifyCode2String() (string, error) {
+	rep, err := c.client.Get(c.baseURL + verifyCodeUrl)
 	if err != nil {
 		return "", err
 	}
@@ -250,7 +254,7 @@ func (this *Crawl) verifyCode2String() (string, error) {
 }
 
 // 尝试登陆系统, 获取登陆成功后的页面
-func (this *Crawl) prepareToLoginSystem() error {
+func (c *Crawl) prepareToLoginSystem() error {
 	var (
 		err  error
 		code string
@@ -258,19 +262,19 @@ func (this *Crawl) prepareToLoginSystem() error {
 		rep  *http.Response
 		vs   string
 	)
-	if vs, err = this.touchIndexPageForGetViewState(); err != nil {
+	if vs, err = c.touchIndexPageForGetViewState(); err != nil {
 		return err
 	}
 
-	if code, err = this.verifyCode2String(); err != nil {
+	if code, err = c.verifyCode2String(); err != nil {
 		return err
 	}
 
 	formData := url.Values{
 		viewState:          {vs},
-		"txtUserName":      {this.num},
+		"txtUserName":      {c.num},
 		"Textbox1":         {""},
-		"TextBox2":         {this.pwd},
+		"TextBox2":         {c.pwd},
 		"txtSecretCode":    {code},
 		"RadioButtonList1": {"%D1%A7%C9%FA"},
 		"Button1":          {""},
@@ -280,15 +284,15 @@ func (this *Crawl) prepareToLoginSystem() error {
 	}
 	request, _ := http.NewRequest(
 		"POST",
-		this.loginUrl,
+		c.loginUrl,
 		strings.NewReader(formData.Encode()),
 	)
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	request.Header.Set("Referer", this.loginUrl)
+	request.Header.Set("Referer", c.loginUrl)
 	request.Header.Set("Host", host)
 	request.Header.Set("User-Agent", userAgent)
 
-	if rep, err = this.client.Do(request); err != nil {
+	if rep, err = c.client.Do(request); err != nil {
 		return err
 	}
 	defer rep.Body.Close()
@@ -297,58 +301,58 @@ func (this *Crawl) prepareToLoginSystem() error {
 		return err
 	}
 	var utf8Html []byte
-	if utf8Html, err = this.gbkToUtf8(html); err != nil {
+	if utf8Html, err = c.gbkToUtf8(html); err != nil {
 		return err
 	}
 
-	this.mainPage = string(utf8Html)
+	c.mainPage = string(utf8Html)
 
 	return nil
 }
 
-func (this *Crawl) touchScorePageForGetViewState() error {
+func (c *Crawl) touchScorePageForGetViewState() error {
 	var (
 		err error
 		req *http.Request
 		rep *http.Response
 	)
 
-	if err = this.prepareToLoginSystem(); err != nil {
+	if err = c.prepareToLoginSystem(); err != nil {
 		return err
 	}
 
 	// 获取 查询成绩 的按钮地址
 	// (?=)正则表达式 顺序环视
 	var re = regexp.MustCompile(`(?s)xscj_gc\.aspx\?xh=(.*?)\&xm=(.*?)\&gnmkdm=(.*?)"`)
-	matches := re.FindAllStringSubmatch(this.mainPage, -1)
+	matches := re.FindAllStringSubmatch(c.mainPage, -1)
 	if matches == nil {
-		return errors.New("获取成绩按钮连接失败, num: [" + this.num + "], name: [" + this.name + "]")
+		return errors.New("获取成绩按钮连接失败, num: [" + c.num + "], name: [" + c.name + "]")
 	}
 
-	this.name = matches[0][2] // "re", num, name, gnmkdm
+	c.name = matches[0][2] // "re", num, name, gnmkdm
 	if req, err = http.NewRequest(GET,
-		this.baseURL+matches[0][0][:len(matches[0][0])-1],
+		c.baseURL+matches[0][0][:len(matches[0][0])-1],
 		nil,
 	); err != nil {
 		return err
 	}
 
-	req.Header.Set("Referer", this.baseURL+"xs_main.aspx?xh="+this.num)
+	req.Header.Set("Referer", c.baseURL+"xs_main.aspx?xh="+c.num)
 
-	if rep, err = this.client.Do(req); err != nil {
+	if rep, err = c.client.Do(req); err != nil {
 		return err
 	}
 
 	defer rep.Body.Close()
 
-	if this.scorePageBeforeRealSeeIt, err = ioutil.ReadAll(rep.Body); err != nil {
+	if c.scorePageBeforeRealSeeIt, err = ioutil.ReadAll(rep.Body); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (this *Crawl) doLoginScorePage() error {
+func (c *Crawl) doLoginScorePage() error {
 	var (
 		newViewState string
 		err          error
@@ -358,12 +362,12 @@ func (this *Crawl) doLoginScorePage() error {
 		rep          *http.Response
 	)
 
-	if err = this.touchScorePageForGetViewState(); err != nil {
+	if err = c.touchScorePageForGetViewState(); err != nil {
 		return err
 	}
 
 	// 获取viewstate, 用于打开成绩页面
-	if newViewState, err = this.getViewState(this.scorePageBeforeRealSeeIt); err != nil {
+	if newViewState, err = c.getViewState(c.scorePageBeforeRealSeeIt); err != nil {
 		return err
 	}
 
@@ -375,22 +379,22 @@ func (this *Crawl) doLoginScorePage() error {
 
 	if req, err = http.NewRequest(
 		POST,
-		this.baseURL+"xscj_gc.aspx?xh="+this.num+"&xm="+url.QueryEscape(this.name)+"&gnmkdm=N121605",
+		c.baseURL+"xscj_gc.aspx?xh="+c.num+"&xm="+url.QueryEscape(c.name)+"&gnmkdm=N121605",
 		strings.NewReader(formData.Encode()),
 	); err != nil {
 		return err
 	}
 
-	req.Header.Set("Referer", this.baseURL+"/xs_main.aspx?xh="+this.num)
+	req.Header.Set("Referer", c.baseURL+"/xs_main.aspx?xh="+c.num)
 	req.Header.Set("Host", host)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded") // 很重要
-	if rep, err = this.client.Do(req); err != nil {
+	if rep, err = c.client.Do(req); err != nil {
 		return err
 	}
 
 	defer rep.Body.Close()
 
-	if this.scorePage, err = ioutil.ReadAll(rep.Body); err != nil {
+	if c.scorePage, err = ioutil.ReadAll(rep.Body); err != nil {
 		return err
 	}
 

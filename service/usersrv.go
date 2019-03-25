@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/astaxie/beego/logs"
+	"pkmm_gin/conf"
 	"pkmm_gin/model"
 	"sync"
 )
@@ -82,8 +82,12 @@ func (serv *userService) GetCanSyncUsers(offset, limit uint64) (users []*model.U
 		Order("`id` DESC").
 		Limit(limit).
 		Offset(offset).Find(&users).Error; err != nil {
-		logs.Error("get sync users failed" + err.Error())
+		conf.AppLogger.Error("get sync users failed" + err.Error())
 	}
 
 	return users
+}
+
+func (serv *userService) UpdateUserName(name string, uid uint64) {
+	db.Model(&model.User{}).Where("id = ?", uid).UpdateColumn("student_name", name)
 }

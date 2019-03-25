@@ -2,6 +2,8 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"pkmm_gin/conf"
 	"pkmm_gin/middleware"
 	"pkmm_gin/util"
 )
@@ -9,9 +11,14 @@ import (
 func MapRoute() *gin.Engine {
 
 	ret := gin.New()
-	ret.Use(middleware.MyRecovery(), middleware.ErrorHandle)
+	if "prod" == conf.AppConfig.DefaultString("appEnv", "prod") {
+		ret.Use(middleware.MyRecovery(), middleware.ErrorHandle) // 正式环境不暴露出error
+	} else {
+		ret.Use(gin.Recovery()) // 开发的时候测试使用，可以比较方便的看到log
+	}
 
-	ret.Static("/static", "/static")
+	// 静态文件的目录
+	ret.StaticFS("/static", http.Dir("static"))
 
 	api := ret.Group(util.PathAPI)
 	{
@@ -19,6 +26,7 @@ func MapRoute() *gin.Engine {
 		api.POST("/login", loginAction)
 		api.POST("/get_scores", getScoresAction)
 		api.POST("/set_account", setAccountAction)
+		api.POST("/check_token", checkTokenAction)
 	}
 
 	return ret

@@ -2,28 +2,41 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"pkmm_gin/errno"
 	"pkmm_gin/model"
 	"pkmm_gin/service"
 	"pkmm_gin/util"
-	"pkmm_gin/util/zf"
+	"pkmm_gin/zcmuES"
 )
 
 func loginAction(c *gin.Context) {
 	arg := map[string]interface{}{}
-	if err := c.BindJSON(&arg); err != nil {
+	if err := c.ShouldBindWith(&arg, binding.JSON); err != nil {
 		service.SendResponse(c, errno.ErrBind, nil)
 		return
 	}
-
-	iv := arg["iv"].(string)
-	code := arg["code"].(string)
-	encryptedData := arg["encrypted_data"].(string)
+	var (
+		iv, code, encryptedData string
+		ok                      bool
+	)
+	if iv, ok = arg["iv"].(string); !ok {
+		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("iv must have."), nil)
+		return
+	}
+	if code, ok = arg["code"].(string); !ok {
+		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("code must have."), nil)
+		return
+	}
+	if encryptedData, ok = arg["encrypted_data"].(string); !ok {
+		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("encrypted data must have."), nil)
+		return
+	}
 
 	wechatUserInfo, err := util.DecodeWchatUserInfo(iv, code, encryptedData)
 
 	if err != nil {
-		service.SendResponse(c, errno.ErrBind.UpdateErrnoWithMsg(err.Error()), nil)
+		service.SendResponse(c, errno.ErrBind.ReplaceErrnoMsgWith(err.Error()), nil)
 		return
 	}
 
@@ -39,54 +52,133 @@ func loginAction(c *gin.Context) {
 		}
 	}
 
-	sess := service.UserSessionService.GetUserSession(user.ID)
+	token, err := service.JWTSrv.GenerateToken(user)
+	if err != nil {
+		service.SendResponse(c, errno.GenerateJwtTokenFailed, nil)
+		return
+	}
 
 	data := map[string]interface{}{}
 	data["user"] = user
-	data["token"] = sess
+	data["token"] = token
 
 	service.SendResponse(c, errno.Success, data)
 }
 
 func getScoresAction(c *gin.Context) {
-	defer func() {
-		service.SendResponse(c, errno.InternalServerError, nil)
-	}()
-
-	data, exist := c.Get("user")
-	if exist == false {
+	val, ok := c.Get("uid")
+	if ok == false {
+		service.SendResponse(c, errno.UserNotAuth, nil)
+		return
+	}
+	uid, _ := val.(uint64)
+	if uid == 0 {
 		service.SendResponse(c, errno.ErrUserNotFound, nil)
 		return
 	}
-	user := data.(*model.User)
 
-	scores := service.ScoreService.GetOwnScores(user.ID)
+	scores := service.ScoreService.GetOwnScores(uint64(uid))
+
+	if len(scores) == 0 { // 提取为一个方法 todo
+		user := service.User.GetUser(uint64(uid))
+		worker, _ := zcmuES.NewCrawl(user.Num, user.Pwd)
+		myScores, _ := worker.GetScores()
+		modelScores := make([]*model.Score, 0)
+		for _, s := range myScores {
+			score := &model.Score{
+				Xn:     s.Xn,
+				Xq:     s.Xq,
+				Kcmc:   s.Kcmc,
+				Cj:     s.Cj,
+				Jd:     s.Jd,
+				Cxcj:   s.Cxcj,
+				Bkcj:   s.Bkcj,
+				Xf:     s.Xf,
+				Type:   s.Type,
+				UserId: user.ID,
+			}
+			modelScores = append(modelScores, score)
+		}
+		service.SendResponse(c, errno.Success, modelScores)
+		go func() {
+			service.ScoreService.BatchCreate(modelScores)
+		}()
+		return
+	}
 	service.SendResponse(c, errno.Success, scores)
 }
 
 func setAccountAction(c *gin.Context) {
-	defer func() {
-		service.SendResponse(c, errno.InternalServerError, nil)
-	}()
-
 	args := map[string]interface{}{}
-	if err := c.BindJSON(&args); err != nil {
+	if err := c.ShouldBindWith(&args, binding.JSON); err != nil {
 		service.SendResponse(c, errno.ErrBind, nil)
 		return
 	}
-	num := args["num"].(string)
-	pwd := args["pwd"].(string)
+	var (
+		num, pwd string
+		ok       bool
+	)
 
-	checker, err := zf.NewCrawl(num, pwd)
+	if num, ok = args["num"].(string); !ok {
+		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("num must have."), nil)
+		return
+	}
+	if pwd, ok = args["pwd"].(string); !ok {
+		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("pwd must have."), nil)
+		return
+	}
+
+	checker, err := zcmuES.NewCrawl(num, pwd)
 	if err != nil {
-		service.SendResponse(c, errno.ErrCheckZfAccountFailed.UpdateErrnoWithMsg(err.Error()), nil)
+		service.SendResponse(c, errno.ErrCheckZfAccountFailed.ReplaceErrnoMsgWith(err.Error()), nil)
 		return
 	}
 
 	if errMsg := checker.CheckAccount(); errMsg == "" {
-		service.SendResponse(c, errno.Success.UpdateErrnoWithMsg("通过验证"), nil)
-	} else  {
-		service.SendResponse(c, errno.ErrCheckZfAccountFailed.UpdateErrnoWithMsg(errMsg), nil)
+
+		// 验证通过后更新token的值
+		var (
+			val interface{}
+			ok  bool
+		)
+		if val, ok = c.Get("uid"); !ok {
+			service.SendResponse(c, errno.UserNotAuth, nil)
+			return
+		}
+		uid, _ := val.(uint64)
+		user := service.User.GetUser(uid)
+		if user == nil {
+			service.SendResponse(c, errno.UserNotAuth, nil)
+			return
+		}
+		// 更新学生的num pwd
+		user.Num = num
+		user.Pwd = pwd
+		service.User.UpdateUser(user) // todo
+		token, err := service.JWTSrv.GenerateToken(user)
+		if err != nil {
+			service.SendResponse(c, errno.UserNotAuth, nil)
+			return
+		}
+		service.SendResponse(c, errno.Success.ReplaceErrnoMsgWith("通过验证"), &map[string]interface{}{
+			"token": token,
+			"user":  user,
+		})
+	} else {
+		service.SendResponse(c, errno.ErrCheckZfAccountFailed.ReplaceErrnoMsgWith(errMsg), nil)
 	}
 }
 
+func checkTokenAction(c *gin.Context) {
+	val, ok := c.Get("uid")
+	if !ok {
+		service.SendResponse(c, errno.UserNotAuth, nil)
+		return
+	}
+	uid, _ := val.(uint64)
+	if uid == 0 {
+		service.SendResponse(c, errno.UserNotAuth, nil)
+		return
+	}
+	service.SendResponse(c, errno.Success, nil)
+}

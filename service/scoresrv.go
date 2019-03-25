@@ -2,7 +2,7 @@ package service
 
 import (
 	"bytes"
-	"github.com/astaxie/beego/logs"
+	"pkmm_gin/conf"
 	"pkmm_gin/model"
 	"strings"
 	"sync"
@@ -42,7 +42,7 @@ func (serv *scoreService) UpdateOrCreateScore(score *model.Score) *model.Score {
 	if err := db.Where(&model.Score{UserId: score.UserId, Xn: score.Xn, Xq: score.Xq, Kcmc: score.Kcmc}).
 		Assign(score).
 		FirstOrCreate(&score).Error; err != nil {
-		logs.Error("update or create user score failed." + err.Error())
+		conf.AppLogger.Error("update or create user score failed." + err.Error())
 		return nil
 	}
 

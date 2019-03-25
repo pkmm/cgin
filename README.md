@@ -6,3 +6,4 @@ orm使用gorm
 `go get -u github.com/kardianos/govendor`  
 govendor sync 同步所有使用依赖包
 
+开发过程中是 fresh 命令 可以热更新代码的改动
