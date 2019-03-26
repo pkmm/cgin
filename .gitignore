@@ -4,6 +4,5 @@ conf/app.conf
 tmp/
 *.exe
 *.log
-vendor/
 /pkmm_gin
 /conf/*.env
