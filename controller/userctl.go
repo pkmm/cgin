@@ -13,7 +13,7 @@ import (
 func loginAction(c *gin.Context) {
 	arg := map[string]interface{}{}
 	if err := c.ShouldBindWith(&arg, binding.JSON); err != nil {
-		service.SendResponse(c, errno.ErrBind, nil)
+		service.SendResponse(c, errno.InvalidParameters, nil)
 		return
 	}
 	var (
@@ -36,7 +36,7 @@ func loginAction(c *gin.Context) {
 	wechatUserInfo, err := util.DecodeWchatUserInfo(iv, code, encryptedData)
 
 	if err != nil {
-		service.SendResponse(c, errno.ErrBind.ReplaceErrnoMsgWith(err.Error()), nil)
+		service.SendResponse(c, errno.InvalidParameters.ReplaceErrnoMsgWith(err.Error()), nil)
 		return
 	}
 
@@ -73,7 +73,7 @@ func getScoresAction(c *gin.Context) {
 	}
 	uid, _ := val.(uint64)
 	if uid == 0 {
-		service.SendResponse(c, errno.ErrUserNotFound, nil)
+		service.SendResponse(c, errno.UserNotFoundException, nil)
 		return
 	}
 
@@ -111,7 +111,7 @@ func getScoresAction(c *gin.Context) {
 func setAccountAction(c *gin.Context) {
 	args := map[string]interface{}{}
 	if err := c.ShouldBindWith(&args, binding.JSON); err != nil {
-		service.SendResponse(c, errno.ErrBind, nil)
+		service.SendResponse(c, errno.InvalidParameters, nil)
 		return
 	}
 	var (
@@ -130,7 +130,7 @@ func setAccountAction(c *gin.Context) {
 
 	checker, err := zcmuES.NewCrawl(num, pwd)
 	if err != nil {
-		service.SendResponse(c, errno.ErrCheckZfAccountFailed.ReplaceErrnoMsgWith(err.Error()), nil)
+		service.SendResponse(c, errno.CheckZfAccountFailedException.ReplaceErrnoMsgWith(err.Error()), nil)
 		return
 	}
 
@@ -165,7 +165,7 @@ func setAccountAction(c *gin.Context) {
 			"user":  user,
 		})
 	} else {
-		service.SendResponse(c, errno.ErrCheckZfAccountFailed.ReplaceErrnoMsgWith(errMsg), nil)
+		service.SendResponse(c, errno.CheckZfAccountFailedException.ReplaceErrnoMsgWith(errMsg), nil)
 	}
 }
 

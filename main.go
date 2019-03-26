@@ -4,12 +4,16 @@ import (
 	"cgin/conf"
 	"cgin/controller"
 	_ "cgin/task"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
+var env = "prod"
+var port = "8654"
+
 func init() {
-	env := conf.AppConfig.String("appEnv")
+	env = conf.AppConfig.DefaultString("appEnv", "prod")
 	if env == "prod" {
 		gin.SetMode(gin.ReleaseMode)
 	} else {
@@ -19,18 +23,13 @@ func init() {
 
 func main() {
 
-	var myPort = "8654"
-	//env := conf.AppConfig.DefaultString("appEnv", "prod")
-	//if env == "prod" {
-	//	myPort = "8189"
-	//}
-
 	router := controller.MapRoute()
 	server := &http.Server{
-		Addr:    "0.0.0.0:" + myPort,
+		Addr:    "0.0.0.0:" + port,
 		Handler: router,
 	}
 
-	conf.AppLogger.Info("pkmm gin is running [%s]", "http://localhost:"+myPort)
+	conf.AppLogger.Info("pkmm gin is running [%s]", "http://localhost:"+port)
+	fmt.Printf("pkmm gin is running [%s]", "http://localhost:"+port)
 	server.ListenAndServe()
 }
