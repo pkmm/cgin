@@ -1,12 +1,12 @@
 package util
 
 import (
+	"cgin/conf"
 	"encoding/json"
 	"fmt"
 	"github.com/xlstudio/wxbizdatacrypt"
 	"io/ioutil"
 	"net/http"
-	"pkmm_gin/conf"
 )
 
 // 使用code换取sessionKey

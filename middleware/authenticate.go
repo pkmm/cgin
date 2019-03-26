@@ -2,12 +2,12 @@ package middleware
 
 import (
 	"bytes"
+	"cgin/conf"
+	"cgin/errno"
+	"cgin/service"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"io/ioutil"
-	"pkmm_gin/conf"
-	"pkmm_gin/errno"
-	"pkmm_gin/service"
 	"strings"
 )
 

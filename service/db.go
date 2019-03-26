@@ -1,13 +1,13 @@
 package service
 
 import (
+	"cgin/conf"
+	"cgin/model"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"net/url"
-	"pkmm_gin/conf"
-	"pkmm_gin/model"
 	"time"
 )
 

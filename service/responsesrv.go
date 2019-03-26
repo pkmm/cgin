@@ -1,9 +1,9 @@
 package service
 
 import (
+	"cgin/errno"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"pkmm_gin/errno"
 )
 
 type Response struct {

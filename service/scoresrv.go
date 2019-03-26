@@ -2,8 +2,8 @@ package service
 
 import (
 	"bytes"
-	"pkmm_gin/conf"
-	"pkmm_gin/model"
+	"cgin/conf"
+	"cgin/model"
 	"strings"
 	"sync"
 	"time"

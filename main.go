@@ -1,11 +1,11 @@
 package main
 
 import (
+	"cgin/conf"
+	"cgin/controller"
+	_ "cgin/task"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"pkmm_gin/conf"
-	"pkmm_gin/controller"
-	_ "pkmm_gin/task"
 )
 
 func init() {

@@ -2,12 +2,12 @@ package task
 
 // 后台运行的任务
 import (
+	"cgin/conf"
+	"cgin/model"
+	"cgin/service"
+	"cgin/zcmuES"
 	"fmt"
 	"github.com/robfig/cron"
-	"pkmm_gin/conf"
-	"pkmm_gin/model"
-	"pkmm_gin/service"
-	"pkmm_gin/zcmuES"
 	"sync"
 	"time"
 )

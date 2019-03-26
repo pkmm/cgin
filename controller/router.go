@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"cgin/conf"
+	"cgin/middleware"
+	"cgin/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"pkmm_gin/conf"
-	"pkmm_gin/middleware"
-	"pkmm_gin/util"
 )
 
 func MapRoute() *gin.Engine {

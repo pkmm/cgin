@@ -1,11 +1,11 @@
 package middleware
 
 import (
+	"cgin/conf"
+	"cgin/errno"
+	"cgin/service"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"pkmm_gin/conf"
-	"pkmm_gin/errno"
-	"pkmm_gin/service"
 )
 
 func ErrorHandle(c *gin.Context) {

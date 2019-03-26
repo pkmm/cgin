@@ -1,9 +1,9 @@
 package service
 
 import (
+	"cgin/conf"
+	"cgin/model"
 	"github.com/dgrijalva/jwt-go"
-	"pkmm_gin/conf"
-	"pkmm_gin/model"
 	"sync"
 	"time"
 )

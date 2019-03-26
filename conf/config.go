@@ -28,7 +28,7 @@ func init() {
 	AppLogger.Async(1e3)
 
 	AppLogger.SetLogger(logs.AdapterMultiFile, `{
-	"filename":"logs/pkmm_gin.log",
+	"filename":"logs/cgin.log",
 	"level":7,
 	"daily":true,
 	"maxdays":2,

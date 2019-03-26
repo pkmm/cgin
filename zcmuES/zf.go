@@ -2,6 +2,7 @@ package zcmuES
 
 import (
 	"bytes"
+	"cgin/util"
 	"errors"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
@@ -10,7 +11,6 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
-	"pkmm_gin/util"
 	"regexp"
 	"strconv"
 	"strings"

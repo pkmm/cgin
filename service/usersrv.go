@@ -1,8 +1,8 @@
 package service
 
 import (
-	"pkmm_gin/conf"
-	"pkmm_gin/model"
+	"cgin/conf"
+	"cgin/model"
 	"sync"
 )
 

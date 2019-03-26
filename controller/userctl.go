@@ -1,13 +1,13 @@
 package controller
 
 import (
+	"cgin/errno"
+	"cgin/model"
+	"cgin/service"
+	"cgin/util"
+	"cgin/zcmuES"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"pkmm_gin/errno"
-	"pkmm_gin/model"
-	"pkmm_gin/service"
-	"pkmm_gin/util"
-	"pkmm_gin/zcmuES"
 )
 
 func loginAction(c *gin.Context) {

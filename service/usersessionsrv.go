@@ -1,10 +1,10 @@
 package service
 
 import (
+	"cgin/model"
+	"cgin/util"
 	"errors"
 	"github.com/jinzhu/gorm"
-	"pkmm_gin/model"
-	"pkmm_gin/util"
 	"sync"
 )
 
