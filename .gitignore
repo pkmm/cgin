@@ -6,3 +6,4 @@ tmp/
 *.log
 vendor/
 /pkmm_gin
+/conf/*.env
