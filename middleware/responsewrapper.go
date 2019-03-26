@@ -4,7 +4,6 @@ import (
 	"cgin/conf"
 	"cgin/errno"
 	"cgin/service"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,8 +11,8 @@ func ErrorHandle(c *gin.Context) {
 	c.Next()
 
 	if len(c.Errors) != 0 {
-		fmt.Println(c.Errors)
-		service.SendResponse(c, errno.InternalServerError, nil)
+		conf.AppLogger.Error("server errors: " + c.Errors.String())
+		//service.SendResponse(c, errno.InternalServerError, nil)
 	}
 }
 
