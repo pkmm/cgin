@@ -4,5 +4,9 @@ conf/app.conf
 tmp/
 *.exe
 *.log
-/pkmm_gin
+/cgin
 /conf/*.env
+
+# 忽略vendor目录下除了vendor.json以外的文件
+/vendor/*
+!/vendor/vendor.json
