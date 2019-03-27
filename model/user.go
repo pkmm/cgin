@@ -2,8 +2,8 @@ package model
 
 type User struct {
 	ID       uint64 `json:"id" gorm:"primary_key"`
-	UnionId  string `json:"union_id" gorm:"unique;size:128"`
-	OpenId   string `json:"open_id" gorm:"unique;size:128"`
+	UnionId  string `json:"union_id" gorm:"unique;size:128;default:null"`
+	OpenId   string `json:"open_id" gorm:"unique;size:128;default:null"`
 	Nickname string `json:"nickname" gorm: "column:nickname;size:64"` // 微信的昵称
 
 	Num         string `json:"num" gorm:"default:null;size:64"` // tags "json:,string" 表示别的类型也能解析到

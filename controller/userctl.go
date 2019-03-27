@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"cgin/conf"
 	"cgin/errno"
 	"cgin/model"
 	"cgin/service"
 	"cgin/util"
 	"cgin/zcmuES"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
@@ -16,38 +18,32 @@ func loginAction(c *gin.Context) {
 		service.SendResponse(c, errno.InvalidParameters, nil)
 		return
 	}
-	var (
-		iv, code, encryptedData string
-		ok                      bool
-	)
-	if iv, ok = arg["iv"].(string); !ok {
-		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("iv must have."), nil)
-		return
-	}
+	var code string
+	var openid string
+	var ok bool
 	if code, ok = arg["code"].(string); !ok {
 		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("code must have."), nil)
 		return
 	}
-	if encryptedData, ok = arg["encrypted_data"].(string); !ok {
+	if openid, ok = arg["openid"].(string); !ok {
 		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("encrypted data must have."), nil)
 		return
 	}
 
-	wechatUserInfo, err := util.DecodeWchatUserInfo(iv, code, encryptedData)
-
-	if err != nil {
-		service.SendResponse(c, errno.InvalidParameters.ReplaceErrnoMsgWith(err.Error()), nil)
+	sign := util.Md5String("xiaocc_ai_liu_yan_lin" + conf.AppConfig.String("miniprogram_app_id") + openid)
+	if sign != code {
+		service.SendResponse(c, errno.InvalidParameters, nil)
 		return
 	}
 
-	user := service.User.GetUserByOpenId(wechatUserInfo.OpenId)
-	if user == nil {
+	user := service.User.GetUserByOpenId(openid)
+	if user == nil { // 没有找到用户 注册一个
 		user = &model.User{
-			OpenId:   wechatUserInfo.OpenId,
-			Nickname: wechatUserInfo.NickName,
+			OpenId: openid,
+			CanSync: 1,
 		}
-		if err = service.User.UpdateUser(user); err != nil {
-			service.SendResponse(c, errno.InternalServerError, nil)
+		if err := service.User.UpdateUser(user); err != nil {
+			service.SendResponse(c, errno.UserNotFoundException, nil)
 			return
 		}
 	}
