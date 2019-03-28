@@ -29,7 +29,7 @@ func main() {
 		Handler: router,
 	}
 
-	conf.AppLogger.Info("pkmm gin is running [%s]", "http://localhost:"+port)
-	fmt.Printf("pkmm gin is running [%s]", "http://localhost:"+port)
+	conf.AppLogger.Info( "cgin is running at [%s]", "http://localhost:"+port)
+	fmt.Printf("cgin is running at [%s]", "http://localhost:"+port)
 	server.ListenAndServe()
 }
