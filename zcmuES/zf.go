@@ -37,9 +37,7 @@ const (
 	loginErrorMsgWrongVerifyCode         = "验证码不正确！！"
 	loginErrorMsgCanNotLoginIn           = "密码错误，您密码输入错误已达5次，账号已锁定无法登录，次日自动解锁！如忘记密码，请与学院教学秘书联系!"
 	loginErrorMsgNotValidUser            = "用户名不存在或未按照要求参加教学活动！！"
-	loginErrorMsgDecodeViewStateError    = "解析viewstate失败"
-	loginErrorMsgCanNotConnectZcmuSystem = "无法访问到教务系统"
-	loginErrorMsgUnknown                 = "未知错误"
+	loginErrorMsgDecodeViewStateError    = "正方系统服务不可用"
 )
 
 // 成绩结构
