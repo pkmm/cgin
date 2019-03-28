@@ -7,7 +7,6 @@ import (
 	"cgin/service"
 	"cgin/util"
 	"cgin/zcmuES"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
@@ -39,7 +38,7 @@ func loginAction(c *gin.Context) {
 	user := service.User.GetUserByOpenId(openid)
 	if user == nil { // 没有找到用户 注册一个
 		user = &model.User{
-			OpenId: openid,
+			OpenId:  openid,
 			CanSync: 1,
 		}
 		if err := service.User.UpdateUser(user); err != nil {
