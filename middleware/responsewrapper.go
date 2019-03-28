@@ -8,11 +8,15 @@ import (
 )
 
 func ErrorHandle(c *gin.Context) {
+	cCp := c.Copy()
+	go func() {
+		conf.AppLogger.Info("Request: URL[%s], RemoteIP[%s]", cCp.Request.URL, cCp.Request.RemoteAddr)
+	}()
 	c.Next()
-
 	if len(c.Errors) != 0 {
-		conf.AppLogger.Error("server errors: " + c.Errors.String())
-		//service.SendResponse(c, errno.InternalServerError, nil)
+		go func() {
+			conf.AppLogger.Error("server errors: " + cCp.Errors.String())
+		}()
 	}
 }
 
