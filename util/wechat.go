@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"cgin/conf"
 	"encoding/json"
 	"fmt"
@@ -27,6 +28,90 @@ type WechatUserInfo struct {
 	City      string `json:"city"`
 	Country   string `json:"country"`
 	Gender    int    `json:"gender"`
+}
+
+// 模板消息 发送 接受的结构体
+type TemplateMsg struct {
+	AccessToken string           `json:"access_token"`
+	ToUser      string           `json:"touser"`
+	TemplateId  string           `json:"template_id"`
+	Page        string           `json:"page"`
+	FormId      string           `json:"form_id"`
+	Data        *TemplateMsgData `json:"data"`
+}
+
+type TemplateMsgData struct {
+	Keyword1 KeywordData `json:"keyword1,omitempty"` // 课程名称
+	Keyword2 KeywordData `json:"keyword2,omitempty"` // 课程成绩
+	Keyword3 KeywordData `json:"keyword3,omitempty"` // 等级
+	Keyword4 KeywordData `json:"keyword4,omitempty"` // 温馨提示
+}
+
+type KeywordData struct {
+	Value string `json:"value"`
+}
+
+type SendTemplateResponse struct {
+	Errcode int    `json:"errcode"`
+	Errmsg  string `json:"errmsg"`
+	MsgID   string `json:"msgid"`
+}
+
+// 模板消息的部分结束
+
+const (
+	sendUserTemplateMsgUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=%s"
+	accessTokenUrl         = "https://api.weixin.qq.com/cgi-bin/token"
+)
+
+func getAccessToken() (token string, err error) {
+	// todo token 缓存在redis中
+	_url := fmt.Sprintf(accessTokenUrl+"?grant_type=client_credential&appid=%s&secret=%s",
+		conf.AppConfig.String("miniprogram_app_id"),
+		conf.AppConfig.String("miniprogram_secret"),
+	)
+	response, err := http.Get(_url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+	data, _ := ioutil.ReadAll(response.Body)
+	type tmp struct {
+		Token string `json:"access_token"`
+	}
+	t := new(tmp)
+	json.Unmarshal(data, &t)
+	return t.Token, nil
+}
+
+func SendUserTemplateMsg(msg *TemplateMsg) *SendTemplateResponse {
+	token, err := getAccessToken()
+	if err != nil {
+		// todo
+		return nil
+	}
+	msg.AccessToken = token
+	data, err := json.Marshal(msg)
+	if err != nil {
+		// todo
+		return nil
+	}
+	fmt.Printf("%#v", msg)
+	resp, err := http.Post(fmt.Sprintf(sendUserTemplateMsgUrl, token), "application/json", bytes.NewBuffer(data))
+	if err != nil {
+		// todo
+		return nil
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	sendTemplateResponse := &SendTemplateResponse{}
+	err = json.Unmarshal(body, sendTemplateResponse)
+	if err != nil {
+		// todo
+		return nil
+	}
+
+	return sendTemplateResponse
 }
 
 func DecodeWchatUserInfo(iv, code, encryptedData string) (*WechatUserInfo, error) {

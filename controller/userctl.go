@@ -177,3 +177,34 @@ func checkTokenAction(c *gin.Context) {
 	}
 	service.SendResponse(c, errno.Success, nil)
 }
+
+func sendTemplateMsg(c *gin.Context) {
+	params := map[string]interface{}{}
+	if err := c.ShouldBindWith(&params, binding.JSON); err != nil {
+		service.SendResponse(c, errno.InvalidParameters, nil)
+		return
+	}
+
+	formId, ok := params["form_id"].(string)
+	if !ok {
+		service.SendResponse(c, errno.InvalidParameters, "form_id must supply")
+		return
+	}
+	openId, ok := params["open_id"].(string)
+	if !ok {
+		service.SendResponse(c, errno.InvalidParameters, "open_id must supply")
+		return
+	}
+	templateKeyData := &util.TemplateMsgData{}
+	templateKeyData.Keyword1.Value = "11"
+	templateKeyData.Keyword2.Value = "22"
+	msg := &util.TemplateMsg{
+		FormId:     formId,
+		ToUser:     openId,
+		TemplateId: conf.AppConfig.String("template_id"),
+		Page:       conf.AppConfig.String("template_msg_open_page"),
+		Data:       templateKeyData,
+	}
+	ret := util.SendUserTemplateMsg(msg)
+	service.SendResponse(c, errno.Success, ret)
+}

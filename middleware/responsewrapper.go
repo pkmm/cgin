@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ErrorHandle(c *gin.Context) {
+func RequestLogger(c *gin.Context) {
 	cCp := c.Copy()
 	go func() {
 		conf.AppLogger.Info("Request: URL[%s], RemoteIP[%s]", cCp.Request.URL, cCp.Request.RemoteAddr)
@@ -15,7 +15,7 @@ func ErrorHandle(c *gin.Context) {
 	c.Next()
 	if len(c.Errors) != 0 {
 		go func() {
-			conf.AppLogger.Error("server errors: " + cCp.Errors.String())
+			conf.AppLogger.Error("Server errors: " + cCp.Errors.String())
 		}()
 	}
 }
