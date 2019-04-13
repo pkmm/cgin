@@ -22,10 +22,10 @@ import (
 // 目前只支持查询成绩，其他的功能后期在做
 
 const (
-	baseUrl       = "http://zfxk.zjtcm.net/"
+	host          = "zfxk.zcmu.edu.cn"
+	baseUrl       = "http://" + host + "/"
 	verifyCodeUrl = "CheckCode.aspx" // 验证码
 	defaultUrl    = "default2.aspx"
-	host          = "zfxk.zjtcm.net"
 	userAgent     = "Mozilla/5.0 (Windows NT 6.3; WOW64)" +
 		" AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.67 Safari/537.36"
 
@@ -33,13 +33,11 @@ const (
 	GET       = "GET"
 	viewState = "__VIEWSTATE"
 
-	loginErrorMsgWrongPassword           = "密码错误！！"
-	loginErrorMsgWrongVerifyCode         = "验证码不正确！！"
-	loginErrorMsgCanNotLoginIn           = "密码错误，您密码输入错误已达5次，账号已锁定无法登录，次日自动解锁！如忘记密码，请与学院教学秘书联系!"
-	loginErrorMsgNotValidUser            = "用户名不存在或未按照要求参加教学活动！！"
-	loginErrorMsgDecodeViewStateError    = "解析viewstate失败"
-	loginErrorMsgCanNotConnectZcmuSystem = "无法访问到教务系统"
-	loginErrorMsgUnknown                 = "未知错误"
+	loginErrorMsgWrongPassword        = "密码错误！！"
+	loginErrorMsgWrongVerifyCode      = "验证码不正确！！"
+	loginErrorMsgCanNotLoginIn        = "密码错误，您密码输入错误已达5次，账号已锁定无法登录，次日自动解锁！如忘记密码，请与学院教学秘书联系!"
+	loginErrorMsgNotValidUser         = "用户名不存在或未按照要求参加教学活动！！"
+	loginErrorMsgDecodeViewStateError = "正方系统服务不可用"
 )
 
 // 成绩结构
