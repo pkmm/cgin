@@ -4,16 +4,19 @@ import (
 	"cgin/conf"
 	"cgin/errno"
 	"cgin/service"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
-func ErrorHandle(c *gin.Context) {
+func RequestLogger(c *gin.Context) {
+	cCp := c.Copy()
+	go func() {
+		conf.AppLogger.Info("Request: URL[%s], RemoteIP[%s]", cCp.Request.URL, cCp.Request.RemoteAddr)
+	}()
 	c.Next()
-
 	if len(c.Errors) != 0 {
-		fmt.Println(c.Errors)
-		service.SendResponse(c, errno.InternalServerError, nil)
+		go func() {
+			conf.AppLogger.Error("Server errors: " + cCp.Errors.String())
+		}()
 	}
 }
 

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"cgin/conf"
 	"cgin/errno"
 	"cgin/model"
 	"cgin/service"
@@ -10,44 +11,42 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-func loginAction(c *gin.Context) {
+type userController struct{}
+
+var UserController = &userController{}
+
+func (u *userController) LoginAction(c *gin.Context) {
 	arg := map[string]interface{}{}
 	if err := c.ShouldBindWith(&arg, binding.JSON); err != nil {
-		service.SendResponse(c, errno.ErrBind, nil)
+		service.SendResponse(c, errno.InvalidParameters, nil)
 		return
 	}
-	var (
-		iv, code, encryptedData string
-		ok                      bool
-	)
-	if iv, ok = arg["iv"].(string); !ok {
-		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("iv must have."), nil)
-		return
-	}
+	var code string
+	var openid string
+	var ok bool
 	if code, ok = arg["code"].(string); !ok {
 		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("code must have."), nil)
 		return
 	}
-	if encryptedData, ok = arg["encrypted_data"].(string); !ok {
+	if openid, ok = arg["openid"].(string); !ok {
 		service.SendResponse(c, errno.InvalidParameters.AppendErrorMsg("encrypted data must have."), nil)
 		return
 	}
 
-	wechatUserInfo, err := util.DecodeWchatUserInfo(iv, code, encryptedData)
-
-	if err != nil {
-		service.SendResponse(c, errno.ErrBind.ReplaceErrnoMsgWith(err.Error()), nil)
+	sign := util.Md5String("xiaocc_ai_liu_yan_lin" + conf.AppConfig.String("miniprogram_app_id") + openid)
+	if sign != code {
+		service.SendResponse(c, errno.InvalidParameters, nil)
 		return
 	}
 
-	user := service.User.GetUserByOpenId(wechatUserInfo.OpenId)
-	if user == nil {
+	user := service.User.GetUserByOpenId(openid)
+	if user == nil { // 没有找到用户 注册一个
 		user = &model.User{
-			OpenId:   wechatUserInfo.OpenId,
-			Nickname: wechatUserInfo.NickName,
+			OpenId:  openid,
+			CanSync: 1,
 		}
-		if err = service.User.UpdateUser(user); err != nil {
-			service.SendResponse(c, errno.InternalServerError, nil)
+		if err := service.User.UpdateUser(user); err != nil {
+			service.SendResponse(c, errno.UserNotFoundException, nil)
 			return
 		}
 	}
@@ -65,7 +64,7 @@ func loginAction(c *gin.Context) {
 	service.SendResponse(c, errno.Success, data)
 }
 
-func getScoresAction(c *gin.Context) {
+func (u *userController) GetScoresAction(c *gin.Context) {
 	val, ok := c.Get("uid")
 	if ok == false {
 		service.SendResponse(c, errno.UserNotAuth, nil)
@@ -73,7 +72,7 @@ func getScoresAction(c *gin.Context) {
 	}
 	uid, _ := val.(uint64)
 	if uid == 0 {
-		service.SendResponse(c, errno.ErrUserNotFound, nil)
+		service.SendResponse(c, errno.UserNotFoundException, nil)
 		return
 	}
 
@@ -108,10 +107,10 @@ func getScoresAction(c *gin.Context) {
 	service.SendResponse(c, errno.Success, scores)
 }
 
-func setAccountAction(c *gin.Context) {
+func (u *userController) SetAccountAction(c *gin.Context) {
 	args := map[string]interface{}{}
 	if err := c.ShouldBindWith(&args, binding.JSON); err != nil {
-		service.SendResponse(c, errno.ErrBind, nil)
+		service.SendResponse(c, errno.InvalidParameters, nil)
 		return
 	}
 	var (
@@ -130,7 +129,7 @@ func setAccountAction(c *gin.Context) {
 
 	checker, err := zcmuES.NewCrawl(num, pwd)
 	if err != nil {
-		service.SendResponse(c, errno.ErrCheckZfAccountFailed.ReplaceErrnoMsgWith(err.Error()), nil)
+		service.SendResponse(c, errno.CheckZfAccountFailedException.ReplaceErrnoMsgWith(err.Error()), nil)
 		return
 	}
 
@@ -165,11 +164,11 @@ func setAccountAction(c *gin.Context) {
 			"user":  user,
 		})
 	} else {
-		service.SendResponse(c, errno.ErrCheckZfAccountFailed.ReplaceErrnoMsgWith(errMsg), nil)
+		service.SendResponse(c, errno.CheckZfAccountFailedException.ReplaceErrnoMsgWith(errMsg), nil)
 	}
 }
 
-func checkTokenAction(c *gin.Context) {
+func (u *userController) CheckTokenAction(c *gin.Context) {
 	val, ok := c.Get("uid")
 	if !ok {
 		service.SendResponse(c, errno.UserNotAuth, nil)
@@ -181,4 +180,35 @@ func checkTokenAction(c *gin.Context) {
 		return
 	}
 	service.SendResponse(c, errno.Success, nil)
+}
+
+func (u *userController) SendTemplateMsg(c *gin.Context) {
+	params := map[string]interface{}{}
+	if err := c.ShouldBindWith(&params, binding.JSON); err != nil {
+		service.SendResponse(c, errno.InvalidParameters, nil)
+		return
+	}
+
+	formId, ok := params["form_id"].(string)
+	if !ok {
+		service.SendResponse(c, errno.InvalidParameters, "form_id must supply")
+		return
+	}
+	openId, ok := params["open_id"].(string)
+	if !ok {
+		service.SendResponse(c, errno.InvalidParameters, "open_id must supply")
+		return
+	}
+	templateKeyData := &util.TemplateMsgData{}
+	templateKeyData.Keyword1.Value = "11"
+	templateKeyData.Keyword2.Value = "22"
+	msg := &util.TemplateMsg{
+		FormId:     formId,
+		ToUser:     openId,
+		TemplateId: conf.AppConfig.String("template_id"),
+		Page:       conf.AppConfig.String("template_msg_open_page"),
+		Data:       templateKeyData,
+	}
+	ret := util.SendUserTemplateMsg(msg)
+	service.SendResponse(c, errno.Success, ret)
 }

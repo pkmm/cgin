@@ -2,15 +2,18 @@ package errno
 
 var (
 	// common errors
-	Success                = &Errno{Code: 0, Msg: "success"}
-	InternalServerError    = &Errno{Code: 10001, Msg: "Internal server error"}
-	ErrBind                = &Errno{Code: 10002, Msg: "Error occurred while binding the request body to struct"}
-	InvalidParameters      = &Errno{10003, "Invalid Parameters"}
-	TokenNotValid          = &Errno{10004, "Token is not valid"}
+	// error code begin with 1... for system error
+	Success                = &Errno{00000, "success"}
+	InternalServerError    = &Errno{10001, "Internal server error"}
+	InvalidParameters      = &Errno{10002, "Invalid Parameters"}
+	TokenNotValid          = &Errno{10003, "Token is not valid"}
 	GenerateJwtTokenFailed = &Errno{10004, "Generate token was failed"}
-	UserNotAuth            = &Errno{10004, "You must login"}
+	UserNotAuth            = &Errno{10005, "You must login"}
+	Welcome                = &Errno{10006, "Welcome to Cgin."}
+	NotSuchRouteException  = &Errno{10007, "Not found resource."}
 
 	// user errors
-	ErrUserNotFound         = &Errno{Code: 20001, Msg: "The user was not found"}
-	ErrCheckZfAccountFailed = &Errno{Code: 20002, Msg: "Check account failed of zcmu"}
+	// error code begin with 2... for business error
+	UserNotFoundException         = &Errno{20001, "The user was not found"}
+	CheckZfAccountFailedException = &Errno{20002, "Check account failed of zcmu"}
 )

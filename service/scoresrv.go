@@ -18,6 +18,9 @@ var ScoreService = &scoreService{
 }
 
 func (serv *scoreService) BatchCreate(scores []*model.Score) {
+	if len(scores) == 0 {
+		return
+	}
 	sql := bytes.Buffer{}
 	sql.WriteString("INSERT IGNORE INTO scores(user_id, xn, xq, kcmc, type, xf, jd, cj, bkcj, cxcj, created_at, updated_at) ")
 	binds := make([]interface{}, 0)

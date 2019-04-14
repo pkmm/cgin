@@ -15,18 +15,3 @@ type Score struct {
 
 	Model
 }
-
-//func GetScore(studentId int64) []Score {
-//	scores := make([]Score, 0)
-//	if studentId > 0 {
-//		db.Where("student_id = ?", studentId).Order("id desc").Find(&scores)
-//	}
-//	return scores
-//}
-//
-//func UpdateOrCreateScore(score *Score) *Score {
-//	db.Where(Score{StudentId: score.StudentId, Xn: score.Xn, Xq: score.Xq, Kcmc: score.Kcmc}).
-//		Assign(score).
-//		FirstOrCreate(&score)
-//	return score
-//}

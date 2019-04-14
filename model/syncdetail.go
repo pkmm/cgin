@@ -8,13 +8,3 @@ type SyncDetail struct {
 	FailedReason string `json:"failed_reason" gorm:"size:255;default:null"`
 	Model
 }
-
-//func (SyncDetail) TableName() string {
-//	return "sync_detail"
-//}
-
-// updateOrCreate
-//func UpdateSyncDetail(syncDetail SyncDetail) SyncDetail {
-//	db.Where(SyncDetail{StuNo: syncDetail.StuNo}).Assign(syncDetail).FirstOrCreate(&syncDetail)
-//	return syncDetail
-//}
