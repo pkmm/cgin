@@ -2,7 +2,7 @@ package main
 
 import (
 	"cgin/conf"
-	"cgin/controller"
+	"cgin/router"
 	_ "cgin/task"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -23,13 +23,13 @@ func init() {
 
 func main() {
 
-	router := controller.MapRoute()
+	handlers := router.MapRoute()
 	server := &http.Server{
 		Addr:    "0.0.0.0:" + port,
-		Handler: router,
+		Handler: handlers,
 	}
 
-	conf.AppLogger.Info( "cgin is running at [%s]", "http://localhost:"+port)
+	conf.AppLogger.Info("cgin is running at [%s]", "http://localhost:"+port)
 	fmt.Printf("cgin is running at [%s]", "http://localhost:"+port)
 	server.ListenAndServe()
 }

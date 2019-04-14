@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"io/ioutil"
-	"strings"
 )
 
 // 使用JWT进行认证
@@ -18,10 +17,6 @@ type authData struct {
 }
 
 func Auth(c *gin.Context) {
-	if strings.Index(c.Request.URL.Path, "login") != -1 {
-		c.Next()
-		return
-	}
 	// 创建buffer 备份body
 	buf, _ := ioutil.ReadAll(c.Request.Body)
 	rdr1 := ioutil.NopCloser(bytes.NewBuffer(buf))

@@ -11,7 +11,11 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-func loginAction(c *gin.Context) {
+type userController struct{}
+
+var UserController = &userController{}
+
+func (u *userController) LoginAction(c *gin.Context) {
 	arg := map[string]interface{}{}
 	if err := c.ShouldBindWith(&arg, binding.JSON); err != nil {
 		service.SendResponse(c, errno.InvalidParameters, nil)
@@ -60,7 +64,7 @@ func loginAction(c *gin.Context) {
 	service.SendResponse(c, errno.Success, data)
 }
 
-func getScoresAction(c *gin.Context) {
+func (u *userController) GetScoresAction(c *gin.Context) {
 	val, ok := c.Get("uid")
 	if ok == false {
 		service.SendResponse(c, errno.UserNotAuth, nil)
@@ -103,7 +107,7 @@ func getScoresAction(c *gin.Context) {
 	service.SendResponse(c, errno.Success, scores)
 }
 
-func setAccountAction(c *gin.Context) {
+func (u *userController) SetAccountAction(c *gin.Context) {
 	args := map[string]interface{}{}
 	if err := c.ShouldBindWith(&args, binding.JSON); err != nil {
 		service.SendResponse(c, errno.InvalidParameters, nil)
@@ -164,7 +168,7 @@ func setAccountAction(c *gin.Context) {
 	}
 }
 
-func checkTokenAction(c *gin.Context) {
+func (u *userController) CheckTokenAction(c *gin.Context) {
 	val, ok := c.Get("uid")
 	if !ok {
 		service.SendResponse(c, errno.UserNotAuth, nil)
@@ -178,7 +182,7 @@ func checkTokenAction(c *gin.Context) {
 	service.SendResponse(c, errno.Success, nil)
 }
 
-func sendTemplateMsg(c *gin.Context) {
+func (u *userController) SendTemplateMsg(c *gin.Context) {
 	params := map[string]interface{}{}
 	if err := c.ShouldBindWith(&params, binding.JSON); err != nil {
 		service.SendResponse(c, errno.InvalidParameters, nil)
