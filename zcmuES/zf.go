@@ -33,11 +33,12 @@ const (
 	GET       = "GET"
 	viewState = "__VIEWSTATE"
 
-	loginErrorMsgWrongPassword        = "密码错误！！"
-	loginErrorMsgWrongVerifyCode      = "验证码不正确！！"
-	loginErrorMsgCanNotLoginIn        = "密码错误，您密码输入错误已达5次，账号已锁定无法登录，次日自动解锁！如忘记密码，请与学院教学秘书联系!"
-	loginErrorMsgNotValidUser         = "用户名不存在或未按照要求参加教学活动！！"
-	loginErrorMsgDecodeViewStateError = "正方系统服务不可用"
+	loginErrorMsgWrongPassword          = "密码错误！！"
+	loginErrorMsgWrongVerifyCode        = "验证码不正确！！"
+	loginErrorMsgCanNotLoginIn          = "密码错误，您密码输入错误已达5次，账号已锁定无法登录，次日自动解锁！如忘记密码，请与学院教学秘书联系!"
+	loginErrorMsgWrongPasswordSometimes = "密码错误，您还有\\d次尝试机会！如忘记密码，请与学院教学秘书联系!"
+	loginErrorMsgNotValidUser           = "用户名不存在或未按照要求参加教学活动！！"
+	loginErrorMsgDecodeViewStateError   = "正方系统服务不可用"
 )
 
 // 成绩结构
@@ -77,13 +78,14 @@ func (c *Crawl) GetErrorMsg() string {
 }
 
 func (c *Crawl) IsPassWordWrong() bool {
-	return c.errorMsg == loginErrorMsgWrongPassword || c.errorMsg == loginErrorMsgCanNotLoginIn
+	return c.errorMsg == loginErrorMsgWrongPassword || c.errorMsg == loginErrorMsgCanNotLoginIn ||
+		c.errorMsg == loginErrorMsgWrongPasswordSometimes
 }
 
 // 是不是可以继续同步
 func (c *Crawl) CanContinue() bool {
 	return c.errorMsg != loginErrorMsgCanNotLoginIn && c.errorMsg != loginErrorMsgWrongPassword &&
-		c.errorMsg != loginErrorMsgNotValidUser
+		c.errorMsg != loginErrorMsgNotValidUser && c.errorMsg != loginErrorMsgWrongPasswordSometimes
 }
 
 // 检测账号的状态
@@ -94,10 +96,11 @@ func (c *Crawl) CheckAccount() (errorMsg string) {
 
 	html := c.mainPage
 	regs := map[string]*regexp.Regexp{
-		loginErrorMsgWrongPassword:   regexp.MustCompile(loginErrorMsgWrongPassword),
-		loginErrorMsgWrongVerifyCode: regexp.MustCompile(loginErrorMsgWrongVerifyCode),
-		loginErrorMsgNotValidUser:    regexp.MustCompile(loginErrorMsgNotValidUser),
-		loginErrorMsgCanNotLoginIn:   regexp.MustCompile(loginErrorMsgCanNotLoginIn),
+		loginErrorMsgWrongPassword:          regexp.MustCompile(loginErrorMsgWrongPassword),
+		loginErrorMsgWrongVerifyCode:        regexp.MustCompile(loginErrorMsgWrongVerifyCode),
+		loginErrorMsgNotValidUser:           regexp.MustCompile(loginErrorMsgNotValidUser),
+		loginErrorMsgCanNotLoginIn:          regexp.MustCompile(loginErrorMsgCanNotLoginIn),
+		loginErrorMsgWrongPasswordSometimes: regexp.MustCompile(loginErrorMsgWrongPasswordSometimes),
 	}
 
 	for key, reg := range regs {
