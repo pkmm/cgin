@@ -61,6 +61,7 @@ func MapRoute() *gin.Engine {
 	{
 		apiStudent.POST("/student", controller.Student.GetStudent)
 		apiStudent.POST("/scores", controller.Student.GetScores)
+		apiStudent.POST("/update_edu_account", controller.Student.GetScores)
 	}
 
 	// 普通的资源

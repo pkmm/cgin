@@ -25,3 +25,8 @@ func (s *studentController) GetScores(c *gin.Context) {
 	s.respData["scores"] = scores
 	service.SendResponseSuccess(c, s.respData)
 }
+
+func (s *studentController) UpdateEduAccount(c *gin.Context) {
+	s.BaseController.GetAuthUserId(c)
+
+}
