@@ -47,7 +47,6 @@ func Auth(c *gin.Context) {
 	}
 
 	c.Set("uid", claims.Uid)
-	c.Set("num", claims.Num)
 	c.Next()
 
 	return

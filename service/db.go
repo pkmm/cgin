@@ -15,7 +15,6 @@ const DATE_FORMAT = "2006-01-02 15:04:05"
 
 var db *gorm.DB
 var err error
-var workPath string
 var pool *redis.Pool
 var dsn string
 

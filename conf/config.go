@@ -32,5 +32,5 @@ func init() {
 	"level":7,
 	"daily":true,
 	"maxdays":2,
-	"separate": ["error", "info", "debug", "notice", "warning"]}`)
+	"separate": ["error", "info", "debug"]}`)
 }

@@ -18,7 +18,6 @@ var JWTSrv = &jwtService{
 
 type AuthClaims struct {
 	Uid uint64 `json:"uid"`
-	Num string `json:"num"`
 	jwt.StandardClaims
 }
 
@@ -28,8 +27,7 @@ func (srv *jwtService) GetSignKey() []byte {
 
 func (srv *jwtService) GenerateToken(user *model.User) (string, error) {
 	claims := AuthClaims{
-		user.ID,
-		user.Num,
+		user.Id,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(7 * 24 * time.Hour).Unix(),
 			Issuer:    "ccla",

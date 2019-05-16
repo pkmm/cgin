@@ -6,9 +6,15 @@ import (
 	"cgin/errno"
 	"cgin/middleware"
 	"cgin/service"
-	"cgin/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
+)
+
+
+const (
+	RootApiPrefix = "/api"
+	AuthPrefix = "/api/auth"
+	StudentPrefix = "/api/student"
 )
 
 func MapRoute() *gin.Engine {
@@ -35,21 +41,34 @@ func MapRoute() *gin.Engine {
 	// 静态文件的目录
 	router.StaticFS("/static", http.Dir("static"))
 
-	// 业务的逻辑 API
-	apiAuth := router.Group(util.PathAPI).Use(middleware.Auth)
+	// 认证业务的逻辑 API
+	// api/auth
+	apiAuth := router.Group(AuthPrefix).Use(middleware.Auth)
 	{
 		// 需要进行认证的业务API
-		apiAuth.POST("/get_scores", controller.UserController.GetScoresAction)
-		apiAuth.POST("/set_account", controller.UserController.SetAccountAction)
-		apiAuth.POST("/check_token", controller.UserController.CheckTokenAction)
-		apiAuth.POST("/send_template_msg", controller.UserController.SendTemplateMsg)
+		apiAuth.POST("/me", controller.AuthController.Me)
 	}
 
-	apiNotAuth := router.Group(util.PathAPI)
+	// api/auth
+	apiNotAuth := router.Group(AuthPrefix)
 	{
 		// 不需要进行认证的API
-		apiNotAuth.POST("/login", controller.UserController.LoginAction)
-		apiNotAuth.POST("/decode_verify_code", controller.VerifyCodeCtl.Recognize)
+		apiNotAuth.POST("/login", controller.AuthController.Login)
+	}
+
+	// api/student
+	apiStudent := router.Group(StudentPrefix).Use(middleware.Auth)
+	{
+		apiStudent.POST("/student", controller.Student.GetStudent)
+		apiStudent.POST("/scores", controller.Student.GetScores)
+	}
+
+	// 普通的资源
+	// api/
+	apiNormal := router.Group(RootApiPrefix)
+	{
+		apiNormal.POST("/send_template_msg", controller.UserController.SendTemplateMsg)
+		apiNormal.POST("/decode_verify_code", controller.VerifyCodeCtl.Recognize)
 	}
 
 	return router

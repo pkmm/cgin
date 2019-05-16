@@ -2,21 +2,21 @@ package errno
 
 import "fmt"
 
-type Errno struct {
+type BusinessErrorInfo struct {
 	Code int
 	Msg  string
 }
 
-func (e *Errno) Error() string {
+func (e *BusinessErrorInfo) Error() string {
 	return e.Msg
 }
 
-func (e *Errno) ReplaceErrnoMsgWith(newMsg string) *Errno {
-	return &Errno{e.Code, newMsg}
+func (e *BusinessErrorInfo) ReplaceErrnoMsgWith(newMsg string) *BusinessErrorInfo {
+	return &BusinessErrorInfo{e.Code, newMsg}
 }
 
-func (e *Errno) AppendErrorMsg(appendMsg string) *Errno {
-	return &Errno{e.Code, e.Msg + " [" + appendMsg + "]"}
+func (e *BusinessErrorInfo) AppendErrorMsg(appendMsg string) *BusinessErrorInfo {
+	return &BusinessErrorInfo{e.Code, e.Msg + " [" + appendMsg + "]"}
 }
 
 //// next.
@@ -31,7 +31,7 @@ func (err *Err) Error() string {
 	return fmt.Sprintf("Err => code: %d, Msg: %s, error: %s", err.Code, err.Msg, err.Err)
 }
 
-func New(errno *Errno, err error) *Err {
+func New(errno *BusinessErrorInfo, err error) *Err {
 	return &Err{Code: errno.Code, Msg: errno.Msg, Err: err}
 }
 
@@ -52,7 +52,7 @@ func DecodeErr(err error) (int, string) {
 	switch typed := err.(type) {
 	case *Err:
 		return typed.Code, typed.Msg
-	case *Errno:
+	case *BusinessErrorInfo:
 		return typed.Code, typed.Msg
 	default:
 

@@ -191,12 +191,12 @@ func (u *userController) SendTemplateMsg(c *gin.Context) {
 
 	formId, ok := params["form_id"].(string)
 	if !ok {
-		service.SendResponse(c, errno.InvalidParameters, "form_id must supply")
+		service.SendResponseWithInvalidParameters(c, "form_id must supply")
 		return
 	}
 	openId, ok := params["open_id"].(string)
 	if !ok {
-		service.SendResponse(c, errno.InvalidParameters, "open_id must supply")
+		service.SendResponseWithInvalidParameters(c, "open_id must supply")
 		return
 	}
 	templateKeyData := &util.TemplateMsgData{}

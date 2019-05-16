@@ -15,24 +15,12 @@ type userService struct {
 	mutex *sync.Mutex
 }
 
-func (serv *userService) CheckAndGetUserByUserIdAndAccessToken(userId uint64, accessToken string) *model.User {
-	userSession := &model.UserSession{}
-	if err := db.Where("`user_id` = ? AND `access_token` = ?", userId, accessToken).
-		First(userSession).Error; err != nil {
-		// todo log
-		return nil
-	}
-
-	return serv.GetUser(userSession.UserId)
-}
-
 func (serv *userService) GetUser(id uint64) *model.User {
 	user := &model.User{}
-	if err := db.Where("`id` = ?", id).First(user).Error; err != nil {
+	if err := db.Where("`id` = ?", id).First(&user).Error; err != nil {
 		// log todo
 		return nil
 	}
-
 	return user
 }
 
@@ -42,7 +30,6 @@ func (serv *userService) GetUserByOpenId(openId string) *model.User {
 		// todo
 		return nil
 	}
-
 	return user
 }
 
@@ -56,7 +43,6 @@ func (serv *userService) UpdateUser(user *model.User) error {
 		return err
 	}
 	tx.Commit()
-
 	return nil
 }
 
@@ -84,10 +70,28 @@ func (serv *userService) GetCanSyncUsers(offset, limit uint64) (users []*model.U
 		Offset(offset).Find(&users).Error; err != nil {
 		conf.AppLogger.Error("get sync users failed" + err.Error())
 	}
-
 	return users
 }
 
 func (serv *userService) UpdateUserName(name string, uid uint64) {
 	db.Model(&model.User{}).Where("id = ?", uid).UpdateColumn("student_name", name)
+}
+
+func (serv *userService) CreateUserWithOpenId(openId string) *model.User {
+	serv.mutex.Lock()
+	defer serv.mutex.Unlock()
+	user := &model.User{
+		OpenId: openId,
+	}
+	if err := db.Save(user); err != nil {
+		return nil
+	}
+	return user
+}
+
+func (serv *userService) GetStudent(userId uint64) (student *model.Student){
+	if err := db.Where("user_id = ?", userId).First(&student); err != nil {
+		return student
+	}
+	return nil
 }

@@ -20,3 +20,11 @@ func SendResponse(c *gin.Context, err error, data interface{}) {
 		Data: data,
 	})
 }
+
+func SendResponseWithInvalidParameters(c *gin.Context, data interface{}) {
+	SendResponse(c, errno.InvalidParameters, data)
+}
+
+func SendResponseSuccess(c *gin.Context, data interface{}) {
+	SendResponse(c, errno.Success, data)
+}
