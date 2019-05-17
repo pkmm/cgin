@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"cgin/errno"
 	"cgin/service"
+	"cgin/zcmu"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,18 +17,49 @@ var Student = &studentController{}
 func (s *studentController) GetStudent(c *gin.Context) {
 	s.BaseController.GetAuthUserId(c)
 	student := service.User.GetStudent(s.UserId)
-	s.respData["student"] =  student
-	service.SendResponseSuccess(c, s.respData)
+	data := gin.H{
+		"student": student,
+	}
+	service.SendResponseSuccess(c, data)
 }
 
 func (s *studentController) GetScores(c *gin.Context) {
 	s.BaseController.GetAuthUserId(c)
 	scores := service.ScoreService.GetOwnScores(s.UserId)
-	s.respData["scores"] = scores
-	service.SendResponseSuccess(c, s.respData)
+	data := gin.H{
+		"scores": scores,
+	}
+	service.SendResponseSuccess(c, data)
 }
 
 func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	s.BaseController.GetAuthUserId(c)
-
+	s.BaseController.Init(c)
+	var (
+		studentNumber, password string
+		ok bool
+		err error
+	)
+	if studentNumber, ok = s.Params["student_number"].(string); !ok {
+		panic(errno.InvalidParameters.AppendErrorMsg("参数student number错误"))
+	}
+	if password, ok = s.Params["password"].(string); !ok {
+		panic(errno.InvalidParameters.AppendErrorMsg("参数password错误"))
+	}
+	student := service.User.UpdateStudentInfo(studentNumber, password, s.UserId)
+	if student == nil {
+		panic(errno.NormalException.AppendErrorMsg("创建学生失败"))
+	}
+	// 调用zcmu接口检测账号密码是否正确
+	checker, err := zcmu.NewCrawl(studentNumber, password)
+	if err != nil {
+		panic(errno.NormalException.AppendErrorMsg(err.Error()))
+	}
+	if msg := checker.CheckAccount(); msg != "" {
+		panic(errno.NormalException.AppendErrorMsg(msg))
+	}
+	data := gin.H{
+		"student": student,
+	}
+	service.SendResponseSuccess(c, data)
 }

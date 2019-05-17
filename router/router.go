@@ -22,7 +22,7 @@ func MapRoute() *gin.Engine {
 	router := gin.New()
 	// 全局的中间件
 	if "prod" == conf.AppConfig.DefaultString("appEnv", "prod") {
-		router.Use(middleware.MyRecovery(), middleware.RequestLogger) // 正式环境不暴露出error
+		router.Use(middleware.BusinessErrorHandler(), middleware.RequestLogger) // 正式环境不暴露出error
 	} else {
 		router.Use(gin.Recovery()) // 开发的时候测试使用，可以比较方便的看到log
 	}
@@ -59,9 +59,9 @@ func MapRoute() *gin.Engine {
 	// api/student
 	apiStudent := router.Group(StudentPrefix).Use(middleware.Auth)
 	{
-		apiStudent.POST("/student", controller.Student.GetStudent)
+		apiStudent.POST("/", controller.Student.GetStudent)
 		apiStudent.POST("/scores", controller.Student.GetScores)
-		apiStudent.POST("/update_edu_account", controller.Student.GetScores)
+		apiStudent.POST("/update_edu_account", controller.Student.UpdateEduAccount)
 	}
 
 	// 普通的资源

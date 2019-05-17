@@ -3,7 +3,7 @@ package controller
 import (
 	"cgin/errno"
 	"cgin/service"
-	"cgin/zcmuES"
+	"cgin/zcmu"
 	"github.com/gin-gonic/gin"
 	"image/gif"
 )
@@ -18,23 +18,19 @@ func (v *verifyCodeController) Recognize(c *gin.Context) {
 	var text string
 	file, err := c.FormFile("img")
 	if err != nil {
-		service.SendResponse(c, errno.InvalidParameters, err.Error())
-		return
+		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
 	}
 	openedFile, err := file.Open()
 	if err != nil {
-		service.SendResponse(c, errno.InvalidParameters, err.Error())
-		return
+		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
 	}
 	img, err := gif.Decode(openedFile)
 	if err != nil {
-		service.SendResponse(c, errno.InvalidParameters, err.Error())
-		return
+		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
 	}
-	text, err = zcmuES.Predict(img)
+	text, err = zcmu.Predict(img)
 	if err != nil {
-		service.SendResponse(c, errno.InvalidParameters, err.Error())
-		return
+		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
 	}
 	service.SendResponse(c, errno.Success, map[string]string{
 		"text": text,

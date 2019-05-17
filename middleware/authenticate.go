@@ -27,27 +27,19 @@ func Auth(c *gin.Context) {
 	if err := c.ShouldBindWith(data, binding.JSON); err != nil {
 		conf.AppLogger.Error("login request failed. " + err.Error())
 		c.Request.Body = rdr2
-		service.SendResponse(c, errno.InvalidParameters, nil)
-		c.Abort()
-		return
+		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
 	}
 	c.Request.Body = rdr2
 
 	if data.Token == "" {
-		service.SendResponse(c, errno.TokenNotValid, nil)
-		c.Abort()
-		return
+		panic(errno.TokenNotValid)
 	}
 
 	claims, err := service.JWTSrv.GetAuthClaims(data.Token)
 	if err != nil {
-		service.SendResponse(c, errno.TokenNotValid, nil)
-		c.Abort()
-		return
+		panic(errno.TokenNotValid)
 	}
 
 	c.Set("uid", claims.Uid)
 	c.Next()
-
-	return
 }

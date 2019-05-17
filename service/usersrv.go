@@ -78,12 +78,10 @@ func (serv *userService) UpdateUserName(name string, uid uint64) {
 }
 
 func (serv *userService) CreateUserWithOpenId(openId string) *model.User {
-	serv.mutex.Lock()
-	defer serv.mutex.Unlock()
 	user := &model.User{
 		OpenId: openId,
 	}
-	if err := db.Save(user); err != nil {
+	if err := db.Save(user).Error; err != nil {
 		return nil
 	}
 	return user
@@ -94,4 +92,16 @@ func (serv *userService) GetStudent(userId uint64) (student *model.Student){
 		return student
 	}
 	return nil
+}
+
+func (serv *userService) UpdateStudentInfo(studentNumber, password string, userId uint64) *model.Student {
+	student := &model.Student{
+		UserId: userId,
+		Number: studentNumber,
+		Password: password,
+	}
+	if err := db.Save(student).Error; err != nil {
+		return nil
+	}
+	return student
 }

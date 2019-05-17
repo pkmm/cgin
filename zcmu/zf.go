@@ -1,4 +1,4 @@
-package zcmuES
+package zcmu
 
 import (
 	"bytes"

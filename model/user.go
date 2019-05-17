@@ -5,5 +5,6 @@ type User struct {
 	OpenId   string `json:"open_id" gorm:"unique;size:128;default:null"`
 	Model
 
-	Student Student `json:"student" gorm:"ForeignKey:UserId:AssociationForeignKey:Id"`
+	// 指针类型 保证关联数据不存在的时候能正常显示为null
+	Student *Student `json:"student" gorm:"ForeignKey:UserId:AssociationForeignKey:Id"`
 }
