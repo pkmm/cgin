@@ -26,6 +26,24 @@ func (s *studentController) GetStudent(c *gin.Context) {
 func (s *studentController) GetScores(c *gin.Context) {
 	s.BaseController.GetAuthUserId(c)
 	scores := service.ScoreService.GetOwnScores(s.UserId)
+	if len(scores) == 0 {
+		student := service.User.GetStudent(s.UserId)
+		if student == nil {
+			panic(errno.NormalException.AppendErrorMsg("用户没有设置学生信息"))
+		}
+		worker, err := zcmu.NewCrawl(student.Number, student.Password)
+		if err != nil {
+			panic(errno.NormalException.AppendErrorMsg(err.Error()))
+		}
+		if scores, err := worker.GetScores(); err == nil {
+			service.SendResponseSuccess(c, gin.H{
+				"scores": scores,
+			})
+			return
+		} else {
+			panic(errno.NormalException.AppendErrorMsg(err.Error()))
+		}
+	}
 	data := gin.H{
 		"scores": scores,
 	}
@@ -56,7 +74,7 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
 	if msg := checker.CheckAccount(); msg != "" {
-		panic(errno.NormalException.AppendErrorMsg(msg))
+		panic(errno.NormalException.ReplaceErrnoMsgWith(msg))
 	}
 	data := gin.H{
 		"student": student,

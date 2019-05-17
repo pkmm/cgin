@@ -87,7 +87,8 @@ func (serv *userService) CreateUserWithOpenId(openId string) *model.User {
 	return user
 }
 
-func (serv *userService) GetStudent(userId uint64) (student *model.Student){
+func (serv *userService) GetStudent(userId uint64) *model.Student {
+	student := &model.Student{}
 	if err := db.Where("user_id = ?", userId).First(&student); err != nil {
 		return student
 	}
@@ -100,7 +101,7 @@ func (serv *userService) UpdateStudentInfo(studentNumber, password string, userI
 		Number: studentNumber,
 		Password: password,
 	}
-	if err := db.Save(student).Error; err != nil {
+	if err := db.Assign(student).FirstOrCreate(student).Error; err != nil {
 		return nil
 	}
 	return student

@@ -7,3 +7,4 @@ orm使用gorm
 govendor sync 同步所有使用依赖包
 
 开发过程中是 fresh 命令 可以热更新代码的改动
+fresh 配置文件是runner.conf

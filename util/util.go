@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"github.com/bwmarrin/snowflake"
 	"math/rand"
@@ -100,4 +101,10 @@ func GetSourceCodePath() string {
 func GetExecPath() string {
 	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	return dir
+}
+
+// 成员相同的结构体进行拷贝
+func StructDeepCopy(structSrc, structDes interface{}) {
+	jsona,_ := json.Marshal(structSrc)
+	_ = json.Unmarshal(jsona, &structDes)
 }
