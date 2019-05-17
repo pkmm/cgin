@@ -7,6 +7,7 @@ tmp/
 /cgin
 /conf/*.env
 
+# vendor目录还是添加到版本库中吧
 # 忽略vendor目录下除了vendor.json以外的文件
-/vendor/*
-!/vendor/vendor.json
+# /vendor/*
+# !/vendor/vendor.json
