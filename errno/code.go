@@ -9,7 +9,7 @@ var (
 	TokenNotValid          = &BusinessErrorInfo{10003, "Token is not valid."}
 	GenerateJwtTokenFailed = &BusinessErrorInfo{10004, "Generate token was failed."}
 	UserNotAuth            = &BusinessErrorInfo{10005, "You must login."}
-	Welcome                = &BusinessErrorInfo{10006, "Welcome to Cgin."}
+	Welcome                = &BusinessErrorInfo{10006, "Hello, I am alive."}
 	NotSuchRouteException  = &BusinessErrorInfo{10007, "Not found resource."}
 	NormalException        = &BusinessErrorInfo{10008, "exception:"}
 

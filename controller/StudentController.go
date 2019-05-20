@@ -29,7 +29,7 @@ func (s *studentController) GetScores(c *gin.Context) {
 	if len(scores) == 0 {
 		student := service.User.GetStudent(s.UserId)
 		if student == nil {
-			panic(errno.NormalException.AppendErrorMsg("用户没有设置学生信息"))
+			panic(errno.NormalException.AppendErrorMsg("用户没有学生信息"))
 		}
 		worker, err := zcmu.NewCrawl(student.Number, student.Password)
 		if err != nil {
