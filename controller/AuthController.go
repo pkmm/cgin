@@ -33,7 +33,7 @@ func (a *authController) Login(c *gin.Context) {
 		panic(errno.InvalidParameters.AppendErrorMsg("参数sign必须提供"))
 	}
 
-	sign2 := util.Md5String("xiaocc_ai_liu_yan_lin" + conf.AppConfig.String("miniprogram_app_id") + openid)
+	sign2 := util.Md5String(conf.AppConfig.String("normal.random.str") + conf.AppConfig.String("miniprogram_app_id") + openid)
 	if sign != sign2 {
 		panic(errno.InvalidParameters.AppendErrorMsg("签名验证失败"))
 	}
