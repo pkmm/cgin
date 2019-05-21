@@ -127,7 +127,7 @@ var UserController = &userController{}
 //
 //	checker, err := zcmu.NewCrawl(num, pwd)
 //	if err != nil {
-//		service.SendResponse(c, errno.CheckZfAccountFailedException.ReplaceErrnoMsgWith(err.Error()), nil)
+//		service.SendResponse(c, errno.CheckZfAccountFailedException.ReplaceErrorMsgWith(err.Error()), nil)
 //		return
 //	}
 //
@@ -157,12 +157,12 @@ var UserController = &userController{}
 //			service.SendResponse(c, errno.UserNotAuth, nil)
 //			return
 //		}
-//		service.SendResponse(c, errno.Success.ReplaceErrnoMsgWith("通过验证"), &map[string]interface{}{
+//		service.SendResponse(c, errno.Success.ReplaceErrorMsgWith("通过验证"), &map[string]interface{}{
 //			"token": token,
 //			"user":  user,
 //		})
 //	} else {
-//		service.SendResponse(c, errno.CheckZfAccountFailedException.ReplaceErrnoMsgWith(errMsg), nil)
+//		service.SendResponse(c, errno.CheckZfAccountFailedException.ReplaceErrorMsgWith(errMsg), nil)
 //	}
 //}
 //

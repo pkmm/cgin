@@ -74,7 +74,7 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
 	if msg := checker.CheckAccount(); msg != "" {
-		panic(errno.NormalException.ReplaceErrnoMsgWith(msg))
+		panic(errno.NormalException.ReplaceErrorMsgWith(msg))
 	}
 	data := gin.H{
 		"student": student,

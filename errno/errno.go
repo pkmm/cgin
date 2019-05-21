@@ -11,7 +11,7 @@ func (e *BusinessErrorInfo) Error() string {
 	return e.Msg
 }
 
-func (e *BusinessErrorInfo) ReplaceErrnoMsgWith(newMsg string) *BusinessErrorInfo {
+func (e *BusinessErrorInfo) ReplaceErrorMsgWith(newMsg string) *BusinessErrorInfo {
 	return &BusinessErrorInfo{e.Code, newMsg}
 }
 
