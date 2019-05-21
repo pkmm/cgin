@@ -6,7 +6,7 @@ import (
 )
 
 // 测试结构体拷贝函数
-func TestStructCopy(t *testing.T) {
+func Test_structCopy(t *testing.T) {
 	type A struct {
 		Name string
 		Age int
@@ -28,8 +28,8 @@ func TestStructCopy(t *testing.T) {
 
 	util.StructDeepCopy(a, b)
 	if b.Name == a.Name && a.Age == b.Age {
-		t.Log("结构体测试通过", b)
+		t.Log("结构体拷贝测试通过", b)
 	} else {
-		t.Error("测试失败，结构体拷贝存在问题")
+		t.Error("结构体拷贝测试失败")
 	}
 }

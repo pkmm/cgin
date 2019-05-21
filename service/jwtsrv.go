@@ -45,6 +45,5 @@ func (srv *jwtService) GetAuthClaims(tokenString string) (*AuthClaims, error) {
 	if claims, ok := token.Claims.(*AuthClaims); ok && token.Valid {
 		return claims, nil
 	}
-
 	return nil, err
 }

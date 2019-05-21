@@ -28,3 +28,7 @@ func SendResponseWithInvalidParameters(c *gin.Context, data interface{}) {
 func SendResponseSuccess(c *gin.Context, data interface{}) {
 	SendResponse(c, errno.Success, data)
 }
+
+func SendResponseWithInternalError(c *gin.Context) {
+	SendResponse(c, errno.InternalServerError, nil)
+}
