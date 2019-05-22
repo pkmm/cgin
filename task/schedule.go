@@ -82,7 +82,7 @@ func taskWrapper(cmd func(), flag string) func() {
 		runningTask.writeSafeMap(flag, RUNNING)
 		cmd()
 		// after task clean up
-		runningTask.writeSafeMap(flagSyncStudentScore, END)
+		runningTask.writeSafeMap(flag, END)
 	}
 }
 
@@ -90,16 +90,24 @@ func updateStudentScore() {
 	startAt := time.Now()
 	// 执行的线程的数量
 	workerCount := 10
-	// 队列的大小
-	queueSize := 32
-	queue := make(chan *model.Student, queueSize)
 
 	// chunk todo
 	students, err := service.StudentService.GetStudentNeedSyncScore(0, 100000)
 	if err != nil {
-		conf.AppLogger.Error("Get student for sync student scores failed: ", err.Error())
+		conf.AppLogger.Error("Get student for sync student scores failed ", err.Error())
 		return
 	}
+	if len(students) == 0 {
+		conf.AppLogger.Error("No students need sync.")
+		return
+	}
+	// 队列的大小
+	queueSize := 32
+	if queueSize > len(students) {
+		queueSize = len(students)
+	}
+	queue := make(chan *model.Student, queueSize)
+	outputQueue := make(chan *model.SyncDetail, queueSize)
 
 	// 生产者 产生任务数据
 	go func(users []*model.Student) {
@@ -108,9 +116,6 @@ func updateStudentScore() {
 		}
 		close(queue)
 	}(students)
-
-
-	outputQueue := make(chan *model.SyncDetail, queueSize)
 
 	for i := 0; i < workerCount; i++ {
 		go func() {
@@ -122,7 +127,7 @@ func updateStudentScore() {
 				}
 				beginAt := time.Now()
 				output := &model.SyncDetail{
-					StudentId: student.Id,
+					StudentId:     student.Id,
 					StudentNumber: student.Number,
 				}
 				conf.AppLogger.Info("begin sync student[num: %s] scores.", student.Number)
@@ -181,8 +186,8 @@ func updateStudentScore() {
 		}()
 	}
 
-	for result := range outputQueue {
-		service.StudentService.UpdateSyncDetail(result)
+	for i := 0; i < len(students); i++ {
+		service.StudentService.UpdateSyncDetail(<-outputQueue)
 	}
 
 	stopAt := time.Since(startAt)
