@@ -77,7 +77,7 @@ func Decimal(value float64) float64 {
 func RandomString(length int) string {
 	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210")
 	N := len(letters)
-	ans := make([]rune, length)
+	ans := make([]rune, 0)
 	for i := 0; i < length; i++ {
 		ans = append(ans, letters[rand.Intn(N)])
 	}

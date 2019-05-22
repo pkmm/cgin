@@ -33,3 +33,12 @@ func Test_structCopy(t *testing.T) {
 		t.Error("结构体拷贝测试失败")
 	}
 }
+
+func Test_RandomString(t *testing.T) {
+	str := util.RandomString(21)
+	if len(str) == 21 {
+		t.Log("生成随机字符串测试通过", str)
+	} else {
+		t.Error("生成随机字符串测试失败", str)
+	}
+}

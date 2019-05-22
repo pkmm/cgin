@@ -45,7 +45,7 @@ func (a *authController) Login(c *gin.Context) {
 }
 
 func (a *authController) Me(c *gin.Context) {
-	a.BaseController.GetAuthUserId(c)
+	a.GetAuthUserId(c)
 	user := service.User.GetUser(a.UserId)
 	data := gin.H{
 		"user": user,
