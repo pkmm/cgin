@@ -25,7 +25,7 @@ func (b *BaseController) GetAuthUserId(c *gin.Context) {
 }
 
 // 请求的中json参数解析到params
-func (b *BaseController) Init(c *gin.Context) {
+func (b *BaseController) ProcessParams(c *gin.Context) {
 	b.Params = map[string]interface{}{}
 	if err := c.ShouldBindWith(&b.Params, binding.JSON); err != nil {
 		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))

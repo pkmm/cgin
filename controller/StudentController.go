@@ -15,7 +15,7 @@ var Student = &studentController{}
 
 
 func (s *studentController) GetStudent(c *gin.Context) {
-	s.BaseController.GetAuthUserId(c)
+	s.GetAuthUserId(c)
 	student := service.User.GetStudent(s.UserId)
 	data := gin.H{
 		"student": student,
@@ -24,7 +24,7 @@ func (s *studentController) GetStudent(c *gin.Context) {
 }
 
 func (s *studentController) GetScores(c *gin.Context) {
-	s.BaseController.GetAuthUserId(c)
+	s.GetAuthUserId(c)
 	scores := service.ScoreService.GetOwnScores(s.UserId)
 	if len(scores) == 0 {
 		student := service.User.GetStudent(s.UserId)
@@ -51,8 +51,8 @@ func (s *studentController) GetScores(c *gin.Context) {
 }
 
 func (s *studentController) UpdateEduAccount(c *gin.Context) {
-	s.BaseController.GetAuthUserId(c)
-	s.BaseController.Init(c)
+	s.GetAuthUserId(c)
+	s.ProcessParams(c)
 	var (
 		studentNumber, password string
 		ok bool

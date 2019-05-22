@@ -6,7 +6,6 @@ import (
 	"cgin/service"
 	"cgin/util"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 )
 
 type authController struct {
@@ -21,15 +20,11 @@ func (a *authController) Login(c *gin.Context) {
 		ok                  bool
 		err                 error
 	)
-	arg := map[string]interface{}{}
-	if err = c.ShouldBindWith(&arg, binding.JSON); err != nil {
-		panic(errno.InvalidParameters)
-	}
-
-	if openid, ok = arg["openid"].(string); !ok {
+	a.ProcessParams(c)
+	if openid, ok = a.Params["openid"].(string); !ok {
 		panic(errno.InvalidParameters.AppendErrorMsg("参数openid必须提供"))
 	}
-	if sign, ok = arg["sign"].(string); !ok {
+	if sign, ok = a.Params["sign"].(string); !ok {
 		panic(errno.InvalidParameters.AppendErrorMsg("参数sign必须提供"))
 	}
 
