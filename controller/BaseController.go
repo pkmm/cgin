@@ -2,6 +2,7 @@ package controller
 
 import (
 	"cgin/errno"
+	"cgin/service"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
@@ -30,4 +31,9 @@ func (b *BaseController) ProcessParams(c *gin.Context) {
 	if err := c.ShouldBindWith(&b.Params, binding.JSON); err != nil {
 		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
 	}
+}
+
+// 处理成功的请求
+func (b *BaseController) SendSuccessResponse(c *gin.Context, responseData interface{}) {
+	service.SendResponseSuccess(c, responseData)
 }

@@ -20,7 +20,7 @@ func (s *studentController) GetStudent(c *gin.Context) {
 	data := gin.H{
 		"student": student,
 	}
-	service.SendResponseSuccess(c, data)
+	s.SendSuccessResponse(c, data)
 }
 
 func (s *studentController) GetScores(c *gin.Context) {
@@ -47,7 +47,7 @@ func (s *studentController) GetScores(c *gin.Context) {
 	data := gin.H{
 		"scores": scores,
 	}
-	service.SendResponseSuccess(c, data)
+	s.SendSuccessResponse(c, data)
 }
 
 func (s *studentController) UpdateEduAccount(c *gin.Context) {
@@ -79,5 +79,5 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	data := gin.H{
 		"student": student,
 	}
-	service.SendResponseSuccess(c, data)
+	s.SendSuccessResponse(c, data)
 }
