@@ -13,10 +13,9 @@ type studentController struct {
 
 var Student = &studentController{}
 
-
 func (s *studentController) GetStudent(c *gin.Context) {
 	s.GetAuthUserId(c)
-	student := service.User.GetStudent(s.UserId)
+	student := service.User.GetStudentByUserId(s.UserId)
 	data := gin.H{
 		"student": student,
 	}
@@ -27,7 +26,7 @@ func (s *studentController) GetScores(c *gin.Context) {
 	s.GetAuthUserId(c)
 	scores := service.ScoreService.GetOwnScores(s.UserId)
 	if len(scores) == 0 {
-		student := service.User.GetStudent(s.UserId)
+		student := service.User.GetStudentByUserId(s.UserId)
 		if student == nil {
 			panic(errno.NormalException.AppendErrorMsg("用户没有学生信息"))
 		}
@@ -55,8 +54,8 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	s.ProcessParams(c)
 	var (
 		studentNumber, password string
-		ok bool
-		err error
+		ok                      bool
+		err                     error
 	)
 	if studentNumber, ok = s.Params["student_number"].(string); !ok {
 		panic(errno.InvalidParameters.AppendErrorMsg("参数student number错误"))
@@ -64,7 +63,7 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	if password, ok = s.Params["password"].(string); !ok {
 		panic(errno.InvalidParameters.AppendErrorMsg("参数password错误"))
 	}
-	student := service.User.UpdateStudentInfo(studentNumber, password, s.UserId)
+	student := service.User.UpdateStudentInfoByUserId(studentNumber, password, s.UserId)
 	if student == nil {
 		panic(errno.NormalException.AppendErrorMsg("创建学生失败"))
 	}

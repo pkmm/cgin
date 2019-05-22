@@ -72,6 +72,8 @@ type Crawl struct {
 
 	viewState          string
 	currentPageOfBytes []byte
+
+	isPasswordWrong bool
 }
 
 func (c *Crawl) GetStudentName() string {
@@ -83,14 +85,12 @@ func (c *Crawl) GetErrorMsg() string {
 }
 
 func (c *Crawl) IsPassWordWrong() bool {
-	return c.errorMsg == loginErrorMsgWrongPassword || c.errorMsg == loginErrorMsgCanNotLoginIn ||
-		c.errorMsg == loginErrorMsgWrongPasswordSometimes
+	return c.isPasswordWrong
 }
 
 // 是不是可以继续同步
 func (c *Crawl) CanContinue() bool {
-	return c.errorMsg != loginErrorMsgCanNotLoginIn && c.errorMsg != loginErrorMsgWrongPassword &&
-		c.errorMsg != loginErrorMsgNotValidUser && c.errorMsg != loginErrorMsgWrongPasswordSometimes
+	return !c.isPasswordWrong && c.errorMsg != loginErrorMsgNotValidUser
 }
 
 // 检测账号的状态
@@ -118,6 +118,7 @@ func (c *Crawl) CheckAccount() (errorMsg string) {
 	}
 	for _, reg := range regs {
 		if value := reg.FindString(string(utf8Html)); value != "" {
+			c.isPasswordWrong = strings.Index(value, "密码") != -1
 			return value
 		}
 	}
@@ -130,12 +131,10 @@ func (c *Crawl) GetScores() ([]*Score, error) {
 	if c.errorMsg = c.CheckAccount(); c.errorMsg != "" {
 		return nil, errors.New(c.errorMsg)
 	}
-	fmt.Println("???????")
 
 	if err := c.pressQueryScoreButton(); err != nil {
 		return nil, err
 	}
-	fmt.Println("===")
 
 	if err := c.filterScores(); err != nil {
 		return nil, err

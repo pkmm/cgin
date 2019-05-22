@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cgin/service"
 	"cgin/util"
 	"testing"
 )
@@ -8,21 +9,21 @@ import (
 // 测试结构体拷贝函数
 func Test_structCopy(t *testing.T) {
 	type A struct {
-		Name string
-		Age int
+		Name  string
+		Age   int
 		Attrs []int
 	}
 
 	type B struct {
-		Name string
-		Age int
+		Name  string
+		Age   int
 		Attrs []int
 	}
 
 	a := &A{
-		Name: "Alice",
-		Age: 24,
-		Attrs: []int{1,2,45},
+		Name:  "Alice",
+		Age:   24,
+		Attrs: []int{1, 2, 45},
 	}
 	b := &B{}
 
@@ -40,5 +41,23 @@ func Test_RandomString(t *testing.T) {
 		t.Log("生成随机字符串测试通过", str)
 	} else {
 		t.Error("生成随机字符串测试失败", str)
+	}
+}
+
+func Test_RestStudentSyncStatus(t *testing.T) {
+	if err := service.StudentService.RestSyncStatus(); err != nil {
+		t.Error("测试重置状态失败", err.Error())
+	} else {
+		t.Log("测试重置状态成功")
+	}
+
+}
+
+func Test_GetNeedSyncScoreStudents(t *testing.T) {
+	students, err := service.StudentService.GetStudentNeedSyncScore(0, 1)
+	if err != nil || len(students) != 1 {
+		t.Error("测试获取学生失败", err.Error())
+	} else {
+		t.Log("测试获取学生成功")
 	}
 }

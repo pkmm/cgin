@@ -1,7 +1,6 @@
 package service
 
 import (
-	"cgin/conf"
 	"cgin/model"
 	"sync"
 )
@@ -55,28 +54,6 @@ func (serv *userService) GetCanSyncCount() uint64 {
 	return uint64(count)
 }
 
-func (serv *userService) SetUserAutoSyncStatus(userId uint64, canSync int) {
-	db.Model(&model.User{}).Where("`id` = ?", userId).Update("can_sync", canSync)
-}
-
-func (serv *userService) ResetSyncStatus() {
-	db.Model(&model.User{}).Updates(map[string]interface{}{"can_sync": 1})
-}
-
-func (serv *userService) GetCanSyncUsers(offset, limit uint64) (users []*model.User) {
-	if err := db.Model(&model.User{}).Where("`can_sync` = 1").
-		Order("`id` DESC").
-		Limit(limit).
-		Offset(offset).Find(&users).Error; err != nil {
-		conf.AppLogger.Error("get sync users failed" + err.Error())
-	}
-	return users
-}
-
-func (serv *userService) UpdateUserName(name string, uid uint64) {
-	db.Model(&model.User{}).Where("id = ?", uid).UpdateColumn("student_name", name)
-}
-
 func (serv *userService) CreateUserWithOpenId(openId string) *model.User {
 	user := &model.User{
 		OpenId: openId,
@@ -87,7 +64,7 @@ func (serv *userService) CreateUserWithOpenId(openId string) *model.User {
 	return user
 }
 
-func (serv *userService) GetStudent(userId uint64) *model.Student {
+func (serv *userService) GetStudentByUserId(userId uint64) *model.Student {
 	student := &model.Student{}
 	if err := db.Where("user_id = ?", userId).First(&student); err != nil {
 		return student
@@ -95,10 +72,10 @@ func (serv *userService) GetStudent(userId uint64) *model.Student {
 	return nil
 }
 
-func (serv *userService) UpdateStudentInfo(studentNumber, password string, userId uint64) *model.Student {
+func (serv *userService) UpdateStudentInfoByUserId(studentNumber, password string, userId uint64) *model.Student {
 	student := &model.Student{
-		UserId: userId,
-		Number: studentNumber,
+		UserId:   userId,
+		Number:   studentNumber,
 		Password: password,
 	}
 	if err := db.Assign(student).FirstOrCreate(student).Error; err != nil {

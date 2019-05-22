@@ -51,21 +51,10 @@ func (serv *scoreService) UpdateOrCreateScore(score *model.Score) *model.Score {
 	return score
 }
 
-func (serv *scoreService) UpdateSyncDetail(syncDetail *model.SyncDetail) *model.SyncDetail {
-	if err := db.Where(&model.SyncDetail{StudentNumber: syncDetail.StudentNumber}).
-		Assign(model.SyncDetail{
-			CostTime: syncDetail.CostTime,
-			Info: syncDetail.Info,
-		Count: syncDetail.Count,
-		}).
-		FirstOrCreate(&syncDetail).Error; err != nil {
-		return nil
-	}
-	return syncDetail
-}
+
 
 func (serv *scoreService) GetUserScoreCount(userId uint64) (count uint64) {
-	student := User.GetStudent(userId)
+	student := User.GetStudentByUserId(userId)
 	if student == nil {
 		return
 	}
@@ -76,7 +65,7 @@ func (serv *scoreService) GetUserScoreCount(userId uint64) (count uint64) {
 }
 
 func (serv *scoreService) GetOwnScores(userId uint64) (scores []*model.Score) {
-	student := User.GetStudent(userId)
+	student := User.GetStudentByUserId(userId)
 	if student == nil {
 		return
 	}
@@ -85,5 +74,3 @@ func (serv *scoreService) GetOwnScores(userId uint64) (scores []*model.Score) {
 	}
 	return scores
 }
-
-

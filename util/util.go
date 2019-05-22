@@ -105,6 +105,6 @@ func GetExecPath() string {
 
 // 成员相同的结构体进行拷贝
 func StructDeepCopy(structSrc, structDes interface{}) {
-	jsona,_ := json.Marshal(structSrc)
+	jsona, _ := json.Marshal(structSrc)
 	_ = json.Unmarshal(jsona, &structDes)
 }

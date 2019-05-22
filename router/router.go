@@ -10,10 +10,9 @@ import (
 	"net/http"
 )
 
-
 const (
 	RootApiPrefix = "/api"
-	AuthPrefix = "/api/auth"
+	AuthPrefix    = "/api/auth"
 	StudentPrefix = "/api/student"
 )
 
