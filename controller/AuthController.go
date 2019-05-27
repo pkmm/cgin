@@ -41,7 +41,7 @@ func (a *authController) Login(c *gin.Context) {
 		"user":  user,
 		"token": token,
 	}
-	a.SendSuccessResponse(c, data)
+	a.Response(c, data)
 }
 
 func (a *authController) Me(c *gin.Context) {
@@ -50,5 +50,5 @@ func (a *authController) Me(c *gin.Context) {
 	data := gin.H{
 		"user": user,
 	}
-	a.SendSuccessResponse(c, data)
+	a.Response(c, data)
 }

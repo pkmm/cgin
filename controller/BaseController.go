@@ -34,6 +34,6 @@ func (b *BaseController) ProcessParams(c *gin.Context) {
 }
 
 // 处理成功的请求
-func (b *BaseController) SendSuccessResponse(c *gin.Context, responseData interface{}) {
+func (b *BaseController) Response(c *gin.Context, responseData interface{}) {
 	service.SendResponseSuccess(c, responseData)
 }
