@@ -56,9 +56,10 @@ func Test_RestStudentSyncStatus(t *testing.T) {
 func Test_GetNeedSyncScoreStudents(t *testing.T) {
 	students, err := service.StudentService.GetStudentNeedSyncScore(0, 1)
 	if err != nil || len(students) != 1 {
-		t.Error("测试获取学生失败")
 		if err != nil {
 			t.Error(err.Error())
+		} else {
+			t.Log("没有学生需要同步， 测试通过")
 		}
 	} else {
 		t.Log("测试获取学生成功")
