@@ -59,7 +59,7 @@ func init() {
 	// 定义任务列表
 
 	// 同步学生的成绩
-	c.AddFunc("*/1 * * * * *", taskWrapper(updateStudentScore, flagSyncStudentScore))
+	c.AddFunc("0 */10 * * * *", taskWrapper(updateStudentScore, flagSyncStudentScore))
 
 	// 在每天即将结束的时候，复位user的can_sync字段
 	c.AddFunc("0 55 11 * * *", func() {
