@@ -15,6 +15,6 @@ var (
 
 	// user errors
 	// error code begin with 2... for business error
-	UserNotFoundException         = &BusinessErrorInfo{20001, "The user was not found"}
-	CheckZfAccountFailedException = &BusinessErrorInfo{20002, "Check account failed of zcmu"}
+	UserNotFoundException         = &BusinessErrorInfo{20001, "The user was not found."}
+	CheckZfAccountFailedException = &BusinessErrorInfo{20002, "Check account failed of education system."}
 )

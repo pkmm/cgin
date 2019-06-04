@@ -67,7 +67,7 @@ func MapRoute() *gin.Engine {
 	// api/
 	apiNormal := router.Group(RootApiPrefix)
 	{
-		apiNormal.POST("/send_template_msg", controller.UserController.SendTemplateMsg)
+		apiNormal.POST("/send_template_msg", controller.WeChatController.SendTemplateMsg)
 		apiNormal.POST("/decode_verify_code", controller.VerifyCodeCtl.Recognize)
 	}
 
