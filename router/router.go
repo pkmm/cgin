@@ -6,6 +6,7 @@ import (
 	"cgin/errno"
 	"cgin/middleware"
 	"cgin/service"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -21,9 +22,9 @@ func MapRoute() *gin.Engine {
 	router := gin.New()
 	// 全局的中间件
 	if "prod" == conf.AppConfig.DefaultString("appEnv", "prod") {
-		router.Use(middleware.BusinessErrorHandler(), middleware.RequestLogger) // 正式环境不暴露出error
+		router.Use(middleware.BusinessErrorHandler(), middleware.RequestLogger, gzip.Gzip(gzip.DefaultCompression)) // 正式环境不暴露出error
 	} else {
-		router.Use(gin.Recovery()) // 开发的时候测试使用，可以比较方便的看到log
+		router.Use(gin.Recovery(), gzip.Gzip(gzip.DefaultCompression)) // 开发的时候测试使用，可以比较方便的看到log
 	}
 
 	// 通用

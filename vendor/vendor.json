@@ -87,6 +87,12 @@
 			"revisionTime": "2018-04-04T16:07:26Z"
 		},
 		{
+			"checksumSHA1": "nbUSw2ulQa//EHCGCNAcO0Jkr9s=",
+			"path": "github.com/gin-contrib/gzip",
+			"revision": "aef065fb847d00a98c42db4173b7cba138112c9c",
+			"revisionTime": "2019-05-10T09:56:02Z"
+		},
+		{
 			"checksumSHA1": "BhMowD2DIKSd9qq8Pzh7Y3mh2/w=",
 			"path": "github.com/gin-contrib/sse",
 			"revision": "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae",

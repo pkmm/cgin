@@ -17,7 +17,7 @@ type userService struct {
 func (serv *userService) GetUser(id uint64) *model.User {
 	user := &model.User{}
 	if err := db.Where("`id` = ?", id).First(&user).Error; err != nil {
-		// log todo
+		// TODO: log
 		return nil
 	}
 	return user
@@ -26,7 +26,7 @@ func (serv *userService) GetUser(id uint64) *model.User {
 func (serv *userService) GetUserByOpenId(openId string) *model.User {
 	user := &model.User{}
 	if err := db.Where("`open_id` = ? ", openId).First(&user).Error; err != nil {
-		// todo
+		// TODO: log
 		return nil
 	}
 	return user
