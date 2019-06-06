@@ -172,7 +172,7 @@ func updateStudentScore() {
 				modelScores := make([]*model.Score, 0)
 				for _, s := range scores {
 					score := &model.Score{}
-					util.StructDeepCopy(s, score)
+					util.BeanDeepCopy(s, score)
 					score.StudentId = student.Id
 					modelScores = append(modelScores, score)
 				}

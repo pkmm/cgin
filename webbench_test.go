@@ -25,6 +25,6 @@ func Benchmark_structCopy(b *testing.B) {
 	}
 	bIn := &B{}
 	for i := 0; i < b.N; i++ {
-		util.StructDeepCopy(a, bIn)
+		util.BeanDeepCopy(a, bIn)
 	}
 }

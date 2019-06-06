@@ -12,9 +12,10 @@ import (
 )
 
 const (
-	RootApiPrefix = "/api"
-	AuthPrefix    = "/api/auth"
-	StudentPrefix = "/api/student"
+	RootApiPrefix     = "/api"
+	AuthPrefix        = "/api/auth"
+	StudentPrefix     = "/api/student"
+	MiniProgramPrefix = RootApiPrefix + "/mini_program"
 )
 
 func MapRoute() *gin.Engine {
@@ -22,9 +23,9 @@ func MapRoute() *gin.Engine {
 	router := gin.New()
 	// 全局的中间件
 	if "prod" == conf.AppConfig.DefaultString("appEnv", "prod") {
-		router.Use(middleware.BusinessErrorHandler(), middleware.RequestLogger, gzip.Gzip(gzip.DefaultCompression)) // 正式环境不暴露出error
+		router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler(), middleware.RequestLogger) // 正式环境不暴露出error
 	} else {
-		router.Use(gin.Recovery(), gzip.Gzip(gzip.DefaultCompression)) // 开发的时候测试使用，可以比较方便的看到log
+		router.Use(gzip.Gzip(gzip.DefaultCompression), gin.Recovery()) // 开发的时候测试使用，可以比较方便的看到log
 	}
 
 	// 通用
@@ -68,8 +69,25 @@ func MapRoute() *gin.Engine {
 	// api/
 	apiNormal := router.Group(RootApiPrefix)
 	{
-		apiNormal.POST("/send_template_msg", controller.WeChatController.SendTemplateMsg)
+		apiNormal.POST("/send_template_msg", controller.MiniProgramController.SendTemplateMsg)
 		apiNormal.POST("/decode_verify_code", controller.VerifyCodeCtl.Recognize)
+	}
+
+	// 小程序
+	// api/mini_program
+	apiMiniProgram := router.Group(MiniProgramPrefix)
+	{
+		// 不需要认证的
+		apiMiniProgram.POST("/get_index_preference", controller.MiniProgramController.GetIndexPreference)
+		apiMiniProgram.POST("/set_index_config", controller.MiniProgramController.SetIndexConfig)
+		apiMiniProgram.POST("/get_notification/:id", controller.MiniProgramController.GetNotification)
+
+		// 以下的API 需要认证
+		apiMiniProgram.POST("/config_menu", controller.MiniProgramController.DisposeMenu).Use(middleware.Auth)
+		apiMiniProgram.POST("/change_notification", controller.MiniProgramController.UpdateOrCreateNotification)
+
+
+
 	}
 
 	return router

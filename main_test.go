@@ -27,7 +27,7 @@ func Test_structCopy(t *testing.T) {
 	}
 	b := &B{}
 
-	util.StructDeepCopy(a, b)
+	util.BeanDeepCopy(a, b)
 	if b.Name == a.Name && a.Age == b.Age {
 		t.Log("结构体拷贝测试通过", b)
 	} else {
