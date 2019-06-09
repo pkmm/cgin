@@ -11,12 +11,12 @@ type dailyController struct {
 
 var DailyController = &dailyController{}
 
+// 直接返回图片，而不是常见的API JSON数据接口
 func (d *dailyController) GetImage(c *gin.Context) {
-	d.Response(c, gin.H{
-		"image": service.DailyService.GetImage(),
-	})
+	c.File(service.DailyService.GetImage())
 }
 
+// 每日一言的数据
 func (d *dailyController) GetSentence(c *gin.Context) {
 	d.Response(c, gin.H{
 		"sentence": service.DailyService.GetSentence(),

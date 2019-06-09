@@ -114,3 +114,23 @@ func BeanDeepCopy(src, des interface{}) {
 		panic(err)
 	}
 }
+
+// like PHP data('Y-m-d H:i:s')
+func DateTime() string {
+	now := time.Now()
+	return fmt.Sprintf("%02d-%02d-%02d %02d:%02d:%02d", now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second())
+}
+
+func Date() string {
+	now := time.Now()
+	return fmt.Sprintf("%02d-%02d-%02d", now.Year(), now.Month(), now.Day())
+}
+
+func PathExists(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	return false
+
+}
