@@ -25,7 +25,7 @@ func MapRoute() *gin.Engine {
 	if "prod" == conf.AppConfig.DefaultString("appEnv", "prod") {
 		router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler(), middleware.RequestLogger) // 正式环境不暴露出error
 	} else {
-		router.Use(gzip.Gzip(gzip.DefaultCompression), gin.Recovery()) // 开发的时候测试使用，可以比较方便的看到log
+		router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler()) // 开发的时候测试使用，可以比较方便的看到log
 	}
 
 	// 通用
@@ -71,6 +71,8 @@ func MapRoute() *gin.Engine {
 	{
 		apiNormal.POST("/send_template_msg", controller.MiniProgramController.SendTemplateMsg)
 		apiNormal.POST("/decode_verify_code", controller.VerifyCodeCtl.Recognize)
+		apiNormal.GET("/daily_image", controller.DailyController.GetImage)
+		apiNormal.GET("/daily_sentence", controller.DailyController.GetSentence)
 	}
 
 	// 小程序
@@ -80,13 +82,11 @@ func MapRoute() *gin.Engine {
 		// 不需要认证的
 		apiMiniProgram.POST("/get_index_preference", controller.MiniProgramController.GetIndexPreference)
 		apiMiniProgram.POST("/set_index_config", controller.MiniProgramController.SetIndexConfig)
-		apiMiniProgram.POST("/get_notification/:id", controller.MiniProgramController.GetNotification)
+		apiMiniProgram.POST("/get_notifications", controller.MiniProgramController.GetNotification)
 
 		// 以下的API 需要认证
 		apiMiniProgram.POST("/config_menu", controller.MiniProgramController.DisposeMenu).Use(middleware.Auth)
 		apiMiniProgram.POST("/change_notification", controller.MiniProgramController.UpdateOrCreateNotification)
-
-
 
 	}
 

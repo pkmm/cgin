@@ -89,21 +89,14 @@ func (m *miniProgramController) SetIndexConfig(c *gin.Context) {
 	m.Response(c, savedConfig)
 }
 
-// 获取notification 没有传递id就查询最新的 否则查询指定的值
+// 获取notification 默认是显示最新的10条
 func (m *miniProgramController) GetNotification(c *gin.Context) {
-	id, ok := c.Params.Get("id")
-	if ok {
-		// 查询指定的notification
-		if idInt, err := strconv.ParseUint(id, 10, 64); err != nil {
-			panic(errno.NormalException.AppendErrorMsg(err.Error()))
-		} else {
-			notification := service.MiniProgramService.GetNotificationById(idInt)
-			m.Response(c, gin.H{"notification": notification})
-		}
-	} else {
-		notification := service.MiniProgramService.GetLatestNotification()
-		m.Response(c, gin.H{"notification": notification})
+	limit, err := strconv.ParseUint(c.DefaultQuery("count", "10"), 10, 64)
+	if err != nil {
+		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
+	notifications := service.MiniProgramService.GetNotifications(limit)
+	m.Response(c, gin.H{"notifications": notifications})
 }
 
 // 更新或者创建一个notification

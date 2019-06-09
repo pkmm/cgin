@@ -1,4 +1,4 @@
-package constant
+package menuaction
 
 // 点击小程序菜单的行为
 type MiniProgramMenuActionType int

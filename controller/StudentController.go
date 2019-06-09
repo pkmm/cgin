@@ -63,10 +63,6 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	if password, ok = s.Params["password"].(string); !ok {
 		panic(errno.InvalidParameters.AppendErrorMsg("参数password错误"))
 	}
-	student := service.User.UpdateStudentInfoByUserId(studentNumber, password, s.UserId)
-	if student == nil {
-		panic(errno.NormalException.AppendErrorMsg("创建学生失败"))
-	}
 	// 调用zcmu接口检测账号密码是否正确
 	checker, err := zcmu.NewCrawl(studentNumber, password)
 	if err != nil {
@@ -74,6 +70,10 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	}
 	if msg := checker.CheckAccount(); msg != "" {
 		panic(errno.NormalException.ReplaceErrorMsgWith(msg))
+	}
+	student := service.User.UpdateStudentInfoByUserId(studentNumber, password, s.UserId)
+	if student == nil {
+		panic(errno.NormalException.AppendErrorMsg("创建学生失败"))
 	}
 	data := gin.H{
 		"student": student,

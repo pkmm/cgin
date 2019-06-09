@@ -1,7 +1,7 @@
 package service
 
 import (
-	"cgin/constant"
+	"cgin/constant/miniprogram/menuaction"
 	"cgin/model"
 	"cgin/util"
 	"github.com/pkg/errors"
@@ -20,7 +20,7 @@ var (
 	menuAlreadyExist = errors.New("菜单项已经存在")
 )
 
-func (m *miniProgramService) DisposeMenu(desp, title, icon string, actionType constant.MiniProgramMenuActionType, actionValue string) (menu *model.Menu, err error) {
+func (m *miniProgramService) DisposeMenu(desp, title, icon string, actionType menuaction.MiniProgramMenuActionType, actionValue string) (menu *model.Menu, err error) {
 
 	if m.GetMenuByTitle(title) != nil {
 		return nil, menuAlreadyExist
@@ -129,4 +129,12 @@ func (m *miniProgramService) GetLatestNotification() *model.Notification {
 		return nil
 	}
 	return notification
+}
+
+func (m *miniProgramService) GetNotifications(limit uint64) []*model.Notification {
+	var notifications  []*model.Notification
+	if err := db.Model(&model.Notification{}).Order("id desc").Limit(limit).Find(&notifications).Error; err != nil {
+		return notifications
+	}
+	return notifications
 }

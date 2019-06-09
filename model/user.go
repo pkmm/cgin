@@ -6,5 +6,5 @@ type User struct {
 	Model
 
 	// 指针类型 保证关联数据不存在的时候能正常显示为null
-	Student *Student `json:"student" gorm:"ForeignKey:UserId:AssociationForeignKey:Id"`
+	Student *Student `json:"student" gorm:"ForeignKey:UserId;AssociationForeignKey:Id"`
 }

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"cgin/conf"
+	"cgin/constant/devicetype"
 	"cgin/errno"
 	"cgin/service"
 	"cgin/util"
@@ -17,10 +18,12 @@ var AuthController = &authController{}
 func (a *authController) Login(c *gin.Context) {
 	var (
 		openid, sign, token string
+		deviceType          devicetype.DeviceType
 		ok                  bool
 		err                 error
 	)
 	a.ProcessParams(c)
+	deviceType = devicetype.DeviceType(a.Params["device_type"].(float64))
 	if openid, ok = a.Params["openid"].(string); !ok {
 		panic(errno.InvalidParameters.AppendErrorMsg("参数openid必须提供"))
 	}
@@ -32,16 +35,18 @@ func (a *authController) Login(c *gin.Context) {
 	if sign != sign2 {
 		panic(errno.InvalidParameters.AppendErrorMsg("签名验证失败"))
 	}
+	if deviceType == devicetype.MiniProgram {
+		user := service.AuthService.LoginFromMiniProgram(openid)
+		if token, err = service.JWTSrv.GenerateToken(user); err != nil {
+			panic(errno.GenerateJwtTokenFailed.AppendErrorMsg(err.Error()))
+		}
+		data := gin.H{
+			"user":  user,
+			"token": token,
+		}
+		a.Response(c, data)
+	}
 
-	user := service.AuthService.LoginFromMiniProgram(openid)
-	if token, err = service.JWTSrv.GenerateToken(user); err != nil {
-		panic(errno.GenerateJwtTokenFailed.AppendErrorMsg(err.Error()))
-	}
-	data := gin.H{
-		"user":  user,
-		"token": token,
-	}
-	a.Response(c, data)
 }
 
 func (a *authController) Me(c *gin.Context) {
