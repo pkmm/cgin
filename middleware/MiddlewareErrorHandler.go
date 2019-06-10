@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"cgin/conf"
 	"cgin/errno"
 	"cgin/service"
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,8 @@ func BusinessErrorHandler() gin.HandlerFunc {
 					})
 				default:
 					//panic(err)
+					ee := err.(error)
+					conf.AppLogger.Error(ee.Error())
 					service.SendResponse(ctx, errno.InternalServerError, nil)
 				}
 			}
