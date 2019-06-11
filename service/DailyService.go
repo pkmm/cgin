@@ -6,7 +6,8 @@ import (
 	"cgin/errno"
 	"cgin/util"
 	"encoding/json"
-	"io"
+	"golang.org/x/image/webp"
+	"image/jpeg"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -29,7 +30,7 @@ type DailySentenceResp struct {
 }
 
 func (d *dailyServ) GetImage() string {
-	fileName := "static/images/" + util.Date() + ".webp"
+	fileName := "static/images/" + util.Date() + ".jpg"
 	// TODO: 逻辑是不是需要更新
 	// 今天的图片已经存在那么就直接返回了
 	if util.PathExists(fileName) {
@@ -46,8 +47,12 @@ func (d *dailyServ) GetImage() string {
 	out, err := os.Create(fileName)
 	d.CheckError(err)
 	defer out.Close()
-	_, err = io.Copy(out, bytes.NewReader(body))
+	webpImage, err := webp.Decode(bytes.NewReader(body))
 	d.CheckError(err)
+	err = jpeg.Encode(out, webpImage, &jpeg.Options{Quality: 90})
+	d.CheckError(err)
+	//_, err = io.Copy(out, bytes.NewReader(body))
+
 	// TODO: 保存在云，优化是不是需要保存下来
 	return fileName
 }
