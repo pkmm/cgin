@@ -49,7 +49,7 @@ func (d *dailyServ) GetImage() string {
 	defer out.Close()
 	webpImage, err := webp.Decode(bytes.NewReader(body))
 	d.CheckError(err)
-	err = jpeg.Encode(out, webpImage, &jpeg.Options{Quality: 90})
+	err = jpeg.Encode(out, webpImage, &jpeg.Options{Quality: 60})
 	d.CheckError(err)
 	//_, err = io.Copy(out, bytes.NewReader(body))
 
