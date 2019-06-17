@@ -41,6 +41,7 @@ func MapRoute() *gin.Engine {
 
 	// 静态文件的目录
 	router.StaticFS("/static", http.Dir("static"))
+	router.StaticFile("/favicon.ico", "./static/favicon.ico")
 
 	// 认证业务的逻辑 API
 	// api/auth
