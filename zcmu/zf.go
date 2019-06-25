@@ -144,7 +144,7 @@ func (c *Crawl) GetScores() ([]*Score, error) {
 }
 
 func NewCrawl(num, pwd string) (*Crawl, error) {
-	timeout := time.Duration(30 * time.Second) // 超时30s
+	timeout := time.Duration(5 * time.Second) // 超时30s
 	crawl := &Crawl{
 		num: num,
 		pwd: pwd,
