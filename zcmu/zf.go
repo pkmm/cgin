@@ -24,7 +24,7 @@ import (
 
 const (
 	host          = "zfxk.zcmu.edu.cn"
-	baseUrl       = "https://" + host + "/"
+	baseUrl       = "http://" + host + "/"
 	verifyCodeUrl = "CheckCode.aspx" // 验证码
 	defaultUrl    = "default2.aspx"
 	userAgent     = "Mozilla/5.0 (Windows NT 6.3; WOW64)" +
@@ -144,7 +144,7 @@ func (c *Crawl) GetScores() ([]*Score, error) {
 }
 
 func NewCrawl(num, pwd string) (*Crawl, error) {
-	timeout := time.Duration(5 * time.Second) // 超时30s
+	timeout := time.Duration(30 * time.Second) // 超时30s
 	crawl := &Crawl{
 		num: num,
 		pwd: pwd,

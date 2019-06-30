@@ -78,10 +78,10 @@ func (m *miniProgramService) GetIndexConfig() *model.IndexConfig {
 
 func (m *miniProgramService) SetIndexConfig(slogan, imageUrl, style string) *model.IndexConfig {
 	indexConfig := &model.IndexConfig{
-		Slogan:slogan,
-		ImageUrl:imageUrl,
-		ImageStyle:style,
-		Disabled: false,
+		Slogan:     slogan,
+		ImageUrl:   imageUrl,
+		ImageStyle: style,
+		Disabled:   false,
 	}
 
 	if err := db.Save(indexConfig).Error; err != nil {
@@ -106,13 +106,13 @@ func (m *miniProgramService) GetNotificationById(id uint64) *model.Notification 
 	return notification
 }
 
-func (m* miniProgramService) SaveNotification(content string, startAt, endAt util.JSONTime) *model.Notification {
+func (m *miniProgramService) SaveNotification(content string, startAt, endAt util.JSONTime) *model.Notification {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 	notification := &model.Notification{
-		Content:content,
-		StartAt:startAt,
-		EndAt:endAt,
+		Content: content,
+		StartAt: startAt,
+		EndAt:   endAt,
 	}
 	tx := db.Begin()
 	if err := tx.Save(notification).Error; err != nil {
@@ -125,15 +125,18 @@ func (m* miniProgramService) SaveNotification(content string, startAt, endAt uti
 
 func (m *miniProgramService) GetLatestNotification() *model.Notification {
 	notification := &model.Notification{}
-	if err := db.Model(&model.Notification{}).Order("id desc").Limit(1).First(&notification).Error; err != nil {
+	if err := db.Model(&model.Notification{}).Order("id desc").
+		Limit(1).First(&notification).Error; err != nil {
 		return nil
 	}
 	return notification
 }
 
 func (m *miniProgramService) GetNotifications(limit uint64) []*model.Notification {
-	var notifications  []*model.Notification
-	if err := db.Model(&model.Notification{}).Order("id desc").Limit(limit).Find(&notifications).Error; err != nil {
+	var notifications []*model.Notification
+	if err := db.Model(&model.Notification{}).
+		Where("disabled = 0").
+		Order("id desc").Limit(limit).Find(&notifications).Error; err != nil {
 		return notifications
 	}
 	return notifications

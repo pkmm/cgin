@@ -35,8 +35,9 @@ func (s *studentController) GetScores(c *gin.Context) {
 			panic(errno.NormalException.AppendErrorMsg(err.Error()))
 		}
 		if scores, err := worker.GetScores(); err == nil {
+			modelScores := service.ScoreService.SaveStudentScoresFromCrawl(scores, student.Id)
 			service.SendResponseSuccess(c, gin.H{
-				"scores": scores,
+				"scores": modelScores,
 			})
 			return
 		} else {
