@@ -20,7 +20,7 @@ var MiniProgramController = &miniProgramController{}
 
 // 发送模板消息
 func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
-	m.ProcessParams(c)
+	m.processParams(c)
 
 	formId, ok := m.Params["form_id"].(string)
 	if !ok {
@@ -41,12 +41,12 @@ func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 		Data:       templateKeyData,
 	}
 	ret := util.SendUserTemplateMsg(msg)
-	m.Response(c, ret)
+	m.response(c, ret)
 }
 
 // 配置小程序首页的菜单项
 func (m *miniProgramController) DisposeMenu(c *gin.Context) {
-	m.GetAuthUserId(c)
+	m.getAuthUserId(c)
 	var menus []co.Menu
 	if err := c.BindJSON(&menus); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
@@ -61,7 +61,7 @@ func (m *miniProgramController) DisposeMenu(c *gin.Context) {
 		}
 		savedMenus = append(savedMenus, savedMenu)
 	}
-	m.Response(c, savedMenus)
+	m.response(c, savedMenus)
 }
 
 // 首页的配置
@@ -75,18 +75,18 @@ func (m *miniProgramController) GetIndexPreference(c *gin.Context) {
 		"menus":        menus,
 		"index_config": indexConfig,
 	}
-	m.Response(c, data)
+	m.response(c, data)
 }
 
 // 首页solgan image等的配置信息
 func (m *miniProgramController) SetIndexConfig(c *gin.Context) {
-	m.GetAuthUserId(c)
+	m.getAuthUserId(c)
 	config := &co.IndexConfig{}
 	if err := c.BindJSON(config); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
 	savedConfig := service.MiniProgramService.SetIndexConfig(config.Slogan, config.ImageUrl, config.ImageStyle)
-	m.Response(c, savedConfig)
+	m.response(c, savedConfig)
 }
 
 // 获取notification 默认是显示最新的10条
@@ -96,12 +96,12 @@ func (m *miniProgramController) GetNotification(c *gin.Context) {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
 	notifications := service.MiniProgramService.GetNotifications(limit)
-	m.Response(c, gin.H{"notifications": notifications})
+	m.response(c, gin.H{"notifications": notifications})
 }
 
 // 更新或者创建一个notification
 func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
-	m.GetAuthUserId(c)
+	m.getAuthUserId(c)
 	notification := &co.Notification{}
 	if err := c.BindJSON(notification); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
@@ -109,10 +109,10 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 	if notification.Id == 0 {
 		// 没有传id认为是创建一个notification
 		createdNotification := service.MiniProgramService.SaveNotification(notification.Content, notification.StartAt, notification.EndAt)
-		m.Response(c, createdNotification)
+		m.response(c, createdNotification)
 		return
 	}
 	// 更新已经存在的一个notification
 	savedNotification := service.MiniProgramService.UpdateNotification(notification.Id, notification.Content, notification.StartAt, notification.EndAt)
-	m.Response(c, savedNotification)
+	m.response(c, savedNotification)
 }

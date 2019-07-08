@@ -14,16 +14,16 @@ type studentController struct {
 var Student = &studentController{}
 
 func (s *studentController) GetStudent(c *gin.Context) {
-	s.GetAuthUserId(c)
+	s.getAuthUserId(c)
 	student := service.User.GetStudentByUserId(s.UserId)
 	data := gin.H{
 		"student": student,
 	}
-	s.Response(c, data)
+	s.response(c, data)
 }
 
 func (s *studentController) GetScores(c *gin.Context) {
-	s.GetAuthUserId(c)
+	s.getAuthUserId(c)
 	scores := service.ScoreService.GetOwnScores(s.UserId)
 	if len(scores) == 0 {
 		student := service.User.GetStudentByUserId(s.UserId)
@@ -47,12 +47,12 @@ func (s *studentController) GetScores(c *gin.Context) {
 	data := gin.H{
 		"scores": scores,
 	}
-	s.Response(c, data)
+	s.response(c, data)
 }
 
 func (s *studentController) UpdateEduAccount(c *gin.Context) {
-	s.GetAuthUserId(c)
-	s.ProcessParams(c)
+	s.getAuthUserId(c)
+	s.processParams(c)
 	var (
 		studentNumber, password string
 		ok                      bool
@@ -79,5 +79,5 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	data := gin.H{
 		"student": student,
 	}
-	s.Response(c, data)
+	s.response(c, data)
 }

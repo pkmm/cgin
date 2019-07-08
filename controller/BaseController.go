@@ -12,7 +12,7 @@ type BaseController struct {
 	Params map[string]interface{}
 }
 
-func (b *BaseController) GetAuthUserId(c *gin.Context) {
+func (b *BaseController) getAuthUserId(c *gin.Context) {
 	val, ok := c.Get("uid")
 	if !ok {
 		panic(errno.UserNotAuth)
@@ -26,7 +26,7 @@ func (b *BaseController) GetAuthUserId(c *gin.Context) {
 }
 
 // 请求的中json参数解析到params
-func (b *BaseController) ProcessParams(c *gin.Context) {
+func (b *BaseController) processParams(c *gin.Context) {
 	b.Params = map[string]interface{}{}
 	if err := c.ShouldBindWith(&b.Params, binding.JSON); err != nil {
 		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
@@ -34,6 +34,6 @@ func (b *BaseController) ProcessParams(c *gin.Context) {
 }
 
 // 处理成功的请求
-func (b *BaseController) Response(c *gin.Context, responseData interface{}) {
+func (b *BaseController) response(c *gin.Context, responseData interface{}) {
 	service.SendResponseSuccess(c, responseData)
 }

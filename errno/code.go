@@ -17,4 +17,9 @@ var (
 	// error code begin with 2... for business error
 	UserNotFoundException         = &BusinessErrorInfo{20001, "The user was not found."}
 	CheckZfAccountFailedException = &BusinessErrorInfo{20002, "Check account failed of education system."}
+
+	// 背单词的错误信息
+	RememberTaskNotBegin   = &BusinessErrorInfo{3001, "任务还未开始."}
+	RememberTaskHasDone    = &BusinessErrorInfo{3002, "任务已经结束了."}
+	RememberRecordNotFound = &BusinessErrorInfo{3003, "未找到相关的任务计划"}
 )

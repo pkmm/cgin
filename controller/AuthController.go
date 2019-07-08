@@ -22,7 +22,7 @@ func (a *authController) Login(c *gin.Context) {
 		ok                  bool
 		err                 error
 	)
-	a.ProcessParams(c)
+	a.processParams(c)
 	deviceType = devicetype.DeviceType(a.Params["device_type"].(float64))
 	if openid, ok = a.Params["openid"].(string); !ok {
 		panic(errno.InvalidParameters.AppendErrorMsg("参数openid必须提供"))
@@ -44,16 +44,16 @@ func (a *authController) Login(c *gin.Context) {
 			"user":  user,
 			"token": token,
 		}
-		a.Response(c, data)
+		a.response(c, data)
 	}
 
 }
 
 func (a *authController) Me(c *gin.Context) {
-	a.GetAuthUserId(c)
+	a.getAuthUserId(c)
 	user := service.User.GetUser(a.UserId)
 	data := gin.H{
 		"user": user,
 	}
-	a.Response(c, data)
+	a.response(c, data)
 }

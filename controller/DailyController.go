@@ -18,7 +18,7 @@ func (d *dailyController) GetImage(c *gin.Context) {
 
 // 每日一言的数据
 func (d *dailyController) GetSentence(c *gin.Context) {
-	d.Response(c, gin.H{
+	d.response(c, gin.H{
 		"sentence": service.DailyService.GetSentence(),
 	})
 }

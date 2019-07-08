@@ -8,4 +8,5 @@ var Models = []interface{}{
 	&Menu{},
 	&IndexConfig{},
 	&Notification{},
+	&HermannMemorial{},
 }
