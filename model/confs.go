@@ -9,4 +9,5 @@ var Models = []interface{}{
 	&IndexConfig{},
 	&Notification{},
 	&HermannMemorial{},
+	&Sponsor{},
 }

@@ -1,7 +1,7 @@
 package model
 
 type Score struct {
-	Id        uint64  `json:"id" gorm:"primary_key"`
+	Id        uint64  `json:"id" gorm:"primary_key;auto_increment;"`
 	StudentId uint64  `json:"student_id" gorm:"index"`
 	Xn        string  `json:"xn" gorm:"size:20;not null"`
 	Xq        uint8   `json:"xq"`

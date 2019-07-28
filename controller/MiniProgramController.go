@@ -3,9 +3,11 @@ package controller
 import (
 	"cgin/conf"
 	"cgin/controller/co"
+	"cgin/controller/respobj"
 	"cgin/errno"
 	"cgin/service"
 	"cgin/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -78,7 +80,7 @@ func (m *miniProgramController) GetIndexPreference(c *gin.Context) {
 	m.response(c, data)
 }
 
-// 首页solgan image等的配置信息
+// 首页slogan image等的配置信息
 func (m *miniProgramController) SetIndexConfig(c *gin.Context) {
 	m.getAuthUserId(c)
 	config := &co.IndexConfig{}
@@ -115,4 +117,25 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 	// 更新已经存在的一个notification
 	savedNotification := service.MiniProgramService.UpdateNotification(notification.Id, notification.Content, notification.StartAt, notification.EndAt)
 	m.response(c, savedNotification)
+}
+
+// 赞助的人
+func (m *miniProgramController) GetSponsors(c *gin.Context) {
+	var result []*respobj.Sponsor
+	sponsors := service.MiniProgramService.GetSponsors()
+	fmt.Printf("%#v", sponsors)
+	for _, s := range sponsors {
+		o := &respobj.Sponsor{
+			Id:        s.Id,
+			Money:     s.Money,
+			CreatedAt: s.CreatedAt,
+		}
+		if s.User != nil {
+			o.OpenId = s.User.OpenId
+		}
+		result = append(result, o)
+	}
+	m.response(c, gin.H{
+		"sponsors": result,
+	})
 }

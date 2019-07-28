@@ -4,6 +4,7 @@ import (
 	"cgin/constant/miniprogram/menuaction"
 	"cgin/model"
 	"cgin/util"
+	"fmt"
 	"github.com/pkg/errors"
 	"sync"
 )
@@ -140,4 +141,14 @@ func (m *miniProgramService) GetNotifications(limit uint64) []*model.Notificatio
 		return notifications
 	}
 	return notifications
+}
+
+// 获取赞助的人
+func (m *miniProgramService) GetSponsors()  []*model.Sponsor {
+	var result []*model.Sponsor
+	if err := db.Model(&model.Sponsor{}).Limit(1000).Order("id desc", true).Preload("User").Find(&result).Error; err != nil {
+		return result
+	}
+	fmt.Printf("%+v", result)
+	return result
 }
