@@ -16,6 +16,7 @@ const (
 	AuthPrefix        = "/api/auth"
 	StudentPrefix     = "/api/student"
 	MiniProgramPrefix = RootApiPrefix + "/mini_program"
+	Trigger = "/api/trigger/"
 )
 
 func MapRoute() *gin.Engine {
@@ -91,6 +92,14 @@ func MapRoute() *gin.Engine {
 		apiMiniProgram.POST("/change_notification", controller.MiniProgramController.UpdateOrCreateNotification)
 		apiMiniProgram.POST("/get_hermann_memorial", controller.HermannRememberController.GetTodayTaskInfo)
 		apiMiniProgram.POST("/add_hermann_memorial", controller.HermannRememberController.SaveUserRememberTask)
+	}
+
+	apiTrigger := router.Group(Trigger)
+	{
+		if conf.AppConfig.String("appEnv") != "dev" {
+			apiTrigger.Use(middleware.Auth)
+		}
+		apiTrigger.Any("/cron", controller.CronTaskController.TriggerTask)
 	}
 
 	return router

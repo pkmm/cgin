@@ -3,6 +3,10 @@
 	"ignore": "test",
 	"package": [
 		{
+			"path": "gb/baidu",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "J8ABQyxrA3Oxyey7yqVuFikVoFU=",
 			"path": "github.com/0xAX/notificator",
 			"revision": "88d57ee9043ba88d6a62e437fa15dda1ca0d2b59",
@@ -205,6 +209,16 @@
 			"path": "github.com/pkg/errors",
 			"revision": "27936f6d90f9c8e1145f11ed52ffffbfdb9e0af7",
 			"revisionTime": "2019-02-27T00:00:51Z"
+		},
+		{
+			"checksumSHA1": "PWSqcIv7cKcOoGPSFdrcY1meZV8=",
+			"path": "github.com/pkmm/gb",
+			"revision": "1d9f6c2f21354773834958e3d3bb8da91b61b73f",
+			"revisionTime": "2019-02-28T08:08:43Z"
+		},
+		{
+			"path": "github.com/pkmm/gb.git",
+			"revision": ""
 		},
 		{
 			"checksumSHA1": "Co8o4cw9gGZpVUjZwNqmjJYXcqU=",

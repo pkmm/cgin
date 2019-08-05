@@ -2,10 +2,10 @@ package service
 
 import "cgin/errno"
 
-type BaseService struct {
+type baseService struct {
 }
 
-func (b *BaseService) CheckError(err error) {
+func (b *baseService) CheckError(err error) {
 	if err != nil {
 		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
 	}

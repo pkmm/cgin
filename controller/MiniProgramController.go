@@ -7,7 +7,6 @@ import (
 	"cgin/errno"
 	"cgin/service"
 	"cgin/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -123,7 +122,7 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 func (m *miniProgramController) GetSponsors(c *gin.Context) {
 	var result []*respobj.Sponsor
 	sponsors := service.MiniProgramService.GetSponsors()
-	fmt.Printf("%#v", sponsors)
+	//fmt.Printf("%#v", sponsors)
 	for _, s := range sponsors {
 		o := &respobj.Sponsor{
 			Id:        s.Id,

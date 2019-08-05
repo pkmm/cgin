@@ -4,7 +4,6 @@ import (
 	"cgin/errno"
 	"cgin/service"
 	"cgin/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,7 +36,6 @@ func (h *hermannRememberController) SaveUserRememberTask(c *gin.Context) {
 	if err := c.BindJSON(&params); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
-	fmt.Println(params.StartAt)
 	err := service.HermannService.SaveTask(params.Unit, params.TotalUnit, params.StartAt, h.UserId)
 	if err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))

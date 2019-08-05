@@ -19,7 +19,7 @@ import (
 )
 
 type dailyServ struct {
-	BaseService
+	baseService
 }
 
 var DailyService = &dailyServ{}
