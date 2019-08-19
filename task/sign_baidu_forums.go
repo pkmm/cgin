@@ -4,7 +4,7 @@ import (
 	"cgin/conf"
 	"cgin/service"
 	"fmt"
-	"gb/baidu"
+	"github.com/pkmm/gb/baidu"
 )
 
 // 签到百度贴吧
