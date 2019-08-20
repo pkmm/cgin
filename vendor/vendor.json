@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "bzYjKjGylVrHAWJFiXCpc/NhczI=",
+			"path": "gb/baidu",
+			"revision": "1d9f6c2f21354773834958e3d3bb8da91b61b73f",
+			"revisionTime": "2019-02-28T08:08:43Z"
+		},
+		{
 			"checksumSHA1": "J8ABQyxrA3Oxyey7yqVuFikVoFU=",
 			"path": "github.com/0xAX/notificator",
 			"revision": "88d57ee9043ba88d6a62e437fa15dda1ca0d2b59",
@@ -121,6 +127,12 @@
 			"revisionTime": "2017-07-02T09:28:26Z",
 			"version": "v1.2",
 			"versionExact": "v1.2"
+		},
+		{
+			"checksumSHA1": "e1dVjp1RV5NstpaRaOfpyL+7lPE=",
+			"path": "github.com/go-sql-driver/mysql",
+			"revision": "a825be04c652d01442384e9dcdf2cdc3f1eda67f",
+			"revisionTime": "2017-06-10T20:04:23Z"
 		},
 		{
 			"checksumSHA1": "fTJ7w+U/xUncdC5XoVpczYQyQug=",
@@ -307,10 +319,28 @@
 			"revisionTime": "2018-09-08T17:02:15Z"
 		},
 		{
+			"checksumSHA1": "zeHyHebIZl1tGuwGllIhjfci+wI=",
+			"path": "golang.org/x/text/encoding/internal",
+			"revision": "e19ae1496984b1c655b8044a65c0300a3c878dd3",
+			"revisionTime": "2017-12-24T20:31:28Z"
+		},
+		{
 			"checksumSHA1": "+bFlIgTuq1Rf8QVtiEGWeCJEnpY=",
 			"path": "golang.org/x/text/encoding/internal/identifier",
 			"revision": "905a57155faa8230500121607930ebb9dd8e139c",
 			"revisionTime": "2018-09-08T17:02:15Z"
+		},
+		{
+			"checksumSHA1": "55UdScb+EMOCPr7OW0hCwDsVxpg=",
+			"path": "golang.org/x/text/encoding/simplifiedchinese",
+			"revision": "e19ae1496984b1c655b8044a65c0300a3c878dd3",
+			"revisionTime": "2017-12-24T20:31:28Z"
+		},
+		{
+			"checksumSHA1": "ziMb9+ANGRJSSIuxYdRbA+cDRBQ=",
+			"path": "golang.org/x/text/transform",
+			"revision": "e19ae1496984b1c655b8044a65c0300a3c878dd3",
+			"revisionTime": "2017-12-24T20:31:28Z"
 		},
 		{
 			"checksumSHA1": "q190bL03wQok3wVwYmMub2XhOiU=",
