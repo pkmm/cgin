@@ -3,12 +3,6 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "bzYjKjGylVrHAWJFiXCpc/NhczI=",
-			"path": "gb/baidu",
-			"revision": "1d9f6c2f21354773834958e3d3bb8da91b61b73f",
-			"revisionTime": "2019-02-28T08:08:43Z"
-		},
-		{
 			"checksumSHA1": "J8ABQyxrA3Oxyey7yqVuFikVoFU=",
 			"path": "github.com/0xAX/notificator",
 			"revision": "88d57ee9043ba88d6a62e437fa15dda1ca0d2b59",
@@ -259,10 +253,6 @@
 			"path": "github.com/xlstudio/wxbizdatacrypt",
 			"revision": "4c8d395744ac478992f26cedb0a2d16ee56118e3",
 			"revisionTime": "2018-08-22T07:34:55Z"
-		},
-		{
-			"path": "golang.org/x/crypto/ssh/terminal",
-			"revision": ""
 		},
 		{
 			"checksumSHA1": "zdekzNuFGSoxAZ8cURGsrhBObZs=",
