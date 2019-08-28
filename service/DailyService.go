@@ -100,24 +100,38 @@ func (d *dailyServ) getListByKeyword(page int, keyword string) *ImageAPIResponse
 
 // 每日一图 使用
 // https://sotama.cool/picture 接口
-func (d *dailyServ) getImageFromAPI() string {
+func (d *dailyServ) getImageFromAPI() (string ,error) {
 	fileName := "static/images/" + util.Date() + ".jpg"
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
 	req, err := http.NewRequest("GET", conf.AppConfig.String("daily.image.api"), nil)
-	d.CheckError(err)
+	if err != nil {
+		return "", err
+	}
 	resp, err := client.Do(req)
-	d.CheckError(err)
+	if err != nil {
+		return "", err
+	}
 	body, err := ioutil.ReadAll(resp.Body)
-	d.CheckError(err)
+	if err != nil {
+		return "", err
+	}
 	defer resp.Body.Close()
 	out, err := os.Create(fileName)
-	d.CheckError(err)
+	if err != nil {
+		return "", err
+	}
 	defer out.Close()
 	webpImage, err := webp.Decode(bytes.NewReader(body))
-	d.CheckError(err)
+	if err != nil {
+		return "", err
+	}
 	err = jpeg.Encode(out, webpImage, &jpeg.Options{Quality: 60})
-	d.CheckError(err)
-	return fileName
+	if err != nil {
+		return "", err
+	}
+	return fileName, nil
 }
 
 func (d *dailyServ) GetImage() string {
@@ -130,7 +144,9 @@ func (d *dailyServ) GetImage() string {
 
 	getImageConfig := conf.AppConfig.DefaultString("daily.image.type", "not-api")
 	if getImageConfig == "api" {
-		return d.getImageFromAPI()
+		if todayImageFilePath, err := d.getImageFromAPI(); err == nil {
+			return todayImageFilePath
+		}
 	}
 
 	page := rand.Intn(4) // TODO 页数的设置
