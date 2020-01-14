@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	FlagSyncStudentScore = "sync student score"
-	FlagBaiduTiebaSign   = "baidu tieba sign"
+	FlagSyncStudentScore = "sync_student_score"
+	FlagBaiduTiebaSign   = "sign_baidu_tieba"
 	//RUNNING
 	RUNNING = 1 // 任务正在运行
 	//END

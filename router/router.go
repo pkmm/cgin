@@ -6,6 +6,7 @@ import (
 	"cgin/errno"
 	"cgin/middleware"
 	"cgin/service"
+	"fmt"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -32,7 +33,7 @@ func MapRoute() *gin.Engine {
 	// 通用
 	router.Any("/", func(context *gin.Context) {
 		currentAppEnv := conf.AppConfig.String("appEnv")
-		service.SendResponse(context, errno.Welcome, currentAppEnv)
+		service.SendResponse(context, errno.Welcome, fmt.Sprintf("current enviorment is [%s].", currentAppEnv))
 	})
 
 	// 未找到的路由

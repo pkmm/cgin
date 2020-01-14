@@ -5,6 +5,7 @@ import (
 	"cgin/service"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"net/http"
 )
 
 type BaseController struct {
@@ -28,8 +29,13 @@ func (b *BaseController) getAuthUserId(c *gin.Context) {
 // 请求的中json参数解析到params
 func (b *BaseController) processParams(c *gin.Context) {
 	b.Params = map[string]interface{}{}
-	if err := c.ShouldBindWith(&b.Params, binding.JSON); err != nil {
-		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
+	switch c.Request.Method {
+	case http.MethodGet:
+		return
+	default:
+		if err := c.ShouldBindWith(&b.Params, binding.JSON); err != nil {
+			panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
+		}
 	}
 }
 

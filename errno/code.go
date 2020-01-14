@@ -11,7 +11,7 @@ var (
 	UserNotAuth            = &BusinessErrorInfo{10005, "You must login."}
 	Welcome                = &BusinessErrorInfo{10006, "Hello, I am still alive."}
 	NotSuchRouteException  = &BusinessErrorInfo{10007, "Not found resource."}
-	NormalException        = &BusinessErrorInfo{10008, "exception:"}
+	NormalException        = &BusinessErrorInfo{10008, "Exception:"}
 
 	// user errors
 	// error code begin with 2... for business error

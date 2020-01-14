@@ -2,6 +2,7 @@ package task
 
 import (
 	"cgin/conf"
+	"cgin/model"
 	"cgin/service"
 	"fmt"
 	"github.com/pkmm/gb/baidu"
@@ -11,6 +12,9 @@ import (
 
 func SignBaiduForums() {
 	budsss := service.TiebaService.GetAll()
+	if len(budsss) == 0 {
+		budsss = append(budsss, &model.Tieba{Bduss:conf.AppConfig.String("bduss")})
+	}
 	for _, record := range budsss {
 		if record.Bduss == "" {
 			continue

@@ -20,19 +20,24 @@ func (this *cronTaskController) TriggerTask(c *gin.Context) {
 	}
 	// 非生产环境
 	this.processParams(c)
-	if jobName, ok := this.Params["job_name"].(string); !ok {
-		panic(errno.NormalException.AppendErrorMsg("参数解析错误"))
-	} else {
-		go func() {
-			switch jobName {
-			case task.FlagBaiduTiebaSign:
-				task.SignBaiduForums()
-			case task.FlagSyncStudentScore:
-				task.UpdateStudentScore()
-			default:
-				panic(errno.NormalException.ReplaceErrorMsgWith("未找到指定的任务"))
-			}
-		}()
+	jobName := ""
+	ok := false
+	if jobName, ok = this.Params["job_name"].(string); !ok {
+		jobName = c.DefaultQuery("job_name", "")
+		if jobName == "" {
+			panic(errno.NormalException.AppendErrorMsg("参数解析错误,未指定job_name"))
+		}
 	}
+	go func() {
+		switch jobName {
+		case task.FlagBaiduTiebaSign:
+			task.SignBaiduForums()
+		case task.FlagSyncStudentScore:
+			task.UpdateStudentScore()
+		default:
+			panic(errno.NormalException.ReplaceErrorMsgWith("未找到指定的任务"))
+		}
+	}()
+
 	this.response(c, "任务已经在后台执行，请稍后查看")
 }
