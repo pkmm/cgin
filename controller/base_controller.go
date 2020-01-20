@@ -27,6 +27,7 @@ func (b *BaseController) getAuthUserId(c *gin.Context) {
 }
 
 // 请求的中json参数解析到params
+// Get 请求参数未解析
 func (b *BaseController) processParams(c *gin.Context) {
 	b.Params = map[string]interface{}{}
 	switch c.Request.Method {

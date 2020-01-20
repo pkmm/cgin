@@ -9,11 +9,10 @@ import (
 )
 
 // 签到百度贴吧
-
 func SignBaiduForums() {
 	budsss := service.TiebaService.GetAll()
 	if len(budsss) == 0 {
-		budsss = append(budsss, &model.Tieba{Bduss:conf.AppConfig.String("bduss")})
+		budsss = append(budsss, &model.Tieba{Bduss: conf.AppConfig.String("bduss")})
 	}
 	for _, record := range budsss {
 		if record.Bduss == "" {
@@ -32,7 +31,10 @@ func SignBaiduForums() {
 		}
 		// TODO: 处理签到的结果
 		ret := worker.SignAll(tiebas)
-		fmt.Printf("%#v", ret)
+		for k, v := range *ret {
+			fmt.Printf("%#v, %#v", k, v)
+		}
+		//fmt.Printf("%#v", ret)
 	}
 
 }

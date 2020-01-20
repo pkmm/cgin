@@ -13,7 +13,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/jinzhu/gorm v1.9.12
 	github.com/pkg/errors v0.9.0
-	github.com/pkmm/gb v0.0.0-20190228080843-1d9f6c2f2135
+	github.com/pkmm/gb v0.0.0-20200120091341-95de571a92be
 	github.com/robfig/cron v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/xlstudio/wxbizdatacrypt v0.0.0-20190418111444-c3e116880c11
