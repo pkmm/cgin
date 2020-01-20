@@ -18,6 +18,8 @@ const (
 	END = 2 // 任务结束运行
 )
 
+var Tasks = []string{FlagBaiduTiebaSign, FlagSyncStudentScore}
+
 // === 线程安全的map ===
 type safeMap struct {
 	sync.RWMutex

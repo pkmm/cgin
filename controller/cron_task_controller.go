@@ -28,6 +28,16 @@ func (this *cronTaskController) TriggerTask(c *gin.Context) {
 			panic(errno.NormalException.AppendErrorMsg("参数解析错误,未指定job_name"))
 		}
 	}
+	flag := false
+	for _, taskName := range task.Tasks {
+		if jobName == taskName {
+			flag = true
+			break
+		}
+	}
+	if !flag {
+		panic(errno.NormalException.ReplaceErrorMsgWith("未找到指定的任务"))
+	}
 	go func() {
 		switch jobName {
 		case task.FlagBaiduTiebaSign:
@@ -35,7 +45,7 @@ func (this *cronTaskController) TriggerTask(c *gin.Context) {
 		case task.FlagSyncStudentScore:
 			task.UpdateStudentScore()
 		default:
-			panic(errno.NormalException.ReplaceErrorMsgWith("未找到指定的任务"))
+			return
 		}
 	}()
 
