@@ -4,55 +4,26 @@ package task
 import (
 	"cgin/conf"
 	"cgin/service"
+	"cgin/util"
 	"github.com/robfig/cron"
-	"sync"
 	"time"
 )
 
 const (
 	FlagSyncStudentScore = "sync_student_score"
 	FlagBaiduTiebaSign   = "sign_baidu_tieba"
-	//RUNNING
-	RUNNING = 1 // 任务正在运行
-	//END
-	END = 2 // 任务结束运行
 )
 
 var Tasks = []string{FlagBaiduTiebaSign, FlagSyncStudentScore}
 
-// === 线程安全的map ===
-type safeMap struct {
-	sync.RWMutex
-	Map map[string]int
-}
 
-func newSafeMap() *safeMap {
-	sm := new(safeMap)
-	sm.Map = make(map[string]int)
-	return sm
-}
-
-func (this *safeMap) readSafeMap(key string) (int, bool) {
-	this.RLock()
-	value, ok := this.Map[key]
-	this.RUnlock()
-	return value, ok
-}
-
-func (this *safeMap) writeSafeMap(key string, value int) {
-	this.Lock()
-	this.Map[key] = value
-	this.Unlock()
-}
-
-// === 线程安全的 map End ===
 
 // 分配每一个goroutine 一个id, 避免任务的重叠运行
-var runningTask *safeMap
+var runningTask *util.SafeMap
 
 func init() {
 
-	runningTask = newSafeMap()
+	runningTask = util.NewSafeMap()
 
 	c := cron.New()
 	// 定义任务列表
@@ -79,14 +50,12 @@ func init() {
 
 func taskWrapper(cmd func(), flag string) func() {
 	return func() {
-		// before task
-		if v, ok := runningTask.readSafeMap(flag); ok && v == RUNNING {
+		if _, ok := runningTask.ReadSafeMap(flag); ok {
 			return
 		}
-		runningTask.writeSafeMap(flag, RUNNING)
+		runningTask.WriteSafeMap(flag, 1)
 		cmd()
-		// after task clean up
-		runningTask.writeSafeMap(flag, END)
+		runningTask.DeleteKey(flag)
 	}
 }
 

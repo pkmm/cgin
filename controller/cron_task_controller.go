@@ -48,6 +48,5 @@ func (this *cronTaskController) TriggerTask(c *gin.Context) {
 			return
 		}
 	}()
-
 	this.response(c, "任务已经在后台执行，请稍后查看")
 }
