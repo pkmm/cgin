@@ -22,7 +22,7 @@ func UpdateStudentScore() {
 		return
 	}
 	if len(students) == 0 {
-		conf.AppLogger.Error("No students need sync.")
+		conf.AppLogger.Info("No students need sync.")
 		return
 	}
 	// 队列的大小
@@ -62,7 +62,7 @@ func UpdateStudentScore() {
 					outputQueue <- output
 					continue // 继续执行下一位的任务
 				}
-				// retry when err is verify code wrong.
+				// retry if err is verify code wrong.
 				retry := 3
 				var scores []*zcmu.Score
 				for tryTimes := 0; tryTimes <= retry; tryTimes++ {

@@ -22,7 +22,6 @@ func BusinessErrorHandler() gin.HandlerFunc {
 						"data": nil,
 					})
 				default:
-					//panic(err)
 					ee := err.(error)
 					conf.AppLogger.Error(ee.Error())
 					service.SendResponse(ctx, errno.InternalServerError, nil)

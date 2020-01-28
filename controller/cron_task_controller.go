@@ -13,6 +13,12 @@ type cronTaskController struct {
 
 var CronTaskController = cronTaskController{}
 
+// @Summary 定时任务触发器
+// @Produce json
+// @Param job_name query string true "job_name" Enums(sign_baidu_tieba, not_exist)
+// @Router /trigger/cron [get]
+// @Failure 200 {object} service.Response
+// @Success 200 {object} service.Response
 func (this *cronTaskController) TriggerTask(c *gin.Context) {
 	if conf.AppConfig.String("appEnv") != "dev" {
 		this.getAuthUserId(c) // prod 需要认证

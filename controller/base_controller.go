@@ -2,6 +2,7 @@ package controller
 
 import (
 	"cgin/errno"
+	"cgin/middleware"
 	"cgin/service"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -14,7 +15,7 @@ type BaseController struct {
 }
 
 func (b *BaseController) getAuthUserId(c *gin.Context) {
-	val, ok := c.Get("uid")
+	val, ok := c.Get(middleware.UID)
 	if !ok {
 		panic(errno.UserNotAuth)
 	}

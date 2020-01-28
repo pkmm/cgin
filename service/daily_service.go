@@ -202,7 +202,7 @@ func (d *dailyServ) GetSentence() (sentence *DailySentenceResp) {
 	}
 	defer resp.Body.Close()
 	ret := &DailySentenceResp{}
-	json.Unmarshal(body, &ret)
+	_ = json.Unmarshal(body, &ret)
 	// TODO:
 	return ret
 }

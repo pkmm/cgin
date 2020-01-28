@@ -1,0 +1,59 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "this is a custom server of my interesting.",
+        "title": "My Server cgin",
+        "contact": {},
+        "license": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8654",
+    "basePath": "/api",
+    "paths": {
+        "/trigger/cron": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "定时任务触发器",
+                "parameters": [
+                    {
+                        "enum": [
+                            "sign_baidu_tieba",
+                            "not_exist"
+                        ],
+                        "type": "string",
+                        "description": "job_name",
+                        "name": "job_name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "service.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "msg": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

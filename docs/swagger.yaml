@@ -1,0 +1,39 @@
+basePath: /api
+definitions:
+  service.Response:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+host: localhost:8654
+info:
+  contact: {}
+  description: this is a custom server of my interesting.
+  license: {}
+  title: My Server cgin
+  version: "1.0"
+paths:
+  /trigger/cron:
+    post:
+      parameters:
+      - description: job_name
+        enum:
+        - sign_baidu_tieba
+        - not_exist
+        in: query
+        name: job_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 定时任务触发器
+swagger: "2.0"

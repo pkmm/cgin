@@ -1,10 +1,6 @@
-使用gin框架  
-orm使用gorm  
-三方依赖使用gvendor
+gin + gorm
 
-安装govendor 
-`go get -u github.com/kardianos/govendor`  
-govendor sync 同步所有使用依赖包
+`go mod tidy `安装依赖
 
-开发过程中是 fresh 命令 可以热更新代码的改动
-fresh 配置文件是runner.conf
+开发过程中使用`fresh`命令，热更新  
+`fresh`命令的配置文件是`runner.conf`

@@ -12,6 +12,8 @@ import (
 
 // 使用JWT进行认证
 
+const UID = "uid"
+
 type authData struct {
 	Token string `json:"token"`
 }
@@ -40,6 +42,6 @@ func Auth(c *gin.Context) {
 		panic(errno.TokenNotValid)
 	}
 
-	c.Set("uid", claims.Uid)
+	c.Set(UID, claims.Uid)
 	c.Next()
 }

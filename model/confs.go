@@ -1,5 +1,7 @@
 package model
 
+// all app models.
+// register model here.
 var Models = []interface{}{
 	&User{},
 	&Score{},

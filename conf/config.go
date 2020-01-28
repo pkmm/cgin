@@ -22,7 +22,7 @@ func init() {
 
 	// 设置beego logs
 	AppLogger = logs.NewLogger(1e5)
-	AppLogger.SetPrefix("xiaocc")
+	AppLogger.SetPrefix("[USE GIN]:")
 	AppLogger.EnableFuncCallDepth(true)
 	AppLogger.SetLogFuncCallDepth(10)
 	AppLogger.Async(1e3)

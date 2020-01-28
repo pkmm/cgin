@@ -21,6 +21,12 @@ func init() {
 	}
 }
 
+// @title My Server cgin
+// @version 1.0
+// @description this is a custom server of my interesting.
+
+// @host localhost:8654
+// @BasePath /api
 func main() {
 
 	handlers := router.MapRoute()
