@@ -13,6 +13,13 @@ var err error
 // 使用beego的log系统
 var AppLogger *logs.BeeLogger
 
+// 运行环境的参数设置
+const (
+	AppEnvironment = "appEnvironment"
+	EnvProd = "prod"
+	EnvDev = "dev"
+)
+
 func init() {
 	AppConfig, err = config.NewConfig("ini", "conf/.env")
 	if err != nil {

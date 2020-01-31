@@ -27,7 +27,7 @@ func MapRoute() *gin.Engine {
 
 	router := gin.New()
 	// 全局的中间件
-	if "prod" == conf.AppConfig.DefaultString("appEnv", "prod") {
+	if conf.EnvProd == conf.AppConfig.DefaultString(conf.AppEnvironment, conf.EnvProd) {
 		router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler(), middleware.RequestLogger) // 正式环境不暴露出error
 	} else {
 		router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler()) // 开发的时候测试使用，可以比较方便的看到log
@@ -36,7 +36,7 @@ func MapRoute() *gin.Engine {
 
 	// 通用
 	router.Any("/", func(context *gin.Context) {
-		currentAppEnv := conf.AppConfig.String("appEnv")
+		currentAppEnv := conf.AppConfig.String(conf.AppEnvironment)
 		service.SendResponse(context, errno.Welcome, fmt.Sprintf("current enviorment is [%s].", currentAppEnv))
 	})
 
@@ -102,7 +102,7 @@ func MapRoute() *gin.Engine {
 
 	apiTrigger := router.Group(Trigger)
 	{
-		if conf.AppConfig.String("appEnv") != "dev" {
+		if conf.AppConfig.String(conf.AppEnvironment) != conf.EnvDev {
 			apiTrigger.Use(middleware.Auth)
 		}
 		apiTrigger.Any("/cron", controller.CronTaskController.TriggerTask)
