@@ -15,7 +15,7 @@ var AppLogger *logs.BeeLogger
 
 // 运行环境的参数设置
 const (
-	AppEnvironment = "appEnvironment"
+	AppEnvironment = "appEnv"
 	EnvProd = "prod"
 	EnvDev = "dev"
 )
