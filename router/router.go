@@ -27,10 +27,10 @@ func MapRoute() *gin.Engine {
 
 	router := gin.New()
 	// 全局的中间件
-	if conf.EnvProd == conf.AppConfig.DefaultString(conf.AppEnvironment, conf.EnvProd) {
-		router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler(), middleware.RequestLogger) // 正式环境不暴露出error
-	} else {
-		router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler()) // 开发的时候测试使用，可以比较方便的看到log
+	router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler(), middleware.RequestLogger)
+
+	// dev export swagger api.
+	if conf.EnvDev == conf.AppConfig.DefaultString(conf.AppEnvironment, conf.EnvProd) {
 		router.GET("/swagger/*any", ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "xx"))
 	}
 
