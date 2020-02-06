@@ -1,10 +1,10 @@
 package zcmu
 
 import (
+	"cgin/util"
 	"fmt"
-	"github.com/ewalker544/libsvm-go"
+	libSvm "github.com/ewalker544/libsvm-go"
 	"image"
-	"os"
 	"path"
 )
 
@@ -13,8 +13,8 @@ var (
 )
 
 func init() {
-	wd, _ := os.Getwd()
-	modelPath := path.Join(wd, "zcmu", "zf.model")
+	wd := util.GetCurrentCodePath()
+	modelPath := path.Join(wd, "zf.model")
 	fmt.Println("zcmu model load in ", modelPath)
 	svmModel = libSvm.NewModelFromFile(modelPath)
 }

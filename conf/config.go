@@ -1,9 +1,12 @@
 package conf
 
 import (
+	"cgin/util"
+	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego/config"
 	"github.com/astaxie/beego/logs"
+	"path"
 )
 
 // 使用beego的config包
@@ -21,7 +24,9 @@ const (
 )
 
 func init() {
-	AppConfig, err = config.NewConfig("ini", "conf/.env")
+	wd := util.GetCurrentCodePath()
+	fmt.Printf("conf path: %#v\n", wd)
+	AppConfig, err = config.NewConfig("ini", path.Join(wd, ".env"))
 	if err != nil {
 		fmt.Println(err)
 		panic("Error of load .env")
@@ -34,10 +39,31 @@ func init() {
 	AppLogger.SetLogFuncCallDepth(10)
 	AppLogger.Async(1e3)
 
-	AppLogger.SetLogger(logs.AdapterMultiFile, `{
-	"filename":"storage/logs/cgin.log",
-	"level":7,
-	"daily":true,
-	"maxdays":2,
-	"separate": ["error", "info", "debug"]}`)
+	type logConfig struct {
+		Filename string `json:"filename"`
+		Level int `json:"level"`
+		Daily bool `json:"daily"`
+		Maxdays int `json:"maxdays"`
+		Separate []string `json:"separate"`
+	}
+
+	lf := &logConfig{
+		Filename: path.Join(wd, "..", "storage/logs/gin.log"),
+		Level: 7,
+		Daily:true,
+		Maxdays:2,
+		Separate: []string{"error", "info", "debug"},
+	}
+	//`{
+	//"filename":"storage/logs/cgin.log",
+	//"level":7,
+	//"daily":true,
+	//"maxdays":2,
+	//"separate": ["error", "info", "debug"]}`
+
+	if byteOfLF, err := json.Marshal(lf); err != nil {
+		panic(err)
+	} else {
+		AppLogger.SetLogger(logs.AdapterMultiFile, string(byteOfLF))
+	}
 }

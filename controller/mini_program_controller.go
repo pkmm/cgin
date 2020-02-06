@@ -6,7 +6,6 @@ import (
 	"cgin/controller/respobj"
 	"cgin/errno"
 	"cgin/service"
-	"cgin/util"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -31,17 +30,17 @@ func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 	if !ok {
 		panic(errno.NormalException.ReplaceErrorMsgWith("require open id."))
 	}
-	templateKeyData := &util.TemplateMsgData{}
+	templateKeyData := &service.TemplateMsgData{}
 	templateKeyData.Keyword1.Value = "11"
 	templateKeyData.Keyword2.Value = "22"
-	msg := &util.TemplateMsg{
+	msg := &service.TemplateMsg{
 		FormId:     formId,
 		ToUser:     openId,
 		TemplateId: conf.AppConfig.String("template_id"),
 		Page:       conf.AppConfig.String("template_msg_open_page"),
 		Data:       templateKeyData,
 	}
-	ret := util.SendUserTemplateMsg(msg)
+	ret := service.SendUserTemplateMsg(msg)
 	m.response(c, ret)
 }
 

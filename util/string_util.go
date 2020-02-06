@@ -92,8 +92,8 @@ func GenerateToken(key uint64) string {
 	return Md5String(newKey)
 }
 
-/// 路径函数
-func GetSourceCodePath() string {
+// 获取当前代码的路径
+func GetCurrentCodePath() string {
 	_, filename, _, _ := runtime.Caller(1)
 	return path.Dir(filename)
 }
@@ -101,6 +101,12 @@ func GetSourceCodePath() string {
 func GetExecPath() string {
 	dir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 	return dir
+}
+
+// 获取当前代码的路径
+func GetExecutableCodePath() string {
+	dir, _ := os.Executable()
+	return filepath.Dir(dir)
 }
 
 // 成员相同的结构体进行拷贝

@@ -152,6 +152,9 @@ func (d *dailyServ) GetImage() string {
 	page := rand.Intn(4) // TODO 页数的设置
 	keyword := "saber"   // TODO 设置关键字 支持搜索
 	list := d.getListByKeyword(page, keyword)
+	if 0 == len(list.Data) {
+		panic(errno.InvalidParameters.ReplaceErrorMsgWith("没有数据"))
+	}
 	itemIndex := rand.Intn(len(list.Data))
 	item := list.Data[itemIndex]
 	var imageUrl string

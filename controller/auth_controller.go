@@ -46,7 +46,6 @@ func (a *authController) Login(c *gin.Context) {
 		}
 		a.response(c, data)
 	}
-
 }
 
 func (a *authController) Me(c *gin.Context) {

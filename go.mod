@@ -17,7 +17,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/jinzhu/gorm v1.9.12
 	github.com/mailru/easyjson v0.7.0 // indirect
-	github.com/parnurzeal/gorequest v0.2.16 // indirect
+	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.9.0
 	github.com/pkmm/gb v0.0.0-20200120091341-95de571a92be
 	github.com/robfig/cron v1.2.0
