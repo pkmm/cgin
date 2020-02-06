@@ -19,8 +19,8 @@ var AppLogger *logs.BeeLogger
 // 运行环境的参数设置
 const (
 	AppEnvironment = "appEnv"
-	EnvProd = "prod"
-	EnvDev = "dev"
+	EnvProd        = "prod"
+	EnvDev         = "dev"
 )
 
 func init() {
@@ -40,18 +40,18 @@ func init() {
 	AppLogger.Async(1e3)
 
 	type logConfig struct {
-		Filename string `json:"filename"`
-		Level int `json:"level"`
-		Daily bool `json:"daily"`
-		Maxdays int `json:"maxdays"`
+		Filename string   `json:"filename"`
+		Level    int      `json:"level"`
+		Daily    bool     `json:"daily"`
+		Maxdays  int      `json:"maxdays"`
 		Separate []string `json:"separate"`
 	}
 
 	lf := &logConfig{
 		Filename: path.Join(wd, "..", "storage/logs/gin.log"),
-		Level: 7,
-		Daily:true,
-		Maxdays:2,
+		Level:    7,
+		Daily:    true,
+		Maxdays:  2,
 		Separate: []string{"error", "info", "debug"},
 	}
 	//`{
