@@ -14,9 +14,9 @@ type hermannRememberController struct {
 var HermannRememberController = &hermannRememberController{}
 
 type taskDetail struct {
-	Unit uint `json:"unit"`
-	TotalUnit uint `json:"total_unit"`
-	StartAt util.JSONTime `json:"start_at,string"`
+	Unit      uint          `json:"unit"`
+	TotalUnit uint          `json:"total_unit"`
+	StartAt   util.JSONTime `json:"start_at,string"`
 }
 
 func (h *hermannRememberController) GetTodayTaskInfo(c *gin.Context) {

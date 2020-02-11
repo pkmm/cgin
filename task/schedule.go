@@ -16,8 +16,6 @@ const (
 
 var Tasks = []string{FlagBaiduTiebaSign, FlagSyncStudentScore}
 
-
-
 // 分配每一个goroutine 一个id, 避免任务的重叠运行
 var runningTask *util.SafeMap
 
@@ -58,4 +56,3 @@ func taskWrapper(cmd func(), flag string) func() {
 		runningTask.DeleteKey(flag)
 	}
 }
-
