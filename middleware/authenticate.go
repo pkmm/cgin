@@ -27,7 +27,7 @@ func Auth(c *gin.Context) {
 	data := &authData{}
 	c.Request.Body = rdr1
 	if err := c.ShouldBindWith(data, binding.JSON); err != nil {
-		conf.AppLogger.Error("login request failed. " + err.Error())
+		conf.Logger.Error("login request failed. " + err.Error())
 		c.Request.Body = rdr2
 		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
 	}

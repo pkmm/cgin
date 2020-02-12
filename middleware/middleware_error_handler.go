@@ -11,7 +11,7 @@ func BusinessErrorHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				conf.AppLogger.Error("服务器错误:[%s] => %#v", ctx.Request.RequestURI, err)
+				conf.Logger.Error("服务器错误:[%s] => %#v", ctx.Request.RequestURI, err)
 				ctx.Abort()
 				switch err.(type) {
 				case *errno.BusinessErrorInfo:

@@ -14,7 +14,7 @@ var AppConfig config.Configer
 var err error
 
 // 使用beego的log系统
-var AppLogger *logs.BeeLogger
+var Logger *logs.BeeLogger
 
 // 运行环境的参数设置
 const (
@@ -33,11 +33,11 @@ func init() {
 	}
 
 	// 设置beego logs
-	AppLogger = logs.NewLogger(1e5)
-	AppLogger.SetPrefix("[USE GIN]:")
-	AppLogger.EnableFuncCallDepth(true)
-	AppLogger.SetLogFuncCallDepth(10)
-	AppLogger.Async(1e3)
+	Logger = logs.NewLogger(1e5)
+	Logger.SetPrefix("[USE GIN]:")
+	Logger.EnableFuncCallDepth(true)
+	Logger.SetLogFuncCallDepth(10)
+	Logger.Async(1e3)
 
 	type logConfig struct {
 		Filename string   `json:"filename"`
@@ -64,6 +64,6 @@ func init() {
 	if byteOfLF, err := json.Marshal(lf); err != nil {
 		panic(err)
 	} else {
-		AppLogger.SetLogger(logs.AdapterMultiFile, string(byteOfLF))
+		Logger.SetLogger(logs.AdapterMultiFile, string(byteOfLF))
 	}
 }

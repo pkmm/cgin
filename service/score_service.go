@@ -47,7 +47,7 @@ func (serv *scoreService) UpdateOrCreateScore(score *model.Score) *model.Score {
 	if err := db.Where(&model.Score{StudentId: score.StudentId, Xn: score.Xn, Xq: score.Xq, Kcmc: score.Kcmc}).
 		Assign(*score).
 		FirstOrCreate(&score).Error; err != nil {
-		conf.AppLogger.Error("update or create user score failed." + err.Error())
+		conf.Logger.Error("update or create user score failed." + err.Error())
 		return nil
 	}
 	return score

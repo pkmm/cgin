@@ -18,11 +18,11 @@ func UpdateStudentScore() {
 	// chunk todo
 	students, err := service.StudentService.GetStudentNeedSyncScore(0, 100000)
 	if err != nil {
-		conf.AppLogger.Error("Get student for sync student scores failed ", err.Error())
+		conf.Logger.Error("Get student for sync student scores failed ", err.Error())
 		return
 	}
 	if len(students) == 0 {
-		conf.AppLogger.Info("No students need sync.")
+		conf.Logger.Info("No students need sync.")
 		return
 	}
 	// 队列的大小
@@ -54,10 +54,10 @@ func UpdateStudentScore() {
 					StudentId:     student.Id,
 					StudentNumber: student.Number,
 				}
-				conf.AppLogger.Info("begin sync student[num: %s] scores.", student.Number)
+				conf.Logger.Info("begin sync student[num: %s] scores.", student.Number)
 				zfWorker, err := zcmu.NewCrawl(student.Number, student.Password)
 				if err != nil {
-					conf.AppLogger.Error("init crawl for user[num: %s] failed.", student.Number)
+					conf.Logger.Error("init crawl for user[num: %s] failed.", student.Number)
 					output.Info = err.Error()
 					outputQueue <- output
 					continue // 继续执行下一位的任务
@@ -76,7 +76,7 @@ func UpdateStudentScore() {
 
 				if err != nil {
 					output.Info = err.Error()
-					conf.AppLogger.Error("sync student[num: %s] scores failed. reason: %s", student.Number, err.Error())
+					conf.Logger.Error("sync student[num: %s] scores failed. reason: %s", student.Number, err.Error())
 					err = service.StudentService.UpdateStudentSyncStatus(student.Id, false)
 					outputQueue <- output
 					continue
@@ -86,7 +86,7 @@ func UpdateStudentScore() {
 					// 成绩数量没有发生变化, 按照算法随机尝试更新
 					x := rand.Intn(100)
 					if x > 3 {
-						conf.AppLogger.Info("student[num: %s] scores not changed. current count[count: %d]", student.Number, len(scores))
+						conf.Logger.Info("student[num: %s] scores not changed. current count[count: %d]", student.Number, len(scores))
 						outputQueue <- output
 						continue
 					}
@@ -115,5 +115,5 @@ func UpdateStudentScore() {
 	}
 
 	stopAt := time.Since(startAt)
-	conf.AppLogger.Info("sync %d students scores finish, use time %s", len(students), stopAt.String())
+	conf.Logger.Info("sync %d students scores finish, use time %s", len(students), stopAt.String())
 }

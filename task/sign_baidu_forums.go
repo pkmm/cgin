@@ -21,12 +21,12 @@ func SignBaiduForums() {
 		worker, err := baidu.NewBaiduTiebaCrawl(record.Bduss)
 		if err != nil {
 			// TODO 邮件通知 或者 记录到DB中
-			conf.AppLogger.Error("初始化百度签到worker失败: ", err.Error())
+			conf.Logger.Error("初始化百度签到worker失败: ", err.Error())
 			return
 		}
 		tiebas, err := worker.RetrieveTiebas()
 		if err != nil {
-			conf.AppLogger.Error("获取贴吧失败： ", err.Error())
+			conf.Logger.Error("获取贴吧失败： ", err.Error())
 			return
 		}
 		// TODO: 处理签到的结果

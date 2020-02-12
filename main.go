@@ -35,7 +35,7 @@ func main() {
 		Handler: handlers,
 	}
 
-	conf.AppLogger.Info("cgin is running at [%s]", "http://localhost:"+port)
+	conf.Logger.Info("cgin is running at [%s]", "http://localhost:"+port)
 	fmt.Printf("cgin is running at [%s]", "http://localhost:"+port)
 	server.ListenAndServe()
 }

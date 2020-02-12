@@ -68,6 +68,6 @@ func ConnectDB() {
 
 	if err = db.Set("gorm:table_options", "ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;").
 		AutoMigrate(model.Models...).Error; err != nil {
-		conf.AppLogger.Error("auto migrate tables failed, " + err.Error())
+		conf.Logger.Error("auto migrate tables failed, " + err.Error())
 	}
 }
