@@ -9,18 +9,18 @@ import (
 )
 
 const (
-	HOST = "http://91porn.com/"
-	Index = "index.php"
+	HOST      = "http://91porn.com/"
+	Index     = "index.php"
 	proxyHost = "http://localhost:1081"
 )
 
 type videoItem struct {
-	Id int64
-	ViewKey string
-	Title string
-	ImgUrl string
-	Duration string
-	Info string
+	Id            int64
+	ViewKey       string
+	Title         string
+	ImgUrl        string
+	Duration      string
+	Info          string
 	VideoResultId int64
 }
 
@@ -39,7 +39,7 @@ func setProxy(proxyHost string) (*url.URL, error) {
 	return u, err
 }
 
-func NewHttpClient() *MyClient{
+func NewHttpClient() *MyClient {
 	proxy, err := setProxy(proxyHost)
 	if err != nil {
 		log.Fatal(err)
@@ -48,8 +48,8 @@ func NewHttpClient() *MyClient{
 		Proxy: http.ProxyURL(proxy),
 	}
 	client := &http.Client{
-		Transport:     transport,
-		Timeout: 10 * time.Second,
+		Transport: transport,
+		Timeout:   10 * time.Second,
 	}
 	return &MyClient{c: client}
 }
@@ -57,7 +57,7 @@ func NewHttpClient() *MyClient{
 func ParseIndex() *[]videoItem {
 
 	client := NewHttpClient()
-	request, err := http.NewRequest("GET", HOST + Index, nil)
+	request, err := http.NewRequest("GET", HOST+Index, nil)
 	res, err := client.Do(request)
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +68,7 @@ func ParseIndex() *[]videoItem {
 		log.Fatal(err)
 	}
 	videos := make([]videoItem, 0)
-	doc.Find("div#tab-featured p").Each(func (i int, pElement *goquery.Selection) {
+	doc.Find("div#tab-featured p").Each(func(i int, pElement *goquery.Selection) {
 		item := videoItem{}
 		item.Title = pElement.Find(".title").Text()
 		item.ImgUrl = pElement.Find("img").First().AttrOr("src", "")
@@ -79,5 +79,3 @@ func ParseIndex() *[]videoItem {
 
 	return &videos
 }
-
-
