@@ -12,6 +12,7 @@ import (
 const (
 	FlagSyncStudentScore = "sync_student_score"
 	FlagBaiduTiebaSign   = "sign_baidu_tieba"
+	FlagBackupMysql      = "backup_mysql"
 )
 
 var Tasks = []string{FlagBaiduTiebaSign, FlagSyncStudentScore}
@@ -30,7 +31,7 @@ func init() {
 	c.AddFunc("0 */10 * * * *", taskWrapper(UpdateStudentScore, FlagSyncStudentScore))
 
 	// 在每天即将结束的时候，复位user的can_sync字段
-	c.AddFunc("0 55 11 * * *", func() {
+	c.AddFunc("0 55 23 * * *", func() {
 		service.StudentService.RestSyncStatus()
 	})
 
@@ -41,6 +42,9 @@ func init() {
 
 	// 百度贴吧签到
 	c.AddFunc("0 0 0 * * *", taskWrapper(SignBaiduForums, FlagBaiduTiebaSign))
+
+	// 数据库备份
+	c.AddFunc("0 0 3 * * *", taskWrapper(backupMysql, FlagBackupMysql))
 
 	//  开始任务
 	c.Start()

@@ -14,11 +14,19 @@ var AppConfig config.Configer
 // 使用beego的log系统
 var Logger *logs.BeeLogger
 
-// 运行环境的参数设置
 const (
+	// 运行环境的参数设置
 	AppEnvironment = "appEnv"
 	AppEnvProd     = "prod"
 	AppEnvDev      = "dev"
+
+	// mysql
+	MysqlHost     = "mysql.host"
+	MysqlPort     = "mysql.port"
+	MysqlUser     = "mysql.username"
+	MysqlPassword = "mysql.password"
+	MysqlDatabase = "mysql.database"
+	MysqlTimezone = "mysql.timezone"
 )
 
 func init() {
@@ -44,7 +52,7 @@ func initLogger() *logs.BeeLogger {
 	}
 
 	wd := util.GetCurrentCodePath()
-	logFileStorageIn :=  path.Join(wd, "..", "storage/logs/gin.log")
+	logFileStorageIn := path.Join(wd, "..", "storage/logs/gin.log")
 	lf := &logConfig{
 		Filename: logFileStorageIn,
 		Level:    7,

@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const DATE_FORMAT = "2006-01-02 15:04:05"
+const DateFormat = "2006-01-02 15:04:05"
 
 var db *gorm.DB
 var err error
@@ -21,10 +21,10 @@ var dsn string
 func init() {
 	dsn = fmt.Sprintf(
 		"%s:%s@/%s?charset=utf8&parseTime=True&loc=%s",
-		conf.AppConfig.String("mysql.username"),
-		conf.AppConfig.String("mysql.password"),
-		conf.AppConfig.String("mysql.database"),
-		url.QueryEscape(conf.AppConfig.String("mysql.timezone")),
+		conf.AppConfig.String(conf.MysqlUser),
+		conf.AppConfig.String(conf.MysqlPassword),
+		conf.AppConfig.String(conf.MysqlDatabase),
+		url.QueryEscape(conf.AppConfig.String(conf.MysqlTimezone)),
 	)
 	db, err = gorm.Open("mysql", dsn)
 	if err != nil {
