@@ -35,7 +35,7 @@ func init() {
 	db.DB().SetMaxIdleConns(10) // 空闲链接
 	db.DB().SetMaxOpenConns(100)
 
-	if conf.AppConfig.String(conf.AppEnvironment) != conf.EnvProd {
+	if conf.AppConfig.String(conf.AppEnvironment) != conf.AppEnvProd {
 		db.LogMode(true)
 	}
 

@@ -9,12 +9,12 @@ import (
 	"net/http"
 )
 
-var env = conf.EnvDev
+var env = conf.AppEnvDev
 var port = "8654"
 
 func init() {
-	env = conf.AppConfig.DefaultString(conf.AppEnvironment, conf.EnvProd)
-	if env == conf.EnvProd {
+	env = conf.AppConfig.DefaultString(conf.AppEnvironment, conf.AppEnvProd)
+	if env == conf.AppEnvProd {
 		gin.SetMode(gin.ReleaseMode)
 	} else {
 		gin.SetMode(gin.DebugMode)

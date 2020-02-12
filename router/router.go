@@ -30,7 +30,7 @@ func MapRoute() *gin.Engine {
 	router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler(), middleware.RequestLogger)
 
 	// dev export swagger api.
-	if conf.EnvDev == conf.AppConfig.DefaultString(conf.AppEnvironment, conf.EnvProd) {
+	if conf.AppEnvDev == conf.AppConfig.DefaultString(conf.AppEnvironment, conf.AppEnvProd) {
 		router.GET("/swagger/*any", ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "xx"))
 	}
 
@@ -102,7 +102,7 @@ func MapRoute() *gin.Engine {
 
 	apiTrigger := router.Group(Trigger)
 	{
-		if conf.AppConfig.String(conf.AppEnvironment) != conf.EnvDev {
+		if conf.AppConfig.String(conf.AppEnvironment) != conf.AppEnvDev {
 			apiTrigger.Use(middleware.Auth)
 		}
 		apiTrigger.Any("/cron", controller.CronTaskController.TriggerTask)
