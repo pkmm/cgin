@@ -21,6 +21,7 @@ const (
 	StudentPrefix     = "/api/student"
 	MiniProgramPrefix = RootApiPrefix + "/mini_program"
 	Trigger = "/api/trigger/"
+	Thinking = "/thinking"
 )
 
 func MapRoute() *gin.Engine {
@@ -100,12 +101,19 @@ func MapRoute() *gin.Engine {
 		apiMiniProgram.POST("/add_hermann_memorial", controller.HermannRememberController.SaveUserRememberTask)
 	}
 
+	// 任务
 	apiTrigger := router.Group(Trigger)
 	{
 		if conf.AppConfig.String(conf.AppEnvironment) != conf.AppEnvDev {
 			apiTrigger.Use(middleware.Auth)
 		}
 		apiTrigger.Any("/cron", controller.CronTaskController.TriggerTask)
+	}
+
+	// thinking
+	thinkingApi := router.Group(Thinking)
+	{
+		thinkingApi.Any("/list", controller.ThinkingController.GetList)
 	}
 
 	return router

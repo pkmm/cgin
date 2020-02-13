@@ -8,6 +8,7 @@ require (
 	github.com/astaxie/beego v1.12.0
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/elazarl/goproxy v0.0.0-20191011121108-aa519ddbe484 // indirect
 	github.com/ewalker544/libsvm-go v0.0.0-20140912030911-ec8445221ede
 	github.com/garyburd/redigo v1.6.0
 	github.com/gin-contrib/gzip v0.0.1
@@ -22,6 +23,7 @@ require (
 	github.com/pkmm/gb v0.0.0-20200120091341-95de571a92be
 	github.com/robfig/cron v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
+	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.5
@@ -29,7 +31,7 @@ require (
 	golang.org/x/image v0.0.0-20191214001246-9130b4cfad52
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
 	golang.org/x/text v0.3.2
-	golang.org/x/tools v0.0.0-20200119215504-eb0d8dd85bcc // indirect
+	golang.org/x/tools v0.0.0-20200119215504-eb0d8dd85bcc
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 	moul.io/http2curl v1.0.0 // indirect
 )

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"cgin/controller/context_helper"
 	"cgin/errno"
 	"cgin/service"
 	"cgin/util"
@@ -8,7 +9,6 @@ import (
 )
 
 type hermannRememberController struct {
-	BaseController
 }
 
 var HermannRememberController = &hermannRememberController{}
@@ -20,25 +20,25 @@ type taskDetail struct {
 }
 
 func (h *hermannRememberController) GetTodayTaskInfo(c *gin.Context) {
-	h.getAuthUserId(c)
-	tasks, err := service.HermannService.GetTodayTask(h.UserId)
+	helper := context_helper.New(c)
+	tasks, err := service.HermannService.GetTodayTask(helper.GetAuthUserId())
 	if err != nil {
 		panic(err)
 	}
-	h.response(c, gin.H{
+	helper.Response(gin.H{
 		"tasks": tasks,
 	})
 }
 
 func (h *hermannRememberController) SaveUserRememberTask(c *gin.Context) {
-	h.getAuthUserId(c)
+	helper := context_helper.New(c)
 	var params taskDetail
 	if err := c.BindJSON(&params); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
-	err := service.HermannService.SaveTask(params.Unit, params.TotalUnit, params.StartAt, h.UserId)
+	err := service.HermannService.SaveTask(params.Unit, params.TotalUnit, params.StartAt, helper.GetAuthUserId())
 	if err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
-	h.response(c, nil)
+	helper.Response(nil)
 }

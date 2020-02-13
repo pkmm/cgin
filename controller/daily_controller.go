@@ -1,12 +1,12 @@
 package controller
 
 import (
+	"cgin/controller/context_helper"
 	"cgin/service"
 	"github.com/gin-gonic/gin"
 )
 
 type dailyController struct {
-	BaseController
 }
 
 var DailyController = &dailyController{}
@@ -18,7 +18,8 @@ func (d *dailyController) GetImage(c *gin.Context) {
 
 // 每日一言的数据
 func (d *dailyController) GetSentence(c *gin.Context) {
-	d.response(c, gin.H{
+	helper := context_helper.New(c)
+	helper.Response(gin.H{
 		"sentence": service.DailyService.GetSentence(),
 	})
 }

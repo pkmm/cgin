@@ -13,4 +13,5 @@ var Models = []interface{}{
 	&HermannMemorial{},
 	&Sponsor{},
 	&Tieba{},
+	&Thinking{},
 }
