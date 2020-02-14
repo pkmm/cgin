@@ -15,6 +15,12 @@ type authController struct {
 
 var AuthController = &authController{}
 
+// @Summary 登录
+// @Produce json
+// @Accept json
+// @Router /auth/login [post]
+// @Success 200 {object} service.Response
+// @Param auth_model body co.AuthModel true "auth model"
 func (a *authController) Login(c *gin.Context) {
 	var (
 		openid, sign, token string

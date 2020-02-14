@@ -17,11 +17,11 @@ import (
 
 const (
 	RootApiPrefix     = "/api"
-	AuthPrefix        = "/api/auth"
-	StudentPrefix     = "/api/student"
+	AuthPrefix        = RootApiPrefix + "/auth"
+	StudentPrefix     = RootApiPrefix + "/student"
 	MiniProgramPrefix = RootApiPrefix + "/mini_program"
-	Trigger = "/api/trigger/"
-	Thinking = "/thinking"
+	Trigger           = RootApiPrefix + "/trigger/"
+	Thinking          = RootApiPrefix + "/thinking"
 )
 
 func MapRoute() *gin.Engine {

@@ -47,6 +47,7 @@ func (s *thinkingService) GetList(page, size int) []*model.Thinking {
 		panic("查询参数错误")
 	}
 	offset := (page - 1) * size
-	db.Model(&model.Thinking{}).Limit(size).Offset(offset).Find(&results).Order("id asc")
+	db.Model(&model.Thinking{}).Where("is_deleted = ? or is_deleted is NULL", false).
+		Limit(size).Offset(offset).Find(&results).Order("id asc")
 	return results
 }

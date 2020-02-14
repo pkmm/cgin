@@ -61,7 +61,6 @@ func (b *contextHelper) GetInt64(key string) int64 {
 	default:
 		panic("无法解析的类型：" + key)
 	}
-	//panic("参数解析错误: " + key)
 }
 
 func (b *contextHelper) GetString(key string) string {
@@ -84,20 +83,6 @@ func (b *contextHelper) GetAuthUserId() uint64 {
 	b.UserId = userId
 	return userId
 }
-
-//// 请求的中json参数解析到params
-//// Get 请求参数未解析
-//func (b *contextHelper) processParams(c *gin.Context) {
-//	b.Params = map[string]interface{}{}
-//	switch c.Request.Method {
-//	case http.MethodGet:
-//		return
-//	default:
-//		if err := c.ShouldBindWith(&b.Params, binding.JSON); err != nil {
-//			panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
-//		}
-//	}
-//}
 
 // 处理成功的请求
 func (b *contextHelper) Response(responseData interface{}) {

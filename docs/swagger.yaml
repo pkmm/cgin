@@ -1,5 +1,35 @@
 basePath: /api
 definitions:
+  co.AuthModel:
+    properties:
+      device_type:
+        example: 1
+        type: integer
+      openid:
+        example: aqe
+        type: string
+      sign:
+        example: ewe
+        type: string
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjgsImV4cCI6MTU2MjQ2NTY0MSwiaXNzIjoiY2NsYSJ9.J3QXF3tZlvzyWvx8VG9EibUIr5mHK0xg3mjxY8LGhk8
+        type: string
+    type: object
+  co.PageLimitOffset:
+    properties:
+      page:
+        example: 1
+        type: integer
+      size:
+        example: 100
+        type: integer
+    type: object
+  co.TaskName:
+    properties:
+      job_name:
+        example: sign_baidu_tieba
+        type: string
+    type: object
   service.Response:
     properties:
       code:
@@ -17,17 +47,55 @@ info:
   title: My Server cgin
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: auth model
+        in: body
+        name: auth_model
+        required: true
+        schema:
+          $ref: '#/definitions/co.AuthModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 登录
+  /thinking/list:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: page size
+        in: body
+        name: paging
+        required: true
+        schema:
+          $ref: '#/definitions/co.PageLimitOffset'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 值得深思的句子
   /trigger/cron:
     post:
+      consumes:
+      - application/json
       parameters:
-      - description: job_name
-        enum:
-        - sign_baidu_tieba
-        - not_exist
-        in: query
+      - description: job name
+        in: body
         name: job_name
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/co.TaskName'
       produces:
       - application/json
       responses:

@@ -10,23 +10,84 @@
     "host": "localhost:8654",
     "basePath": "/api",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "登录",
+                "parameters": [
+                    {
+                        "description": "auth model",
+                        "name": "auth_model",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.AuthModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/thinking/list": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "值得深思的句子",
+                "parameters": [
+                    {
+                        "description": "page size",
+                        "name": "paging",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.PageLimitOffset"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/trigger/cron": {
             "post": {
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "summary": "定时任务触发器",
                 "parameters": [
                     {
-                        "enum": [
-                            "sign_baidu_tieba",
-                            "not_exist"
-                        ],
-                        "type": "string",
-                        "description": "job_name",
+                        "description": "job name",
                         "name": "job_name",
-                        "in": "query",
-                        "required": true
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.TaskName"
+                        }
                     }
                 ],
                 "responses": {
@@ -41,6 +102,49 @@
         }
     },
     "definitions": {
+        "co.AuthModel": {
+            "type": "object",
+            "properties": {
+                "device_type": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "openid": {
+                    "type": "string",
+                    "example": "aqe"
+                },
+                "sign": {
+                    "type": "string",
+                    "example": "ewe"
+                },
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjgsImV4cCI6MTU2MjQ2NTY0MSwiaXNzIjoiY2NsYSJ9.J3QXF3tZlvzyWvx8VG9EibUIr5mHK0xg3mjxY8LGhk8"
+                }
+            }
+        },
+        "co.PageLimitOffset": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "size": {
+                    "type": "integer",
+                    "example": 100
+                }
+            }
+        },
+        "co.TaskName": {
+            "type": "object",
+            "properties": {
+                "job_name": {
+                    "type": "string",
+                    "example": "sign_baidu_tieba"
+                }
+            }
+        },
         "service.Response": {
             "type": "object",
             "properties": {
