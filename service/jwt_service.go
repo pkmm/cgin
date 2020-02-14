@@ -3,6 +3,7 @@ package service
 import (
 	"cgin/conf"
 	"cgin/model"
+	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"sync"
 	"time"
@@ -42,6 +43,9 @@ func (srv *jwtService) GetAuthClaims(tokenString string) (*AuthClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AuthClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return srv.GetSignKey(), nil
 	})
+	if token == nil {
+		return nil, errors.New("token is not valid")
+	}
 	if claims, ok := token.Claims.(*AuthClaims); ok && token.Valid {
 		return claims, nil
 	}

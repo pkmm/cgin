@@ -6,8 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type dailyController struct {
-}
+type dailyController struct {}
 
 var DailyController = &dailyController{}
 

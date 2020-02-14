@@ -40,6 +40,36 @@
                 }
             }
         },
+        "/auth/me": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取认证的自己",
+                "parameters": [
+                    {
+                        "description": "get auth self",
+                        "name": "auth_credit",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.AuthCredit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/thinking/list": {
             "post": {
                 "consumes": [
@@ -102,6 +132,15 @@
         }
     },
     "definitions": {
+        "co.AuthCredit": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "tokne_example.asdass"
+                }
+            }
+        },
         "co.AuthModel": {
             "type": "object",
             "properties": {

@@ -8,8 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type cronTaskController struct {
-}
+type cronTaskController struct {}
 
 var CronTaskController = cronTaskController{}
 

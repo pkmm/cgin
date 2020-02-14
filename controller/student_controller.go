@@ -8,8 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type studentController struct {
-}
+type studentController struct {}
 
 var Student = &studentController{}
 

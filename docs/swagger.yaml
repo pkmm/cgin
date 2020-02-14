@@ -1,5 +1,11 @@
 basePath: /api
 definitions:
+  co.AuthCredit:
+    properties:
+      token:
+        example: tokne_example.asdass
+        type: string
+    type: object
   co.AuthModel:
     properties:
       device_type:
@@ -66,6 +72,25 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 登录
+  /auth/me:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: get auth self
+        in: body
+        name: auth_credit
+        required: true
+        schema:
+          $ref: '#/definitions/co.AuthCredit'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 获取认证的自己
   /thinking/list:
     post:
       consumes:

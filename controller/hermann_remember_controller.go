@@ -8,8 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type hermannRememberController struct {
-}
+type hermannRememberController struct {}
 
 var HermannRememberController = &hermannRememberController{}
 

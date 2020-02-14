@@ -13,8 +13,7 @@ import (
 
 // 微信小程序控制器，后台配置小程序各个页面，小程序获取配置接口
 
-type miniProgramController struct {
-}
+type miniProgramController struct {}
 
 var MiniProgramController = &miniProgramController{}
 
