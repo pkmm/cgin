@@ -18,6 +18,11 @@ type taskDetail struct {
 	StartAt   util.JSONTime `json:"start_at,string"`
 }
 
+// @Summary 背单词：今天的任务
+// @Produce json
+// @Router /mini_program/get_hermann_memorial [get]
+// @Success 200 {object} service.Response
+// @Param auth_credit query co.AuthCredit true "auth credit"
 func (h *hermannRememberController) GetTodayTaskInfo(c *gin.Context) {
 	helper := context_helper.New(c)
 	tasks, err := service.HermannService.GetTodayTask(helper.GetAuthUserId())
@@ -29,6 +34,11 @@ func (h *hermannRememberController) GetTodayTaskInfo(c *gin.Context) {
 	})
 }
 
+// @Summary 添加背单词的任务
+// @Produce json
+// @Router /mini_program/add_hermann_memorial [post]
+// @Success 200 {object} service.Response
+// @Param addData body co.AddHermannMemorial true "data"
 func (h *hermannRememberController) SaveUserRememberTask(c *gin.Context) {
 	helper := context_helper.New(c)
 	var params taskDetail

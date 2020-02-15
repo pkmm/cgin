@@ -1,5 +1,20 @@
 basePath: /api
 definitions:
+  co.AddHermannMemorial:
+    properties:
+      start_at:
+        $ref: '#/definitions/util.JSONTime'
+        type: object
+      token:
+        example: tokne_example.asdass
+        type: string
+      total_unit:
+        example: 39
+        type: integer
+      unit:
+        example: 2
+        type: integer
+    type: object
   co.AuthCredit:
     properties:
       token:
@@ -44,6 +59,8 @@ definitions:
         type: object
       msg:
         type: string
+    type: object
+  util.JSONTime:
     type: object
 host: localhost:8654
 info:
@@ -91,6 +108,57 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 获取认证的自己
+  /daily_image:
+    get:
+      produces:
+      - image/jpeg
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 随机图片
+  /daily_sentence:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 一句话
+  /mini_program/add_hermann_memorial:
+    post:
+      parameters:
+      - description: data
+        in: body
+        name: addData
+        required: true
+        schema:
+          $ref: '#/definitions/co.AddHermannMemorial'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 添加背单词的任务
+  /mini_program/get_hermann_memorial:
+    get:
+      parameters:
+      - in: query
+        name: token
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 背单词：今天的任务
   /thinking/list:
     post:
       consumes:

@@ -70,6 +70,88 @@
                 }
             }
         },
+        "/daily_image": {
+            "get": {
+                "produces": [
+                    "image/jpeg"
+                ],
+                "summary": "随机图片",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/daily_sentence": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "一句话",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/mini_program/add_hermann_memorial": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "添加背单词的任务",
+                "parameters": [
+                    {
+                        "description": "data",
+                        "name": "addData",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.AddHermannMemorial"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/mini_program/get_hermann_memorial": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "背单词：今天的任务",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "token",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/thinking/list": {
             "post": {
                 "consumes": [
@@ -132,6 +214,27 @@
         }
     },
     "definitions": {
+        "co.AddHermannMemorial": {
+            "type": "object",
+            "properties": {
+                "start_at": {
+                    "type": "object",
+                    "$ref": "#/definitions/util.JSONTime"
+                },
+                "token": {
+                    "type": "string",
+                    "example": "tokne_example.asdass"
+                },
+                "total_unit": {
+                    "type": "integer",
+                    "example": 39
+                },
+                "unit": {
+                    "type": "integer",
+                    "example": 2
+                }
+            }
+        },
         "co.AuthCredit": {
             "type": "object",
             "properties": {
@@ -197,6 +300,9 @@
                     "type": "string"
                 }
             }
+        },
+        "util.JSONTime": {
+            "type": "object"
         }
     }
 }

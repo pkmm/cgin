@@ -2,17 +2,17 @@ package middleware
 
 import (
 	"bytes"
-	"cgin/conf"
 	"cgin/errno"
 	"cgin/service"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"io/ioutil"
+	"net/http"
 )
 
 // 使用JWT进行认证
 
 const UID = "uid"
+const Token = "token"
 
 type authData struct {
 	Token string `json:"token"`
@@ -24,24 +24,23 @@ func Auth(c *gin.Context) {
 	rdr1 := ioutil.NopCloser(bytes.NewBuffer(buf))
 	rdr2 := ioutil.NopCloser(bytes.NewBuffer(buf)) //We have to create a new Buffer, because rdr1 will be read.
 
-	data := &authData{}
 	c.Request.Body = rdr1
-	if err := c.ShouldBindWith(data, binding.JSON); err != nil {
-		conf.Logger.Error("login request failed. " + err.Error())
-		c.Request.Body = rdr2
-		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
+	data := new(authData)
+	if c.Request.Method == http.MethodPost {
+		if err := c.ShouldBindJSON(&data);err != nil {
+			panic(errno.NormalException.AppendErrorMsg("获取token失败"))
+		}
+	} else if c.Request.Method == http.MethodGet {
+		data.Token = c.DefaultQuery(Token, "")
+		if data.Token == "" {
+			panic(errno.TokenNotValid)
+		}
 	}
 	c.Request.Body = rdr2
-
-	if data.Token == "" {
-		panic(errno.TokenNotValid)
-	}
-
 	claims, err := service.JWTSrv.GetAuthClaims(data.Token)
 	if err != nil {
 		panic(errno.TokenNotValid)
 	}
-
 	c.Set(UID, claims.Uid)
 	c.Next()
 }

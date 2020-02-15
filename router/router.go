@@ -97,7 +97,7 @@ func MapRoute() *gin.Engine {
 		// 以下的API 需要认证
 		apiMiniProgram.POST("/config_menu", controller.MiniProgramController.DisposeMenu).Use(middleware.Auth)
 		apiMiniProgram.POST("/change_notification", controller.MiniProgramController.UpdateOrCreateNotification)
-		apiMiniProgram.POST("/get_hermann_memorial", controller.HermannRememberController.GetTodayTaskInfo)
+		apiMiniProgram.GET("/get_hermann_memorial", controller.HermannRememberController.GetTodayTaskInfo)
 		apiMiniProgram.POST("/add_hermann_memorial", controller.HermannRememberController.SaveUserRememberTask)
 	}
 
