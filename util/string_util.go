@@ -34,7 +34,7 @@ func Md5(buf []byte) string {
 func Md5String(s string) string {
 	h := md5.New()
 	h.Write([]byte(s))
-	return hex.EncodeToString(h.Sum(nil))
+	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
 func Signature(params map[string]string) string {

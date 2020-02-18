@@ -83,6 +83,10 @@ func (m *miniProgramController) SetIndexConfig(c *gin.Context) {
 }
 
 // 获取notification 默认是显示最新的10条
+// @Summary 获取notification
+// @Router /mini_program/get_notifications [get]
+// @Success 200 {object} service.Response
+// @Produce json
 func (m *miniProgramController) GetNotification(c *gin.Context) {
 	helper := context_helper.New(c)
 	limit, err := strconv.ParseUint(c.DefaultQuery("count", "10"), 10, 64)
@@ -94,6 +98,11 @@ func (m *miniProgramController) GetNotification(c *gin.Context) {
 }
 
 // 更新或者创建一个notification
+// @Summary 更新创建一个notification
+// @Router /mini_program/change_notification [post]
+// @Success 200 {object} service.Response
+// @Param notification body co.Notification true "one notification"
+// @Produce json
 func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 	helper := context_helper.New(c)
 	helper.GetAuthUserId()
@@ -113,12 +122,15 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 }
 
 // 赞助的人
+// @Summary 查看赞助我的人
+// @Router /mini_program/get_sponsors [get]
+// @Success 200 {object} service.Response
+// @Produce json
 func (m *miniProgramController) GetSponsors(c *gin.Context) {
 	helper := context_helper.New(c)
-	var result []*respobj.Sponsor
 	sponsors := service.MiniProgramService.GetSponsors()
-	//fmt.Printf("%#v", sponsors)
-	for _, s := range sponsors {
+	var result = make([]*respobj.Sponsor, len(sponsors))
+	for ind, s := range sponsors {
 		o := &respobj.Sponsor{
 			Id:        s.Id,
 			Money:     s.Money,
@@ -127,7 +139,7 @@ func (m *miniProgramController) GetSponsors(c *gin.Context) {
 		if s.User != nil {
 			o.OpenId = s.User.OpenId
 		}
-		result = append(result, o)
+		result[ind] = o
 	}
 	helper.Response(gin.H{
 		"sponsors": result,

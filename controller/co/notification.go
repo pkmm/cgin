@@ -3,6 +3,7 @@ package co
 import "cgin/util"
 
 type Notification struct {
+	AuthCredit
 	Id      uint64        `json:"id,omitempty"`
 	Content string        `json:"content,omitempty"`
 	StartAt util.JSONTime `json:"start_at,omitempty"`

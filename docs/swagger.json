@@ -102,6 +102,34 @@
                 }
             }
         },
+        "/decode_verify_code": {
+            "post": {
+                "consumes": [
+                    "image/gif"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "验证码识别",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "image of verify code",
+                        "name": "img",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/mini_program/add_hermann_memorial": {
             "post": {
                 "produces": [
@@ -129,6 +157,33 @@
                 }
             }
         },
+        "/mini_program/change_notification": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "更新创建一个notification",
+                "parameters": [
+                    {
+                        "description": "one notification",
+                        "name": "notification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.Notification"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/mini_program/get_hermann_memorial": {
             "get": {
                 "produces": [
@@ -142,6 +197,38 @@
                         "in": "query"
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/mini_program/get_notifications": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取notification",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/mini_program/get_sponsors": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "查看赞助我的人",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -223,7 +310,7 @@
                 },
                 "token": {
                     "type": "string",
-                    "example": "tokne_example.asdass"
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM"
                 },
                 "total_unit": {
                     "type": "integer",
@@ -240,7 +327,7 @@
             "properties": {
                 "token": {
                     "type": "string",
-                    "example": "tokne_example.asdass"
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM"
                 }
             }
         },
@@ -249,19 +336,38 @@
             "properties": {
                 "device_type": {
                     "type": "integer",
-                    "example": 1
+                    "example": 2
                 },
                 "openid": {
                     "type": "string",
-                    "example": "aqe"
+                    "example": "openid_xxsd"
                 },
                 "sign": {
                     "type": "string",
-                    "example": "ewe"
+                    "example": "559EB671B3E536C8B1705EA9BD90FCFE"
+                }
+            }
+        },
+        "co.Notification": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "end_at": {
+                    "type": "object",
+                    "$ref": "#/definitions/util.JSONTime"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "start_at": {
+                    "type": "object",
+                    "$ref": "#/definitions/util.JSONTime"
                 },
                 "token": {
                     "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjgsImV4cCI6MTU2MjQ2NTY0MSwiaXNzIjoiY2NsYSJ9.J3QXF3tZlvzyWvx8VG9EibUIr5mHK0xg3mjxY8LGhk8"
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM"
                 }
             }
         },

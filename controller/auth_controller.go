@@ -8,9 +8,10 @@ import (
 	"cgin/service"
 	"cgin/util"
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
-type authController struct {}
+type authController struct{}
 
 var AuthController = &authController{}
 
@@ -23,19 +24,20 @@ var AuthController = &authController{}
 func (a *authController) Login(c *gin.Context) {
 	var (
 		openid, sign, token string
-		deviceType          devicetype.DeviceType
+		loginDeviceType     devicetype.DeviceType
 		err                 error
 	)
 	helper := context_helper.New(c)
-	deviceType = devicetype.DeviceType(helper.GetInt("device_type"))
+	loginDeviceType = devicetype.DeviceType(helper.GetInt("device_type"))
 	openid = helper.GetString("openid")
-	openid = helper.GetString("sign")
+	sign = strings.ToUpper(helper.GetString("sign"))
 
-	sign2 := util.Md5String(conf.AppConfig.String("normal.random.str") + conf.AppConfig.String("miniprogram_app_id") + openid)
-	if sign != sign2 {
-		panic(errno.InvalidParameters.AppendErrorMsg("签名验证失败"))
-	}
-	if deviceType == devicetype.MiniProgram {
+	switch loginDeviceType {
+	case devicetype.MiniProgram:
+		sign2 := util.Md5String(conf.AppConfig.String("normal.random.str") + conf.AppConfig.String("miniprogram_app_id") + openid)
+		if sign != sign2 {
+			panic(errno.InvalidParameters.AppendErrorMsg("签名验证失败"))
+		}
 		user := service.AuthService.LoginFromMiniProgram(openid)
 		if token, err = service.JWTSrv.GenerateToken(user); err != nil {
 			panic(errno.GenerateJwtTokenFailed.AppendErrorMsg(err.Error()))
@@ -45,6 +47,8 @@ func (a *authController) Login(c *gin.Context) {
 			"token": token,
 		}
 		helper.Response(data)
+	default:
+		panic(errno.NormalException.ReplaceErrorMsgWith("未支持的device type"))
 	}
 }
 

@@ -6,7 +6,7 @@ definitions:
         $ref: '#/definitions/util.JSONTime'
         type: object
       token:
-        example: tokne_example.asdass
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
         type: string
       total_unit:
         example: 39
@@ -18,22 +18,35 @@ definitions:
   co.AuthCredit:
     properties:
       token:
-        example: tokne_example.asdass
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
         type: string
     type: object
   co.AuthModel:
     properties:
       device_type:
-        example: 1
+        example: 2
         type: integer
       openid:
-        example: aqe
+        example: openid_xxsd
         type: string
       sign:
-        example: ewe
+        example: 559EB671B3E536C8B1705EA9BD90FCFE
         type: string
+    type: object
+  co.Notification:
+    properties:
+      content:
+        type: string
+      end_at:
+        $ref: '#/definitions/util.JSONTime'
+        type: object
+      id:
+        type: integer
+      start_at:
+        $ref: '#/definitions/util.JSONTime'
+        type: object
       token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjgsImV4cCI6MTU2MjQ2NTY0MSwiaXNzIjoiY2NsYSJ9.J3QXF3tZlvzyWvx8VG9EibUIr5mHK0xg3mjxY8LGhk8
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
         type: string
     type: object
   co.PageLimitOffset:
@@ -128,6 +141,24 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 一句话
+  /decode_verify_code:
+    post:
+      consumes:
+      - image/gif
+      parameters:
+      - description: image of verify code
+        in: formData
+        name: img
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 验证码识别
   /mini_program/add_hermann_memorial:
     post:
       parameters:
@@ -145,6 +176,23 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 添加背单词的任务
+  /mini_program/change_notification:
+    post:
+      parameters:
+      - description: one notification
+        in: body
+        name: notification
+        required: true
+        schema:
+          $ref: '#/definitions/co.Notification'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 更新创建一个notification
   /mini_program/get_hermann_memorial:
     get:
       parameters:
@@ -159,6 +207,26 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 背单词：今天的任务
+  /mini_program/get_notifications:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 获取notification
+  /mini_program/get_sponsors:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 查看赞助我的人
   /thinking/list:
     post:
       consumes:

@@ -91,8 +91,8 @@ func MapRoute() *gin.Engine {
 		// 不需要认证的
 		apiMiniProgram.POST("/get_index_preference", controller.MiniProgramController.GetIndexPreference)
 		apiMiniProgram.POST("/set_index_config", controller.MiniProgramController.SetIndexConfig)
-		apiMiniProgram.POST("/get_notifications", controller.MiniProgramController.GetNotification)
-		apiMiniProgram.POST("/get_sponsors", controller.MiniProgramController.GetSponsors)
+		apiMiniProgram.GET("/get_notifications", controller.MiniProgramController.GetNotification)
+		apiMiniProgram.GET("/get_sponsors", controller.MiniProgramController.GetSponsors)
 
 		// 以下的API 需要认证
 		apiMiniProgram.POST("/config_menu", controller.MiniProgramController.DisposeMenu).Use(middleware.Auth)
