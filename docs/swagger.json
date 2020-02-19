@@ -352,7 +352,8 @@
             "type": "object",
             "properties": {
                 "content": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "lalala"
                 },
                 "end_at": {
                     "type": "object",

@@ -7,6 +7,7 @@ import (
 	"cgin/util"
 	"encoding/json"
 	"fmt"
+	"github.com/parnurzeal/gorequest"
 	"golang.org/x/image/webp"
 	"image/jpeg"
 	"io"
@@ -25,12 +26,12 @@ type dailyServ struct {
 var DailyService = &dailyServ{}
 
 type DailySentenceResp struct {
-	Id        int       `json:"id"`
-	Hitokoto  string    `json:"hitokoto"`
-	Type      string    `json:"type"`
-	From      string    `json:"from"`
-	Creator   string    `json:"creator"`
-	CreatedAt time.Time `json:"created_at"`
+	Id        int           `json:"id"`
+	Hitokoto  string        `json:"hitokoto"`
+	Type      string        `json:"type"`
+	From      string        `json:"from"`
+	Creator   string        `json:"creator"`
+	CreatedAt util.JSONTime `json:"created_at"`
 }
 
 type ImageTags struct {
@@ -100,7 +101,7 @@ func (d *dailyServ) getListByKeyword(page int, keyword string) *ImageAPIResponse
 
 // 每日一图 使用
 // https://sotama.cool/picture 接口
-func (d *dailyServ) getImageFromAPI() (string ,error) {
+func (d *dailyServ) getImageFromAPI() (string, error) {
 	fileName := "static/images/" + util.Date() + ".jpg"
 	client := &http.Client{
 		Timeout: 10 * time.Second,
@@ -190,22 +191,24 @@ func (d *dailyServ) GetImage() string {
 }
 
 func (d *dailyServ) GetSentence() (sentence *DailySentenceResp) {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", conf.AppConfig.String("daily.sentence"), nil)
-	if err != nil {
-		panic(errno.NormalException.AppendErrorMsg(err.Error()))
-	}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(errno.NormalException.AppendErrorMsg(err.Error()))
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(errno.NormalException.AppendErrorMsg(err.Error()))
-	}
-	defer resp.Body.Close()
+	//client := &http.Client{}
+	//req, err := http.NewRequest("GET", conf.AppConfig.String("daily.sentence"), nil)
+	//if err != nil {
+	//	panic(errno.NormalException.AppendErrorMsg(err.Error()))
+	//}
+	//resp, err := client.Do(req)
+	//if err != nil {
+	//	panic(errno.NormalException.AppendErrorMsg(err.Error()))
+	//}
+	//body, err := ioutil.ReadAll(resp.Body)
+	//if err != nil {
+	//	panic(errno.NormalException.AppendErrorMsg(err.Error()))
+	//}
+	//defer resp.Body.Close()
+
+	// use gorequest
 	ret := &DailySentenceResp{}
-	_ = json.Unmarshal(body, &ret)
-	// TODO:
+	gorequest.New().Get(conf.AppConfig.String("daily.sentence")).EndStruct(ret)
+	// TODO: 做自己的精彩的句子库
 	return ret
 }

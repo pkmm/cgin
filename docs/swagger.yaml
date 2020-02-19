@@ -36,6 +36,7 @@ definitions:
   co.Notification:
     properties:
       content:
+        example: lalala
         type: string
       end_at:
         $ref: '#/definitions/util.JSONTime'
