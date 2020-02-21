@@ -69,8 +69,8 @@ func MapRoute() *gin.Engine {
 	// api/student
 	apiStudent := router.Group(StudentPrefix).Use(middleware.Auth)
 	{
-		apiStudent.POST("/", controller.Student.GetStudent)
-		apiStudent.POST("/scores", controller.Student.GetScores)
+		apiStudent.GET("/", controller.Student.GetStudent)
+		apiStudent.GET("/scores", controller.Student.GetScores)
 		apiStudent.POST("/update_edu_account", controller.Student.UpdateEduAccount)
 	}
 

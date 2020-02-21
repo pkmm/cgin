@@ -3,8 +3,8 @@ definitions:
   co.AddHermannMemorial:
     properties:
       start_at:
-        $ref: '#/definitions/util.JSONTime'
-        type: object
+        example: "2019-01-23 23:12:30"
+        type: string
       token:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
         type: string
@@ -33,19 +33,31 @@ definitions:
         example: 559EB671B3E536C8B1705EA9BD90FCFE
         type: string
     type: object
+  co.EduAccount:
+    properties:
+      password:
+        example: "34"
+        type: string
+      student_number:
+        example: "1923"
+        type: string
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
+        type: string
+    type: object
   co.Notification:
     properties:
       content:
         example: lalala
         type: string
       end_at:
-        $ref: '#/definitions/util.JSONTime'
-        type: object
+        example: "2029-01-23 23:12:30"
+        type: string
       id:
         type: integer
       start_at:
-        $ref: '#/definitions/util.JSONTime'
-        type: object
+        example: "2019-01-23 23:23:34"
+        type: string
       token:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
         type: string
@@ -73,8 +85,6 @@ definitions:
         type: object
       msg:
         type: string
-    type: object
-  util.JSONTime:
     type: object
 host: localhost:8654
 info:
@@ -228,6 +238,51 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 查看赞助我的人
+  /student:
+    get:
+      parameters:
+      - in: query
+        name: token
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 获取当前用户的学生信息
+  /student/scores:
+    get:
+      parameters:
+      - in: query
+        name: token
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 获取学生的成绩
+  /student/update_edu_account:
+    post:
+      parameters:
+      - description: update edu account info
+        in: body
+        name: auth
+        required: true
+        schema:
+          $ref: '#/definitions/co.EduAccount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 更新学生的信息
   /thinking/list:
     post:
       consumes:

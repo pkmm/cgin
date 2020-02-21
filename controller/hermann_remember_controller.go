@@ -42,7 +42,7 @@ func (h *hermannRememberController) GetTodayTaskInfo(c *gin.Context) {
 func (h *hermannRememberController) SaveUserRememberTask(c *gin.Context) {
 	helper := context_helper.New(c)
 	var params taskDetail
-	if err := c.BindJSON(&params); err != nil {
+	if err := c.ShouldBindJSON(&params); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
 	err := service.HermannService.SaveTask(params.Unit, params.TotalUnit, params.StartAt, helper.GetAuthUserId())

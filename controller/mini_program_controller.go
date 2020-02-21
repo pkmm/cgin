@@ -107,7 +107,7 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 	helper := context_helper.New(c)
 	helper.GetAuthUserId()
 	notification := &co.Notification{}
-	if err := c.BindJSON(notification); err != nil {
+	if err := c.ShouldBindJSON(notification); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
 	if notification.Id == 0 {

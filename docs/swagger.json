@@ -239,6 +239,79 @@
                 }
             }
         },
+        "/student": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取当前用户的学生信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "token",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/scores": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取学生的成绩",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "token",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/update_edu_account": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "更新学生的信息",
+                "parameters": [
+                    {
+                        "description": "update edu account info",
+                        "name": "auth",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.EduAccount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/thinking/list": {
             "post": {
                 "consumes": [
@@ -305,8 +378,8 @@
             "type": "object",
             "properties": {
                 "start_at": {
-                    "type": "object",
-                    "$ref": "#/definitions/util.JSONTime"
+                    "type": "string",
+                    "example": "2019-01-23 23:12:30"
                 },
                 "token": {
                     "type": "string",
@@ -348,6 +421,23 @@
                 }
             }
         },
+        "co.EduAccount": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "34"
+                },
+                "student_number": {
+                    "type": "string",
+                    "example": "1923"
+                },
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM"
+                }
+            }
+        },
         "co.Notification": {
             "type": "object",
             "properties": {
@@ -356,15 +446,15 @@
                     "example": "lalala"
                 },
                 "end_at": {
-                    "type": "object",
-                    "$ref": "#/definitions/util.JSONTime"
+                    "type": "string",
+                    "example": "2029-01-23 23:12:30"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "start_at": {
-                    "type": "object",
-                    "$ref": "#/definitions/util.JSONTime"
+                    "type": "string",
+                    "example": "2019-01-23 23:23:34"
                 },
                 "token": {
                     "type": "string",
@@ -407,9 +497,6 @@
                     "type": "string"
                 }
             }
-        },
-        "util.JSONTime": {
-            "type": "object"
         }
     }
 }

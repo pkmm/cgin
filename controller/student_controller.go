@@ -12,6 +12,11 @@ type studentController struct {}
 
 var Student = &studentController{}
 
+// @Summary 获取当前用户的学生信息
+// @Produce json
+// @Router /student [get]
+// @Param auth query co.AuthCredit true "auth token"
+// @Success 200 {object} service.Response
 func (s *studentController) GetStudent(c *gin.Context) {
 	helper := context_helper.New(c)
 	student := service.User.GetStudentByUserId(helper.GetAuthUserId())
@@ -21,6 +26,11 @@ func (s *studentController) GetStudent(c *gin.Context) {
 	helper.Response(data)
 }
 
+// @Summary 获取学生的成绩
+// @Produce json
+// @Router /student/scores [get]
+// @Param auth query co.AuthCredit true "auth token"
+// @Success 200 {object} service.Response
 func (s *studentController) GetScores(c *gin.Context) {
 	helper := context_helper.New(c)
 	scores := service.ScoreService.GetOwnScores(helper.GetAuthUserId())
@@ -49,6 +59,11 @@ func (s *studentController) GetScores(c *gin.Context) {
 	helper.Response(data)
 }
 
+// @Summary 更新学生的信息
+// @Produce json
+// @Router /student/update_edu_account [post]
+// @Param auth body co.EduAccount true "update edu account info"
+// @Success 200 {object} service.Response
 func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	helper := context_helper.New(c)
 	var (

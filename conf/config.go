@@ -40,7 +40,7 @@ func initLogger() *logs.BeeLogger {
 	logger := logs.NewLogger(1e5)
 	logger.SetPrefix("[RETAIN]:")
 	logger.EnableFuncCallDepth(true)
-	logger.SetLogFuncCallDepth(2)
+	logger.SetLogFuncCallDepth(20)
 	logger.Async(1e3)
 
 	type logConfig struct {

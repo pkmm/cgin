@@ -18,7 +18,7 @@ func UpdateStudentScore() {
 	// chunk todo
 	students, err := service.StudentService.GetStudentNeedSyncScore(0, 100000)
 	if err != nil {
-		conf.Logger.Error("Get student for sync student scores failed ", err.Error())
+		conf.Logger.Error("Get student for sync student scores failed %#v", err)
 		return
 	}
 	if len(students) == 0 {
