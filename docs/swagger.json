@@ -70,7 +70,7 @@
                 }
             }
         },
-        "/daily_image": {
+        "/daily/image": {
             "get": {
                 "produces": [
                     "image/jpeg"
@@ -86,7 +86,7 @@
                 }
             }
         },
-        "/daily_sentence": {
+        "/daily/sentence": {
             "get": {
                 "produces": [
                     "application/json"

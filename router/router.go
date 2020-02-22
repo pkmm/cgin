@@ -80,8 +80,8 @@ func MapRoute() *gin.Engine {
 	{
 		apiNormal.POST("/send_template_msg", controller.MiniProgramController.SendTemplateMsg)
 		apiNormal.POST("/decode_verify_code", controller.VerifyCodeCtl.Recognize)
-		apiNormal.GET("/daily_image", controller.DailyController.GetImage)
-		apiNormal.GET("/daily_sentence", controller.DailyController.GetSentence)
+		apiNormal.GET("/daily/image", controller.DailyController.GetImage)
+		apiNormal.GET("/daily/sentence", controller.DailyController.GetSentence)
 	}
 
 	// 小程序

@@ -12,7 +12,7 @@ var DailyController = &dailyController{}
 
 // 直接返回图片，而不是常见的API JSON数据接口
 // @Summary 随机图片
-// @Router /daily_image [get]
+// @Router /daily/image [get]
 // @Produce image/jpeg
 // @Success 200 {object} service.Response
 func (d *dailyController) GetImage(c *gin.Context) {
@@ -22,7 +22,7 @@ func (d *dailyController) GetImage(c *gin.Context) {
 // 每日一言的数据
 // @Summary 一句话
 // @Produce json
-// @Router /daily_sentence [get]
+// @Router /daily/sentence [get]
 // @Success 200 {object} service.Response
 func (d *dailyController) GetSentence(c *gin.Context) {
 	helper := context_helper.New(c)

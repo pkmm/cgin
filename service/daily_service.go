@@ -26,12 +26,16 @@ type dailyServ struct {
 var DailyService = &dailyServ{}
 
 type DailySentenceResp struct {
-	Id        int           `json:"id"`
-	Hitokoto  string        `json:"hitokoto"`
-	Type      string        `json:"type"`
-	From      string        `json:"from"`
-	Creator   string        `json:"creator"`
-	CreatedAt util.JSONTime `json:"created_at"`
+	Id         int    `json:"id"`
+	Hitokoto   string `json:"hitokoto"`
+	Type       string `json:"type"`
+	From       string `json:"from"`
+	FromWho    string `json:"from_who,omitempty"`
+	Creator    string `json:"creator"`
+	CreatorUid int64  `json:"creator_uid"`
+	Reviewer   int64  `json:"reviewer,omitempty"`
+	UUID       string `json:"uuid"`
+	CreatedAt  int64  `json:"created_at,string"`
 }
 
 type ImageTags struct {
@@ -191,22 +195,6 @@ func (d *dailyServ) GetImage() string {
 }
 
 func (d *dailyServ) GetSentence() (sentence *DailySentenceResp) {
-	//client := &http.Client{}
-	//req, err := http.NewRequest("GET", conf.AppConfig.String("daily.sentence"), nil)
-	//if err != nil {
-	//	panic(errno.NormalException.AppendErrorMsg(err.Error()))
-	//}
-	//resp, err := client.Do(req)
-	//if err != nil {
-	//	panic(errno.NormalException.AppendErrorMsg(err.Error()))
-	//}
-	//body, err := ioutil.ReadAll(resp.Body)
-	//if err != nil {
-	//	panic(errno.NormalException.AppendErrorMsg(err.Error()))
-	//}
-	//defer resp.Body.Close()
-
-	// use gorequest
 	ret := &DailySentenceResp{}
 	gorequest.New().Get(conf.AppConfig.String("daily.sentence")).EndStruct(ret)
 	// TODO: 做自己的精彩的句子库

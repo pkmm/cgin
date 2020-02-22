@@ -132,7 +132,7 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 获取认证的自己
-  /daily_image:
+  /daily/image:
     get:
       produces:
       - image/jpeg
@@ -142,7 +142,7 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 随机图片
-  /daily_sentence:
+  /daily/sentence:
     get:
       produces:
       - application/json
