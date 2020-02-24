@@ -6,7 +6,7 @@ definitions:
         example: "2019-01-23 23:12:30"
         type: string
       token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
         type: string
       total_unit:
         example: 39
@@ -18,7 +18,7 @@ definitions:
   co.AuthCredit:
     properties:
       token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
         type: string
     type: object
   co.AuthModel:
@@ -42,7 +42,7 @@ definitions:
         example: "1923"
         type: string
       token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
         type: string
     type: object
   co.Notification:
@@ -59,7 +59,7 @@ definitions:
         example: "2019-01-23 23:23:34"
         type: string
       token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4MjY0ODc2MCwiaXNzIjoiY2NsYSJ9.vJo0zAU-SZrHmNJBNpCh5wUhFwt1S-0JuhrVN7gGIqM
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
         type: string
     type: object
   co.PageLimitOffset:

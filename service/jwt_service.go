@@ -23,15 +23,15 @@ type AuthClaims struct {
 }
 
 func (srv *jwtService) GetSignKey() []byte {
-	return []byte(conf.AppConfig.String("jwt_secret"))
+	return []byte(conf.AppConfig.String(conf.JwtSignKey))
 }
 
 func (srv *jwtService) GenerateToken(user *model.User) (string, error) {
 	claims := AuthClaims{
 		user.Id,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(7 * 24 * time.Hour).Unix(),
-			Issuer:    "ccla",
+			ExpiresAt: time.Now().Add(conf.GetJwtExpiresAt()).Unix(),
+			Issuer:    "c_gin",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

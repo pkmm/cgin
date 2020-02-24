@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego/config"
 	"github.com/astaxie/beego/logs"
 	"path"
+	"time"
 )
 
 // 使用beego的config包
@@ -27,7 +28,17 @@ const (
 	MysqlPassword = "mysql.password"
 	MysqlDatabase = "mysql.database"
 	MysqlTimezone = "mysql.timezone"
+
+	// jwt config
+	JwtExpireAt = "jwt.day"
+	JwtSignKey = "jwt.secret"
 )
+
+// 天数对应的小时 1天 返回24小时
+func GetJwtExpiresAt() time.Duration {
+	day := AppConfig.DefaultInt64(JwtExpireAt, 1)
+	return time.Duration(day) * 24 * time.Hour
+}
 
 func init() {
 	// Note: Must init logger module first.

@@ -28,7 +28,7 @@ func init() {
 func Md5(buf []byte) string {
 	hash := md5.New()
 	hash.Write(buf)
-	return fmt.Sprintf("%x", hash.Sum(nil))
+	return fmt.Sprintf("%X", hash.Sum(nil))
 }
 
 func Md5String(s string) string {
@@ -77,9 +77,9 @@ func Decimal(value float64) float64 {
 func RandomString(length int) string {
 	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210")
 	N := len(letters)
-	ans := make([]rune, 0)
+	ans := make([]rune, length)
 	for i := 0; i < length; i++ {
-		ans = append(ans, letters[rand.Intn(N)])
+		ans[i] = letters[rand.Intn(N)]
 	}
 	return string(ans)
 }
@@ -124,13 +124,18 @@ func BeanDeepCopy(src, des interface{}) {
 // like PHP data('Y-m-d H:i:s')
 func DateTime() string {
 	now := time.Now()
-	return fmt.Sprintf("%02d-%02d-%02d %02d:%02d:%02d", now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second())
+	return now.Format("2006-01-02 15:04:05")
 }
 
 func Date() string {
 	now := time.Now()
-	return fmt.Sprintf("%02d-%02d-%02d", now.Year(), now.Month(), now.Day())
+	return now.Format("2006-01-02")
 }
+
+func TimeString() string {
+	return time.Now().Format("15:04:05")
+}
+// time func end
 
 func PathExists(path string) bool {
 	_, err := os.Stat(path)
