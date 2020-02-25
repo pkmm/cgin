@@ -21,6 +21,7 @@ import (
 // 登录正方教务系统
 // 密码错误五次后 当天是不能登录的
 // 目前只支持查询成绩，其他的功能后期在做
+// TODO: 使用gorequest + goquery重构代码
 
 const (
 	host          = "zfxk.zcmu.edu.cn"
@@ -179,6 +180,7 @@ func (c *Crawl) gbkToUtf8(s []byte) ([]byte, error) {
 	return d, nil
 }
 
+// todo: 提取出成绩的课程编码，作为主键
 func (c *Crawl) retrieveScores() []*Score {
 	// 使用(?s)标记表示.可以匹配换行符
 	pattern := regexp.MustCompile(`(?s)<table .+?id="Datagrid1"[\s\S]*?>(.*?)</table>`)

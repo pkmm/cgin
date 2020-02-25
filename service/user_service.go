@@ -25,7 +25,8 @@ func (serv *userService) GetUser(id uint64) *model.User {
 
 func (serv *userService) GetUserByOpenId(openId string) *model.User {
 	user := &model.User{}
-	if err := db.Model(&model.User{}).Where("`open_id` = ? ", openId).Preload("Student").First(&user).Error; err != nil {
+	if err := db.Model(&model.User{}).Where("`open_id` = ? ", openId).
+		Preload("Student").First(&user).Error; err != nil {
 		// TODO: log
 		return nil
 	}
@@ -47,7 +48,9 @@ func (serv *userService) UpdateUser(user *model.User) error {
 
 func (serv *userService) GetCanSyncCount() uint64 {
 	count := 0
-	if err := db.Model(&model.User{}).Where("`can_sync` = 1").Count(&count).Error; err != nil {
+	if err := db.Model(&model.User{}).
+		Where("`can_sync` = 1").
+		Count(&count).Error; err != nil {
 		return 0
 	}
 
@@ -75,7 +78,8 @@ func (serv *userService) GetStudentByUserId(userId uint64) *model.Student {
 	return student
 }
 
-func (serv *userService) UpdateStudentInfoByUserId(studentNumber, password string, userId uint64) *model.Student {
+func (serv *userService) UpdateStudentInfoByUserId(
+	studentNumber, password string, userId uint64) *model.Student {
 	student := &model.Student{}
 	if err := db.Where("user_id = ?", userId).
 		Assign(model.Student{Number: studentNumber, Password: password, UserId: userId}).
