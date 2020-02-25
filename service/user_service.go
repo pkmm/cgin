@@ -66,7 +66,10 @@ func (serv *userService) CreateUserWithOpenId(openId string) *model.User {
 
 func (serv *userService) GetStudentByUserId(userId uint64) *model.Student {
 	student := &model.Student{}
-	if err := db.Where("user_id = ?", userId).First(&student); err != nil {
+	if err := db.Where("user_id = ?", userId).
+		Preload("Scores").
+		Preload("SyncDetail").
+		First(&student).Error; err != nil {
 		return nil
 	}
 	return student
