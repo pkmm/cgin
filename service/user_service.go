@@ -74,7 +74,9 @@ func (serv *userService) GetStudentByUserId(userId uint64) *model.Student {
 
 func (serv *userService) UpdateStudentInfoByUserId(studentNumber, password string, userId uint64) *model.Student {
 	student := &model.Student{}
-	if err := db.Where("user_id = ?", userId).Assign(model.Student{Number: studentNumber, Password: password, UserId: userId}).FirstOrCreate(student).Error; err != nil {
+	if err := db.Where("user_id = ?", userId).
+		Assign(model.Student{Number: studentNumber, Password: password, UserId: userId}).
+		FirstOrCreate(student).Error; err != nil {
 		return nil
 	}
 	return student
