@@ -15,7 +15,7 @@ var (
 func init() {
 	wd := util.GetCurrentCodePath()
 	modelPath := path.Join(wd, "zf.model")
-	fmt.Println("zcmu model load in ", modelPath)
+	fmt.Println("||||| ZCMU OCR model load in ", modelPath)
 	svmModel = libSvm.NewModelFromFile(modelPath)
 }
 
@@ -30,7 +30,7 @@ func crop(src image.Image, name string) map[string][]float64 {
 			for x := 0; x <= 16; x++ {
 				pixel := rgbImg.At(x+i, y)
 				r, g, b, _ := pixel.RGBA()
-				y := float64(0.3*float64(r)+0.59*float64(g)+0.11*float64(b)) / 257.0
+				y := (0.3*float64(r) + 0.59*float64(g) + 0.11*float64(b)) / 257.0
 				tmp = append(tmp, y/255.0)
 			}
 		}

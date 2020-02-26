@@ -73,13 +73,13 @@ func (s *studentController) UpdateEduAccount(c *gin.Context) {
 	studentNumber = helper.GetString("student_number")
 	password = helper.GetString("password")
 	// 调用zcmu接口检测账号密码是否正确
-	//checker, err := zcmu.NewCrawl(studentNumber, password)
-	//if err != nil {
-	//	panic(errno.NormalException.AppendErrorMsg(err.Error()))
-	//}
-	//if msg := checker.CheckAccount(); msg != "" {
-	//	panic(errno.NormalException.ReplaceErrorMsgWith(msg))
-	//}
+	checker, err := zcmu.NewCrawl(studentNumber, password)
+	if err != nil {
+		panic(errno.NormalException.AppendErrorMsg(err.Error()))
+	}
+	if msg := checker.CheckAccount(); msg != "" {
+		panic(errno.NormalException.ReplaceErrorMsgWith(msg))
+	}
 	student := service.User.UpdateStudentInfoByUserId(studentNumber, password, helper.GetAuthUserId())
 	if student == nil {
 		panic(errno.NormalException.AppendErrorMsg("创建学生失败"))
