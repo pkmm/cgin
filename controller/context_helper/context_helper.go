@@ -88,3 +88,8 @@ func (b *contextHelper) GetAuthUserId() uint64 {
 func (b *contextHelper) Response(responseData interface{}) {
 	service.SendResponseSuccess(b.ctx, responseData)
 }
+
+// 需要认证的 check
+func (b *contextHelper) NeedAuthOrPanic() {
+	b.GetAuthUserId()
+}

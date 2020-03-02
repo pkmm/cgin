@@ -45,6 +45,34 @@ definitions:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
         type: string
     type: object
+  co.Menu:
+    properties:
+      action_type:
+        example: 2
+        type: integer
+      action_value:
+        example: action value
+        type: string
+      desp:
+        example: 这是一个菜单的描述
+        type: string
+      icon:
+        example: icon
+        type: string
+      title:
+        example: 标题
+        type: string
+    type: object
+  co.Menus:
+    properties:
+      menus:
+        items:
+          $ref: '#/definitions/co.Menu'
+        type: array
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
+        type: string
+    type: object
   co.Notification:
     properties:
       content:
@@ -54,6 +82,7 @@ definitions:
         example: "2029-01-23 23:12:30"
         type: string
       id:
+        example: 18
         type: integer
       start_at:
         example: "2019-01-23 23:23:34"
@@ -204,6 +233,21 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 更新创建一个notification
+  /mini_program/config_menu:
+    post:
+      parameters:
+      - description: dispose menus
+        in: body
+        name: menus
+        required: true
+        schema:
+          $ref: '#/definitions/co.Menus'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 配置菜单项
   /mini_program/get_hermann_memorial:
     get:
       parameters:

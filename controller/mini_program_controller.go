@@ -37,16 +37,21 @@ func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 }
 
 // 配置小程序首页的菜单项
+// @Summary 配置菜单项
+// @Router /mini_program/config_menu [post]
+// @Success 200 {object} service.Response
+// @Param menus body co.Menus true "dispose menus"
 func (m *miniProgramController) DisposeMenu(c *gin.Context) {
 	helper := context_helper.New(c)
-	var menus []co.Menu
-	if err := c.BindJSON(&menus); err != nil {
+	var menus = &co.Menus{}
+	helper.NeedAuthOrPanic()
+	if err := c.ShouldBindJSON(&menus); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
 
 	// 有一个创建失败就会全部创建失败 TODO: 可以支持部分创建成功
 	var savedMenus []interface{}
-	for _, menu := range menus {
+	for _, menu := range menus.Menus {
 		savedMenu, errI := service.MiniProgramService.DisposeMenu(menu.Desp, menu.Title, menu.Icon, menu.ActionType, menu.ActionValue)
 		if errI != nil {
 			panic(errno.NormalException.ReplaceErrorMsgWith(errI.Error()))

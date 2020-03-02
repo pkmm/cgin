@@ -184,6 +184,30 @@
                 }
             }
         },
+        "/mini_program/config_menu": {
+            "post": {
+                "summary": "配置菜单项",
+                "parameters": [
+                    {
+                        "description": "dispose menus",
+                        "name": "menus",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.Menus"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/mini_program/get_hermann_memorial": {
             "get": {
                 "produces": [
@@ -438,6 +462,46 @@
                 }
             }
         },
+        "co.Menu": {
+            "type": "object",
+            "properties": {
+                "action_type": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "action_value": {
+                    "type": "string",
+                    "example": "action value"
+                },
+                "desp": {
+                    "type": "string",
+                    "example": "这是一个菜单的描述"
+                },
+                "icon": {
+                    "type": "string",
+                    "example": "icon"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "标题"
+                }
+            }
+        },
+        "co.Menus": {
+            "type": "object",
+            "properties": {
+                "menus": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/co.Menu"
+                    }
+                },
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks"
+                }
+            }
+        },
         "co.Notification": {
             "type": "object",
             "properties": {
@@ -450,7 +514,8 @@
                     "example": "2029-01-23 23:12:30"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 18
                 },
                 "start_at": {
                     "type": "string",
