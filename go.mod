@@ -20,7 +20,7 @@ require (
 	github.com/mailru/easyjson v0.7.0 // indirect
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.9.0
-	github.com/pkmm/gb v0.0.0-20200120091341-95de571a92be
+	github.com/pkmm/gb v0.0.0-20200305065538-e4d7fd3650da
 	github.com/robfig/cron v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/smartystreets/goconvey v1.6.4 // indirect
