@@ -29,12 +29,29 @@ func SignBaiduForums() {
 			conf.Logger.Error("获取贴吧失败： ", err.Error())
 			return
 		}
-		// TODO: 处理签到的结果
-		ret := worker.SignAll(tiebas)
-		for k, v := range *ret {
-			fmt.Printf("%#v, %#v", k, v)
-		}
-		//fmt.Printf("%#v", ret)
-	}
 
+		//  ====  使用pool的版本 =====
+		// ==========================
+		ts := make([]*Task, len(tiebas))
+		for i, t := range tiebas {
+			y := t
+			ts[i] = NewTask(func() error {
+				resp := worker.SignOne(y)
+				fmt.Printf("Sign [%s] result is %s\n", y, resp)
+				return nil
+			})
+		}
+		pool.AddTasks(ts)
+		//  ====== 使用pool  =====
+		//  =====================
+
+		// 之前的版本 ======================
+		//// TODO: 处理签到的结果
+		//ret := worker.SignAll(tiebas)
+		//for k, v := range *ret {
+		//	fmt.Printf("%#v, %#v", k, v)
+		//}
+		////fmt.Printf("%#v", ret)
+		// ================================
+	}
 }

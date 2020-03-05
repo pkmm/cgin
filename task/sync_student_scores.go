@@ -11,6 +11,10 @@ import (
 )
 
 func UpdateStudentScore() {
+
+	_updateStudentScore()
+	return
+
 	startAt := time.Now()
 	// 执行的线程的数量
 	workerCount := 10
@@ -116,4 +120,39 @@ func UpdateStudentScore() {
 
 	stopAt := time.Since(startAt)
 	conf.Logger.Info("sync %d students scores finish, use time %s", len(students), stopAt.String())
+}
+
+
+func _updateStudentScore() {
+	// TODO: chunk 分块查询 优化查询 保存成绩， 更新爬虫的代码
+	students, err := service.StudentService.GetStudentNeedSyncScore(0, 100000)
+	if err != nil {
+		conf.Logger.Info("查询学生成绩失败 [%s]",err.Error())
+		return
+	}
+	ts := make([]*Task, len(students))
+	for i, stu := range students {
+		stuCopy := stu
+		ts[i] = NewTask(func() error {
+			wk, err := zcmu.NewCrawl(stuCopy.Number, stuCopy.Password)
+			if err != nil {
+				conf.Logger.Error("Init crawl of student[%s] failed [%s]", stuCopy.Number, err.Error())
+			}
+			scores, err := wk.GetScores()
+			if err != nil {
+				conf.Logger.Error("Get scores of student[%s] failed [%s]", stuCopy.Number, err.Error())
+			}
+			// 更新成绩
+			modelScores := make([]*model.Score, 0)
+			for _, s := range scores {
+				score := &model.Score{}
+				util.BeanDeepCopy(s, score)
+				score.StudentId = stuCopy.Id
+				modelScores = append(modelScores, score)
+			}
+			service.ScoreService.BatchCreate(modelScores)
+			return nil
+		})
+	}
+	pool.AddTasks(ts)
 }

@@ -20,7 +20,14 @@ var Tasks = []string{FlagBaiduTiebaSign, FlagSyncStudentScore}
 // 分配每一个goroutine 一个id, 避免任务的重叠运行
 var runningTask *util.SafeMap
 
+var pool *SimplePool
+
 func init() {
+
+	// 协程 作为全部的任务的执行器
+	// 需要停止 stop 函数 才能结束全部的协程
+	pool = NewSimplePool(30)
+	pool.RunPool()
 
 	runningTask = util.NewSafeMap()
 
