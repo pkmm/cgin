@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// 出于兴趣实现，暂时没有在代码中使用，可靠性未知
+// 可靠性未知
 
 // 用于线程池执行的任务task
 type Task struct {
@@ -29,7 +29,7 @@ type SimplePool struct {
 }
 
 func NewSimplePool(cap int) *SimplePool {
-	return &SimplePool{Count: cap, JobQueue: make(chan *Task), Stopped: make(chan interface{})}
+	return &SimplePool{Count: cap, JobQueue: make(chan *Task, cap), Stopped: make(chan interface{})}
 }
 
 func (s *SimplePool) AddTasks(ts []*Task) {
@@ -53,7 +53,7 @@ func (s *SimplePool) worker(workerId int) {
 			fmt.Printf("worker %d finished\n", workerId)
 		}
 	}
-	fmt.Printf("worker %d stoped\n", workerId)
+	fmt.Printf("worker %d stopped\n", workerId)
 }
 
 func (s *SimplePool) RunPool() {

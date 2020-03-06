@@ -3,6 +3,7 @@ package main
 import (
 	"cgin/conf"
 	"cgin/router"
+	"cgin/task"
 	_ "cgin/task"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -28,6 +29,12 @@ func init() {
 // @host localhost:8654
 // @BasePath /api
 func main() {
+
+	defer func() {
+		// release some resource.
+		fmt.Println("do some clean work.")
+		task.CleanPool()
+	}()
 
 	handlers := router.MapRoute()
 	server := &http.Server{

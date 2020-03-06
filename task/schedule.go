@@ -45,7 +45,11 @@ func init() {
 
 	// 测试用
 	c.AddFunc("0 */10 * * * *", func() {
-		conf.Logger.Info(time.Now().Format("2006-01-02 15:04:05"))
+		task := NewTask(func() error {
+			conf.Logger.Info(time.Now().Format("2006-01-02 15:04:05"))
+			return nil
+		})
+		pool.AddTasks([]*Task{task})
 	})
 
 	// 百度贴吧签到
@@ -66,5 +70,11 @@ func taskWrapper(cmd func(), flag string) func() {
 		runningTask.WriteSafeMap(flag, 1)
 		cmd()
 		runningTask.DeleteKey(flag)
+	}
+}
+
+func CleanPool() {
+	if pool != nil {
+		pool.Stop()
 	}
 }

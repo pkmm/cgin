@@ -2,31 +2,34 @@ package task
 
 import (
 	"fmt"
-	"github.com/parnurzeal/gorequest"
+	"sync"
 	"testing"
+	"time"
 )
 
+var wg sync.WaitGroup
 func toSleep(i int) error {
-	fmt.Printf("sleep %d\n", i)
-	gorequest.New().Get("http://www.baidu.com").End()
+	time.Sleep(time.Duration(i) * time.Second)
+	wg.Done()
 	return nil
 }
 
 func TestSimplePool_RunPool(t *testing.T) {
-	tasks := make([]*Task, 10)
-	for i := 0; i < 10; i++ {
+	var count int = 100
+	tasks := make([]*Task, count)
+	for i := 0; i < count; i++ {
+		wg.Add(1)
 		tasks[i] = NewTask(func() error {
 			return toSleep(2)
 		})
 	}
 
+	at := time.Now()
 	pool := NewSimplePool(2)
 	pool.RunPool()
 	pool.AddTasks(tasks)
-	//pool.Stop()
-
-	select {
-
-	}
-
+	wg.Wait()
+	fmt.Println("pool run finished")
+	pool.Stop()
+	fmt.Println("time use: ", time.Since(at).String())
 }
