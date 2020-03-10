@@ -2,9 +2,11 @@ package video_91porn
 
 import (
 	"github.com/PuerkitoBio/goquery"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -54,6 +56,7 @@ func NewHttpClient() *MyClient {
 	return &MyClient{c: client}
 }
 
+// 解析主页视频
 func ParseIndex() *[]videoItem {
 
 	client := NewHttpClient()
@@ -73,9 +76,46 @@ func ParseIndex() *[]videoItem {
 		item.Title = pElement.Find(".title").Text()
 		item.ImgUrl = pElement.Find("img").First().AttrOr("src", "")
 		item.Duration = pElement.Find(".duration").First().Text()
-		item.ViewKey = pElement.Find("a").First().AttrOr("href", "")
+		href := pElement.Find("a").First().AttrOr("href", "")
+		item.ViewKey = href[strings.LastIndex(href, "=")+1:]
+		//allInfo := pElement.Text()
+		//start := strings.Index(allInfo, "添加时间")
+		//item.Info = allInfo[start:]
+
 		videos = append(videos, item)
 	})
 
 	return &videos
 }
+
+
+// 解析其他的类别
+func parseByCategory(html io.Reader) *[]videoItem {
+	videoItemList := make([]videoItem, 0)
+	doc, err := goquery.NewDocumentFromReader(html)
+	if err != nil {
+		log.Fatal(err)
+	}
+	doc.Find("#fullside").Find(".listchannel").Each(func(i int, element *goquery.Selection) {
+		item := videoItem{}
+		contentUrl := element.Find("a").First().AttrOr("href", "")
+		contentUrl = contentUrl[0: strings.Index(contentUrl, "&")]
+		item.ViewKey = contentUrl[strings.Index(contentUrl, "=")+1:]
+		tmpElement := element.Find("a").First().Find("img").First()
+		item.ImgUrl = tmpElement.AttrOr("src", "")
+		item.Title = tmpElement.AttrOr("title", "")
+		allInfo := element.Text()
+		startIndex := strings.Index(allInfo, "时长")
+		item.Duration = allInfo[startIndex+6: startIndex+12]
+		//start := strings.Index(allInfo, "添加时间")
+		//info := allInfo[start:]
+		//item.Info = strings.Replace(info, "还未被评分", "", -1)
+		videoItemList = append(videoItemList, item)
+	})
+	return &videoItemList
+}
+
+//// 解析视屏的播放链接
+//func ParseVideoPlayUrl(html io.Reader) videoItem {
+//
+//}
