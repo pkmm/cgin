@@ -1,7 +1,7 @@
 package task
 
 import (
-	"fmt"
+	"cgin/conf"
 )
 
 // 可靠性未知
@@ -48,12 +48,12 @@ func (s *SimplePool) AddTasks(ts []*Task) {
 func (s *SimplePool) worker(workerId int) {
 	for t := range s.JobQueue {
 		if err := t.Execute(); err != nil {
-			fmt.Printf("task execute err: %s\n", err.Error())
+			conf.Logger.Debug("task execute err: %s", err.Error())
 		} else {
-			fmt.Printf("worker %d finished\n", workerId)
+			conf.Logger.Debug("worker %d finished", workerId)
 		}
 	}
-	fmt.Printf("worker %d stopped\n", workerId)
+	conf.Logger.Debug("worker %d stopped", workerId)
 }
 
 func (s *SimplePool) RunPool() {
