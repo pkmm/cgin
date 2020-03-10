@@ -1,8 +1,8 @@
 package controller
 
 import (
+	"cgin/controller/context_helper"
 	"cgin/errno"
-	"cgin/service"
 	"cgin/zcmu"
 	"github.com/gin-gonic/gin"
 	"image/gif"
@@ -21,6 +21,7 @@ var VerifyCodeCtl = &verifyCodeController{}
 // @Produce json
 // @Accept image/gif
 func (v *verifyCodeController) Recognize(c *gin.Context) {
+	helper := context_helper.New(c)
 	var text string
 	file, err := c.FormFile("img")
 	if err != nil {
@@ -38,7 +39,7 @@ func (v *verifyCodeController) Recognize(c *gin.Context) {
 	if err != nil {
 		panic(errno.InvalidParameters.AppendErrorMsg(err.Error()))
 	}
-	service.SendResponse(c, errno.Success, map[string]string{
+	helper.Response(gin.H{
 		"text": text,
 	})
 }

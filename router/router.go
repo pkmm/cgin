@@ -28,7 +28,7 @@ func MapRoute() *gin.Engine {
 
 	router := gin.New()
 	// 全局的中间件
-	router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler(), middleware.RequestLogger)
+	router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler())
 
 	// dev export swagger api.
 	if conf.AppEnvDev == conf.AppConfig.DefaultString(conf.AppEnvironment, conf.AppEnvProd) {

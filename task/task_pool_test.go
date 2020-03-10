@@ -15,7 +15,7 @@ func toSleep(i int) error {
 }
 
 func TestSimplePool_RunPool(t *testing.T) {
-	var count int = 100
+	var count int = 5
 	tasks := make([]*Task, count)
 	for i := 0; i < count; i++ {
 		wg.Add(1)

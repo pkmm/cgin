@@ -1,9 +1,12 @@
 package task
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestUpdateStudentScore(t *testing.T) {
 	_updateStudentScore()
+	time.Sleep(5 * time.Second)
 	t.Log("success")
-	select {} // 阻塞使用线程池
 }
