@@ -31,5 +31,6 @@ func TestSimplePool_RunPool(t *testing.T) {
 	wg.Wait()
 	fmt.Println("pool run finished")
 	pool.Stop()
+	pool.Stop()
 	fmt.Println("time use: ", time.Since(at).String())
 }

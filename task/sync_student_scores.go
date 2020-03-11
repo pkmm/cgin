@@ -105,7 +105,7 @@ func UpdateStudentScore() {
 	//			service.ScoreService.BatchCreate(modelScores)
 	//
 	//			endAt := time.Since(beginAt)
-	//			output.Count = len(scores)
+	//			output.count = len(scores)
 	//			output.CostTime = endAt.String()
 	//			outputQueue <- output
 	//		}
@@ -141,7 +141,7 @@ func _updateStudentScore() {
 				conf.Logger.Error("Get scores of student[%s] failed [%s]", stuCopy.Number, err.Error())
 			}
 			// 更新成绩
-			modelScores := make([]*model.Score, 0)
+			modelScores := make([]*model.Score, 0, len(scores))
 			for _, s := range scores {
 				score := &model.Score{}
 				util.BeanDeepCopy(s, score)
