@@ -27,7 +27,10 @@ func init() {
 // @description this is a custom server of my interesting.
 
 // @host localhost:8654
-// @BasePath /api
+// @BasePath /api/v1
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 
 	defer func() {

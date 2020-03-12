@@ -8,7 +8,7 @@
         "version": "1.0"
     },
     "host": "localhost:8654",
-    "basePath": "/api",
+    "basePath": "/api/v1",
     "paths": {
         "/auth/login": {
             "post": {
@@ -263,29 +263,6 @@
                 }
             }
         },
-        "/student": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "获取当前用户的学生信息",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "name": "token",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/student/scores": {
             "get": {
                 "produces": [
@@ -324,6 +301,36 @@
                         "schema": {
                             "$ref": "#/definitions/co.EduAccount"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/{studentId}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取当前用户的学生信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "student id",
+                        "name": "studentId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -562,6 +569,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

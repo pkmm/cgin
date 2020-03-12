@@ -1,4 +1,4 @@
-basePath: /api
+basePath: /api/v1
 definitions:
   co.AddHermannMemorial:
     properties:
@@ -282,20 +282,6 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 查看赞助我的人
-  /student:
-    get:
-      parameters:
-      - in: query
-        name: token
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.Response'
-      summary: 获取当前用户的学生信息
   /student/scores:
     get:
       parameters:
@@ -327,6 +313,24 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 更新学生的信息
+  /students/{studentId}:
+    get:
+      parameters:
+      - description: student id
+        in: path
+        name: studentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取当前用户的学生信息
   /thinking/list:
     post:
       consumes:
@@ -365,4 +369,9 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 定时任务触发器
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

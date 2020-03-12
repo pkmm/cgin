@@ -3,6 +3,8 @@ package main
 import (
 	"cgin/service"
 	"cgin/util"
+	"runtime"
+	"strconv"
 	"testing"
 )
 
@@ -64,4 +66,16 @@ func Test_GetNeedSyncScoreStudents(t *testing.T) {
 	} else {
 		t.Log("测试获取学生成功")
 	}
+}
+
+func TestSystemInfo(t *testing.T) {
+	t.Log("cpu number:", runtime.NumCPU())
+	t.Log("运行环境:",  runtime.GOOS)
+	t.Log("go root:", runtime.GOROOT())
+}
+
+func TestConvert(t *testing.T) {
+	i, err := strconv.ParseInt("", 10, 64)
+	t.Log(err)
+	t.Log(i == 0)
 }

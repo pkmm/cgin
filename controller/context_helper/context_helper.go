@@ -93,3 +93,24 @@ func (b *contextHelper) Response(responseData interface{}) {
 func (b *contextHelper) NeedAuthOrPanic() {
 	b.GetAuthUserId()
 }
+
+// 获取路径参数
+func (b *contextHelper) GetPathInt64(key string) int64 {
+	if i64, err := strconv.ParseInt(b.ctx.Param(key), 10, 64); err == nil {
+		return i64
+	} else {
+		panic(errno.InvalidParameters.ReplaceErrorMsgWith("参数不合法" + err.Error()))
+	}
+}
+
+func (b *contextHelper) GetPathUint64(key string) uint64 {
+	return uint64(b.GetPathInt64(key))
+}
+
+func (b *contextHelper) GetPathInt(key string) int {
+	i, err := strconv.Atoi(b.ctx.Param(key))
+	if err != nil {
+		panic(errno.InvalidParameters.ReplaceErrorMsgWith("参数不合法"))
+	}
+	return i
+}

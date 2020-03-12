@@ -23,7 +23,6 @@ require (
 	github.com/pkmm/gb v0.0.0-20200305065538-e4d7fd3650da
 	github.com/robfig/cron v1.2.0
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
-	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0

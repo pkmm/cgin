@@ -150,8 +150,6 @@ github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.0 h1:J8lpUdobwIeCI7OiSxHqEwJUKvJwicL5+3v1oe2Yb4k=
 github.com/pkg/errors v0.9.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
-github.com/pkmm/gb v0.0.0-20200120091341-95de571a92be h1:+rZlKCw+OUE5IVw3pBvTkZFYvbx1RQN9IRWS1SHCR2Y=
-github.com/pkmm/gb v0.0.0-20200120091341-95de571a92be/go.mod h1:i33dVl7KBa8ZRk+fFXHifc6s4q1n7VUnVeVL09pZ2mk=
 github.com/pkmm/gb v0.0.0-20200305065538-e4d7fd3650da h1:7u6tnqgFMYGRaoyT2vzP81KxxQ58XnXwjhzp0ndZePs=
 github.com/pkmm/gb v0.0.0-20200305065538-e4d7fd3650da/go.mod h1:i33dVl7KBa8ZRk+fFXHifc6s4q1n7VUnVeVL09pZ2mk=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
