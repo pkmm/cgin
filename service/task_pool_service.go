@@ -38,9 +38,24 @@ type SimplePool struct {
 }
 
 func NewSimplePool(cap int) *SimplePool {
-	return &SimplePool{count: cap, jobQueue: make(chan *Task, cap), stopped: make(chan interface{}, 1)}
+	return &SimplePool{
+		count: cap,
+		jobQueue: make(chan *Task, cap<<1), // 2倍的任务队列
+		stopped: make(chan interface{}, 1),
+	}
 }
 
+// 添加一个任务 阻塞
+func (s *SimplePool) AddTask(t *Task) {
+	select {
+	case <-s.stopped:
+		return
+	default:
+		s.jobQueue <- t
+	}
+}
+
+// 启动一个goroutine非阻塞
 func (s *SimplePool) AddTasks(ts []*Task) {
 	go func() {
 		for _, t := range ts {
@@ -55,11 +70,14 @@ func (s *SimplePool) AddTasks(ts []*Task) {
 }
 
 func (s *SimplePool) worker(workerId int) {
+	defer func() {
+		if e := recover(); e != nil {
+			conf.Logger.Error("worker [%d] of pool panic, msg[%#v]", workerId, e)
+		}
+	}()
 	for t := range s.jobQueue {
 		if err := t.Execute(); err != nil {
 			conf.Logger.Debug("task execute err: %s", err.Error())
-		} else {
-			//conf.Logger.Debug("worker %d finished", workerId)
 		}
 	}
 	conf.Logger.Debug("worker %d stopped", workerId)
