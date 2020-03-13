@@ -32,10 +32,10 @@ func SignBaiduForums() {
 
 		//  ====  使用pool的版本 =====
 		// ==========================
-		ts := make([]*Task, len(tiebas))
+		ts := make([]*service.Task, len(tiebas))
 		for i, t := range tiebas {
 			y := t
-			ts[i] = NewTask(func() error {
+			ts[i] = service.NewTask(func() error {
 				resp := worker.SignOne(y)
 				fmt.Printf("Sign [%s] result is %s\n", y, resp)
 				return nil

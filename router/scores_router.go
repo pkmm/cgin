@@ -1,7 +1,7 @@
 package router
 
 import (
-	"cgin/controller"
+	"cgin/controller/api/v1"
 	"cgin/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -9,6 +9,6 @@ import (
 func mapScoresRouter(router *gin.Engine) {
 	api := router.Group(Score).Use(middleware.Auth)
 	{
-		api.GET("/", controller.Student.GetScores)
+		api.GET("/", v1.Student.GetScores)
 	}
 }

@@ -62,6 +62,7 @@ func (b *contextHelper) GetInt64(key string) int64 {
 	}
 }
 
+// 获取query或者body中的参数
 func (b *contextHelper) GetString(key string) string {
 	return b.get(key).(string)
 }

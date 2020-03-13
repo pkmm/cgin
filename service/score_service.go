@@ -76,13 +76,17 @@ func (serv *scoreService) GetOwnScores(userId uint64) (scores []*model.Score) {
 }
 
 func (s *scoreService) SaveStudentScoresFromCrawl(scores []*zcmu.Score, studentId uint64) []*model.Score {
-	dbScores := make([]*model.Score, 0)
+	dbScores := make([]*model.Score, 0, len(scores))
 	for _, s := range scores {
 		modelScore := &model.Score{}
 		util.BeanDeepCopy(s, modelScore)
 		modelScore.StudentId = studentId
 		dbScores = append(dbScores, modelScore)
 	}
-	go s.BatchCreate(dbScores)
+	TaskPool.AddTasks([]*Task{NewTask(func() error {
+		s.BatchCreate(dbScores)
+		return nil
+	})})
+	//go s.BatchCreate(dbScores)
 	return dbScores
 }

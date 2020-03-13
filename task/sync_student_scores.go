@@ -128,10 +128,10 @@ func _updateStudentScore() {
 		conf.Logger.Info("查询学生成绩失败 [%s]",err.Error())
 		return
 	}
-	ts := make([]*Task, len(students))
+	ts := make([]*service.Task, len(students))
 	for i, stu := range students {
 		stuCopy := stu
-		ts[i] = NewTask(func() error {
+		ts[i] = service.NewTask(func() error {
 			wk, err := zcmu.NewCrawl(stuCopy.Number, stuCopy.Password)
 			if err != nil {
 				conf.Logger.Error("Init crawl of student[%s] failed [%s]", stuCopy.Number, err.Error())

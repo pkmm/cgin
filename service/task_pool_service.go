@@ -1,4 +1,4 @@
-package task
+package service
 
 import (
 	"cgin/conf"
@@ -6,6 +6,13 @@ import (
 )
 
 var once sync.Once
+
+var TaskPool *SimplePool
+
+func init() {
+	TaskPool = NewSimplePool(30)
+}
+
 // 可靠性未知
 
 // 用于线程池执行的任务task

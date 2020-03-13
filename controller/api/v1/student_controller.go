@@ -1,4 +1,4 @@
-package controller
+package v1
 
 import (
 	"cgin/controller/context_helper"
