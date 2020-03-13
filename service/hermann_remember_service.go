@@ -100,14 +100,14 @@ func (h *hermannService) getNthRememberList(n, unit int) *UnitInterval {
 }
 
 func (h *hermannService) GetTaskRecord(userId uint64) *model.HermannMemorial {
-	var result *model.HermannMemorial
+	var result model.HermannMemorial
 	if err := db.Model(&model.HermannMemorial{}).
 		Where("user_id = ?", userId).
 		First(&result).Error; err != nil {
 		// TODO: LOG something.
 		return nil
 	}
-	return result
+	return &result
 }
 
 func (h *hermannService) GetHoursPastOfTask(userId uint64) *HoursPast {

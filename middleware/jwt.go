@@ -8,12 +8,12 @@ import (
 
 // 使用JWT进行认证
 
-const UID = "uid"
-const Token = "token"
+//const UID = "uid"
+//const Token = "token"
 
-type authData struct {
-	Token string `json:"token"`
-}
+//type authData struct {
+//	Token string `json:"token"`
+//}
 
 func Auth(c *gin.Context) {
 	// 创建buffer 备份body
@@ -42,6 +42,6 @@ func Auth(c *gin.Context) {
 	if err != nil {
 		panic(errno.TokenNotValid)
 	}
-	c.Set(UID, claims.Uid)
+	c.Set("claims", claims)
 	c.Next()
 }

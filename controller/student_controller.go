@@ -23,6 +23,9 @@ func (s *studentController) GetStudent(c *gin.Context) {
 	studentId := helper.GetPathUint64("studentId")
 	student := service.User.GetStudentByUserId(studentId)
 	// TODO: 如果student id 是0 且是该查询者是admin显示分页的学生信息
+	if studentId != helper.GetAuthUserId() {
+		panic(errno.NormalException.ReplaceErrorMsgWith("没有权限"))
+	}
 	data := gin.H{
 		"student": student,
 	}
@@ -31,9 +34,10 @@ func (s *studentController) GetStudent(c *gin.Context) {
 
 // @Summary 获取学生的成绩
 // @Produce json
-// @Router /student/scores [get]
-// @Param auth query co.AuthCredit true "auth token"
+// @Router /scores [get]
+// @Param studentId query uint64 true "id of student"
 // @Success 200 {object} service.Response
+// @Security ApiKeyAuth
 func (s *studentController) GetScores(c *gin.Context) {
 	helper := context_helper.New(c)
 	scores := service.ScoreService.GetOwnScores(helper.GetAuthUserId())
@@ -64,7 +68,7 @@ func (s *studentController) GetScores(c *gin.Context) {
 
 // @Summary 更新学生的信息
 // @Produce json
-// @Router /student/update_edu_account [post]
+// @Router /students/update_edu_account [post]
 // @Param auth body co.EduAccount true "update edu account info"
 // @Success 200 {object} service.Response
 func (s *studentController) UpdateEduAccount(c *gin.Context) {

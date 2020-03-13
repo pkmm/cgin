@@ -14,6 +14,5 @@ type Menu struct {
 }
 
 type Menus struct {
-	AuthCredit
 	Menus []Menu `json:"menus"`
 }

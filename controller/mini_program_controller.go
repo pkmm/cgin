@@ -38,6 +38,7 @@ func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 
 // 配置小程序首页的菜单项
 // @Summary 配置菜单项
+// @Security ApiKeyAuth
 // @Router /mini_program/config_menu [post]
 // @Success 200 {object} service.Response
 // @Param menus body co.Menus true "dispose menus"
@@ -88,6 +89,7 @@ func (m *miniProgramController) SetIndexConfig(c *gin.Context) {
 }
 
 // 获取notification 默认是显示最新的10条
+// @Security ApiKeyAuth
 // @Summary 获取notification
 // @Router /mini_program/get_notifications [get]
 // @Success 200 {object} service.Response
@@ -103,6 +105,7 @@ func (m *miniProgramController) GetNotification(c *gin.Context) {
 }
 
 // 更新或者创建一个notification
+// @Security ApiKeyAuth
 // @Summary 更新创建一个notification
 // @Router /mini_program/change_notification [post]
 // @Success 200 {object} service.Response

@@ -3,7 +3,7 @@ package errno
 var (
 	// common errors
 	// error code begin with 1... for system error
-	Success                = &BusinessErrorInfo{00000, "success"}
+	Success                = &BusinessErrorInfo{10000, "success"}
 	InternalServerError    = &BusinessErrorInfo{10001, "Internal server error"}
 	InvalidParameters      = &BusinessErrorInfo{10002, "Invalid Parameters"}
 	TokenNotValid          = &BusinessErrorInfo{10003, "Token is not valid"}

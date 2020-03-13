@@ -18,7 +18,9 @@ var JWTSrv = &jwtService{
 }
 
 type AuthClaims struct {
-	Uid uint64 `json:"uid"`
+	Uid      uint64 `json:"uid"`
+	UserName string `json:"user_name"`
+	RoleType int    `json:"role_type"`
 	jwt.StandardClaims
 }
 
@@ -29,6 +31,8 @@ func (srv *jwtService) GetSignKey() []byte {
 func (srv *jwtService) GenerateToken(user *model.User) (string, error) {
 	claims := AuthClaims{
 		user.Id,
+		"cgin user",
+		int(user.RoleId),
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(conf.GetJwtExpiresAt()).Unix(),
 			Issuer:    "c_gin",

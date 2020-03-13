@@ -5,21 +5,12 @@ definitions:
       start_at:
         example: "2019-01-23 23:12:30"
         type: string
-      token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
-        type: string
       total_unit:
         example: 39
         type: integer
       unit:
         example: 2
         type: integer
-    type: object
-  co.AuthCredit:
-    properties:
-      token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
-        type: string
     type: object
   co.AuthModel:
     properties:
@@ -40,9 +31,6 @@ definitions:
         type: string
       student_number:
         example: "1923"
-        type: string
-      token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
         type: string
     type: object
   co.Menu:
@@ -69,9 +57,6 @@ definitions:
         items:
           $ref: '#/definitions/co.Menu'
         type: array
-      token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
-        type: string
     type: object
   co.Notification:
     properties:
@@ -86,9 +71,6 @@ definitions:
         type: integer
       start_at:
         example: "2019-01-23 23:23:34"
-        type: string
-      token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImV4cCI6MTU4NjgzNTA3NiwiaXNzIjoiY19naW4ifQ.W8BQ2Xy0Z_t4-iVmTCtvo7r3ZYZxZBUjPPSra9Q6Kks
         type: string
     type: object
   co.PageLimitOffset:
@@ -146,13 +128,6 @@ paths:
     post:
       consumes:
       - application/json
-      parameters:
-      - description: get auth self
-        in: body
-        name: auth_credit
-        required: true
-        schema:
-          $ref: '#/definitions/co.AuthCredit'
       produces:
       - application/json
       responses:
@@ -160,6 +135,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 获取认证的自己
   /daily/image:
     get:
@@ -170,6 +147,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 随机图片
   /daily/sentence:
     get:
@@ -180,6 +159,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 一句话
   /decode_verify_code:
     post:
@@ -215,6 +196,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 添加背单词的任务
   /mini_program/change_notification:
     post:
@@ -232,6 +215,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 更新创建一个notification
   /mini_program/config_menu:
     post:
@@ -247,13 +232,11 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 配置菜单项
   /mini_program/get_hermann_memorial:
     get:
-      parameters:
-      - in: query
-        name: token
-        type: string
       produces:
       - application/json
       responses:
@@ -261,6 +244,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 背单词：今天的任务
   /mini_program/get_notifications:
     get:
@@ -271,6 +256,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 获取notification
   /mini_program/get_sponsors:
     get:
@@ -282,29 +269,14 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 查看赞助我的人
-  /student/scores:
+  /scores:
     get:
       parameters:
-      - in: query
-        name: token
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/service.Response'
-      summary: 获取学生的成绩
-  /student/update_edu_account:
-    post:
-      parameters:
-      - description: update edu account info
-        in: body
-        name: auth
+      - description: id of student
+        in: query
+        name: studentId
         required: true
-        schema:
-          $ref: '#/definitions/co.EduAccount'
+        type: integer
       produces:
       - application/json
       responses:
@@ -312,7 +284,9 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
-      summary: 更新学生的信息
+      security:
+      - ApiKeyAuth: []
+      summary: 获取学生的成绩
   /students/{studentId}:
     get:
       parameters:
@@ -331,6 +305,23 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 获取当前用户的学生信息
+  /students/update_edu_account:
+    post:
+      parameters:
+      - description: update edu account info
+        in: body
+        name: auth
+        required: true
+        schema:
+          $ref: '#/definitions/co.EduAccount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 更新学生的信息
   /thinking/list:
     post:
       consumes:
@@ -349,13 +340,15 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 值得深思的句子
   /trigger/cron:
     post:
       consumes:
       - application/json
       parameters:
-      - description: job name
+      - description: 任务名称
         in: body
         name: job_name
         required: true
@@ -368,6 +361,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 定时任务触发器
 securityDefinitions:
   ApiKeyAuth:

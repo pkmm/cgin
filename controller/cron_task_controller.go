@@ -13,9 +13,10 @@ type cronTaskController struct {}
 var CronTaskController = cronTaskController{}
 
 // @Summary 定时任务触发器
+// @Security ApiKeyAuth
 // @Produce json
 // @Accept json
-// @Param job_name body co.TaskName true "job name"
+// @Param job_name body co.TaskName true "任务名称"
 // @Router /trigger/cron [post]
 // @Failure 200 {object} service.Response
 // @Success 200 {object} service.Response

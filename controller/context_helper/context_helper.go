@@ -2,7 +2,6 @@ package context_helper
 
 import (
 	"cgin/errno"
-	"cgin/middleware"
 	"cgin/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -71,17 +70,13 @@ func (b *contextHelper) GetAuthUserId() uint64 {
 	if b.UserId != 0 {
 		return b.UserId
 	}
-	val, ok := b.ctx.Get(middleware.UID)
-	if !ok {
+	val := b.ctx.MustGet("claims")
+	awaitUse, ok := val.(*service.AuthClaims)
+	if !ok || awaitUse.Uid == 0 {
 		panic(errno.UserNotAuth)
 	}
-
-	userId, ok := val.(uint64)
-	if !ok || userId == 0 {
-		panic(errno.UserNotAuth)
-	}
-	b.UserId = userId
-	return userId
+	b.UserId = awaitUse.Uid
+	return b.UserId
 }
 
 // 处理成功的请求

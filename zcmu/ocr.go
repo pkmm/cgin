@@ -15,7 +15,7 @@ var (
 func init() {
 	wd := util.GetCurrentCodePath()
 	modelPath := path.Join(wd, "zf.model")
-	fmt.Println("||||| ZCMU OCR model load in ", modelPath)
+	fmt.Println(" === OCR model load in ", modelPath)
 	svmModel = libSvm.NewModelFromFile(modelPath)
 }
 

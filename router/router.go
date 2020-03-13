@@ -41,6 +41,7 @@ func MapRoute() *gin.Engine {
 	mapMiniProgramRouter(router)
 	mapTaskRouter(router)
 	mapThinkingRouter(router)
+	mapScoresRouter(router)
 
 	// 认证业务的逻辑 API
 	// api/auth

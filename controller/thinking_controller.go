@@ -15,6 +15,7 @@ func (t *thinkController) GetOne(ctx *gin.Context) {
 }
 
 // @Summary 值得深思的句子
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Router /thinking/list [post]

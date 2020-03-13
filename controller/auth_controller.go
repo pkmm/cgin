@@ -53,10 +53,10 @@ func (a *authController) Login(c *gin.Context) {
 }
 
 // @Summary 获取认证的自己
+// @Security ApiKeyAuth
 // @Accept json
 // @Produce json
 // @Router /auth/me [post]
-// @Param auth_credit body co.AuthCredit true "get auth self"
 // @Success 200 {object} service.Response
 func (a *authController) Me(c *gin.Context) {
 	helper := context_helper.New(c)
