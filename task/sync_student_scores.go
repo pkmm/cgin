@@ -4,6 +4,7 @@ import (
 	"cgin/conf"
 	"cgin/model"
 	"cgin/service"
+	"cgin/service/workerpool"
 	"cgin/util"
 	"cgin/zcmu"
 )
@@ -128,10 +129,10 @@ func _updateStudentScore() {
 		conf.Logger.Info("查询学生成绩失败 [%s]",err.Error())
 		return
 	}
-	ts := make([]*service.Task, len(students))
+	ts := make([]*workerpool.Task, len(students))
 	for i, stu := range students {
 		stuCopy := stu
-		ts[i] = service.NewTask(func() error {
+		ts[i] = workerpool.NewTask(func() error {
 			wk, err := zcmu.NewCrawl(stuCopy.Number, stuCopy.Password)
 			if err != nil {
 				conf.Logger.Error("Init crawl of student[%s] failed [%s]", stuCopy.Number, err.Error())

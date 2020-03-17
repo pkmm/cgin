@@ -4,6 +4,7 @@ import (
 	"cgin/conf"
 	"cgin/model"
 	"cgin/service"
+	"cgin/service/workerpool"
 	"fmt"
 	"github.com/pkmm/gb/baidu"
 )
@@ -32,10 +33,10 @@ func SignBaiduForums() {
 
 		//  ====  使用pool的版本 =====
 		// ==========================
-		ts := make([]*service.Task, len(tiebas))
+		ts := make([]*workerpool.Task, len(tiebas))
 		for i, t := range tiebas {
 			y := t
-			ts[i] = service.NewTask(func() error {
+			ts[i] = workerpool.NewTask(func() error {
 				resp := worker.SignOne(y)
 				fmt.Printf("Sign [%s] result is %s\n", y, resp)
 				return nil

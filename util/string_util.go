@@ -2,12 +2,9 @@ package util
 
 import (
 	"bytes"
-	"crypto/md5"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/bwmarrin/snowflake"
-	"math/rand"
 	"net"
 	"os"
 	"path"
@@ -24,18 +21,6 @@ func init() {
 }
 
 // 实用函数
-
-func Md5(buf []byte) string {
-	hash := md5.New()
-	hash.Write(buf)
-	return fmt.Sprintf("%X", hash.Sum(nil))
-}
-
-func Md5String(s string) string {
-	h := md5.New()
-	h.Write([]byte(s))
-	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
-}
 
 func Signature(params map[string]string) string {
 	var keys []string
@@ -74,15 +59,7 @@ func Decimal(value float64) float64 {
 	return value
 }
 
-func RandomString(length int) string {
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210")
-	N := len(letters)
-	ans := make([]rune, length)
-	for i := 0; i < length; i++ {
-		ans[i] = letters[rand.Intn(N)]
-	}
-	return string(ans)
-}
+
 
 func GenerateToken(key uint64) string {
 	now := time.Now().Unix()

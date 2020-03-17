@@ -25,7 +25,6 @@ func mapNormalRouter(rootRouter *gin.Engine) {
 	// api/
 	apiNormal := rootRouter.Group(RootApiPrefix)
 	{
-		apiNormal.POST("/send_template_msg", v1.MiniProgramController.SendTemplateMsg)
 		apiNormal.POST("/decode_verify_code", v1.VerifyCodeCtl.Recognize)
 		apiNormal.GET("/daily/image", v1.DailyController.GetImage)
 		apiNormal.GET("/daily/sentence", v1.DailyController.GetSentence)

@@ -285,6 +285,28 @@
                 }
             }
         },
+        "/mini_program/send_template_msg": {
+            "get": {
+                "summary": "发送微信小程序订阅消息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户的open id",
+                        "name": "open_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/scores": {
             "get": {
                 "security": [

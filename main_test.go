@@ -3,8 +3,8 @@ package main
 import (
 	"cgin/service"
 	"cgin/util"
+	"fmt"
 	"runtime"
-	"strconv"
 	"testing"
 )
 
@@ -75,7 +75,18 @@ func TestSystemInfo(t *testing.T) {
 }
 
 func TestConvert(t *testing.T) {
-	i, err := strconv.ParseInt("", 10, 64)
-	t.Log(err)
-	t.Log(i == 0)
+	//i, err := strconv.ParseInt("", 10, 64)
+	//t.Log(err)
+	//t.Log(i == 0)
+
+	type name struct {
+		H int
+	}
+
+	a := make([]*name, 10)
+	a[0] = &name{23}
+	b := a
+	b[0] = &name{34}
+	fmt.Printf("a == b %#v\n", a[0])
+	fmt.Printf("a == b %#v", b[0])
 }

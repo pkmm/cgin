@@ -36,19 +36,17 @@ type TemplateMsg struct {
 	ToUser      string           `json:"touser"`
 	TemplateId  string           `json:"template_id"`
 	Page        string           `json:"page"`
-	FormId      string           `json:"form_id"`
-	Data        *TemplateMsgData `json:"data"`
+	//FormId      string           `json:"form_id"`
+	Data        TemplateMsgData `json:"data"`
 }
 
 type TemplateMsgData struct {
-	Keyword1 KeywordData `json:"keyword1,omitempty"` // 课程名称
-	Keyword2 KeywordData `json:"keyword2,omitempty"` // 课程成绩
-	Keyword3 KeywordData `json:"keyword3,omitempty"` // 等级
-	Keyword4 KeywordData `json:"keyword4,omitempty"` // 温馨提示
+	Key1 KeywordData `json:"thing1,omitempty"`
+	Key2 KeywordData `json:"thing2,omitempty"`
 }
 
 type KeywordData struct {
-	Value string `json:"value"`
+	Value interface{} `json:"value"`
 }
 
 type SendTemplateResponse struct {
@@ -60,7 +58,7 @@ type SendTemplateResponse struct {
 // 模板消息的部分结束
 
 const (
-	sendUserTemplateMsgUrl = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=%s"
+	sendUserTemplateMsgUrl = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=%s"
 	accessTokenUrl         = "https://api.weixin.qq.com/cgi-bin/token"
 )
 

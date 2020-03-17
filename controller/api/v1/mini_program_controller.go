@@ -7,6 +7,7 @@ import (
 	"cgin/controller/respobj"
 	"cgin/errno"
 	"cgin/service"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 )
@@ -18,18 +19,23 @@ type miniProgramController struct {}
 var MiniProgramController = &miniProgramController{}
 
 // 发送模板消息
+// @Summary 发送微信小程序订阅消息
+// @Router /mini_program/send_template_msg [GET]
+// @Param open_id query string true "用户的open id"
+// @Success 200 {object} service.Response
 func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 	helper := context_helper.New(c)
-	formId := helper.GetString("form_id")
+	//formId := helper.GetString("form_id")
 	openId := helper.GetString("open_id")
-	templateKeyData := &service.TemplateMsgData{}
-	templateKeyData.Keyword1.Value = "11"
-	templateKeyData.Keyword2.Value = "22"
+	templateKeyData := service.TemplateMsgData{}
+	templateKeyData.Key1.Value = "背单词签到"
+	templateKeyData.Key2.Value = "手机App签到"
+	fmt.Printf("%#v\n", templateKeyData)
 	msg := &service.TemplateMsg{
-		FormId:     formId,
+		//FormId:     formId,
 		ToUser:     openId,
-		TemplateId: conf.AppConfig.String("template_id"),
-		Page:       conf.AppConfig.String("template_msg_open_page"),
+		TemplateId: conf.AppConfig.String("miniprogram.template_id"),
+		Page:       conf.AppConfig.String("miniprogram.open_page"),
 		Data:       templateKeyData,
 	}
 	ret := service.SendUserTemplateMsg(msg)

@@ -14,6 +14,7 @@ func mapMiniProgramRouter(router *gin.Engine) {
 		apiMiniProgram.POST("/set_index_config", v1.MiniProgramController.SetIndexConfig)
 		apiMiniProgram.GET("/get_notifications", v1.MiniProgramController.GetNotification)
 		apiMiniProgram.GET("/get_sponsors", v1.MiniProgramController.GetSponsors)
+		apiMiniProgram.GET("/send_template_msg", v1.MiniProgramController.SendTemplateMsg)
 
 		// 以下的API 需要认证
 		apiMiniProgramNeedAuth := apiMiniProgram.Use(middleware.Auth)

@@ -3,6 +3,7 @@ package service
 import (
 	"cgin/conf"
 	"cgin/model"
+	"cgin/service/workerpool"
 	"cgin/util"
 	"cgin/zcmu"
 	"sync"
@@ -83,7 +84,7 @@ func (s *scoreService) SaveStudentScoresFromCrawl(scores []*zcmu.Score, studentI
 		modelScore.StudentId = studentId
 		dbScores = append(dbScores, modelScore)
 	}
-	TaskPool.AddTasks([]*Task{NewTask(func() error {
+	workerpool.TaskPool.AddTasks([]*workerpool.Task{workerpool.NewTask(func() error {
 		s.BatchCreate(dbScores)
 		return nil
 	})})

@@ -4,6 +4,7 @@ package task
 import (
 	"cgin/conf"
 	"cgin/service"
+	"cgin/service/workerpool"
 	"cgin/util"
 	"github.com/robfig/cron"
 	"time"
@@ -20,14 +21,14 @@ var Tasks = []string{FlagBaiduTiebaSign, FlagSyncStudentScore}
 // 分配每一个goroutine 一个id, 避免任务的重叠运行
 var runningTask *util.SafeMap
 
-var pool *service.SimplePool
+var pool *workerpool.SimplePool
 
 func init() {
 
 	// 协程 作为全部的任务的执行器
 	// 需要停止 stop 函数 才能结束全部的协程
 	//pool = service.NewSimplePool(30)
-	pool = service.TaskPool
+	pool = workerpool.TaskPool
 	pool.RunPool()
 
 	runningTask = util.NewSafeMap()
@@ -46,11 +47,11 @@ func init() {
 
 	// 测试用
 	c.AddFunc("0 */10 * * * *", func() {
-		task := service.NewTask(func() error {
+		task := workerpool.NewTask(func() error {
 			conf.Logger.Info(time.Now().Format("2006-01-02 15:04:05"))
 			return nil
 		})
-		pool.AddTasks([]*service.Task{task})
+		pool.AddTasks([]*workerpool.Task{task})
 	})
 
 	// 百度贴吧签到
