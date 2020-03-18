@@ -10,7 +10,7 @@ func mapMiniProgramRouter(router *gin.Engine) {
 	apiMiniProgram := router.Group(MiniProgram)
 	{
 		// 不需要认证的
-		apiMiniProgram.POST("/get_index_preference", v1.MiniProgramController.GetIndexPreference)
+		apiMiniProgram.GET("/get_index_preference", v1.MiniProgramController.GetIndexPreference)
 		apiMiniProgram.POST("/set_index_config", v1.MiniProgramController.SetIndexConfig)
 		apiMiniProgram.GET("/get_notifications", v1.MiniProgramController.GetNotification)
 		apiMiniProgram.GET("/get_sponsors", v1.MiniProgramController.GetSponsors)

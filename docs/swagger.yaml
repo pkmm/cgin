@@ -247,6 +247,16 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 背单词：今天的任务
+  /mini_program/get_index_preference:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 首页的配置
   /mini_program/get_notifications:
     get:
       produces:

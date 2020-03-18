@@ -1,6 +1,8 @@
 package model
 
-import "cgin/util"
+import (
+	"cgin/util"
+)
 
 type Notification struct {
 	Id       uint64        `json:"id" gorm:"primary_key;auto_increment;"`

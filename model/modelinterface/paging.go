@@ -1,4 +1,4 @@
-package model_interface
+package modelinterface
 
 type PageSizeInfo struct {
 	Page, PageSize int

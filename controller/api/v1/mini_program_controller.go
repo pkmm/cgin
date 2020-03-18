@@ -68,7 +68,10 @@ func (m *miniProgramController) DisposeMenu(c *gin.Context) {
 	helper.Response(savedMenus)
 }
 
-// 首页的配置
+// @summary 首页的配置
+// @router /mini_program/get_index_preference [get]
+// @Security ApiKeyAuth
+// @Success 200 {object} service.Response
 func (m *miniProgramController) GetIndexPreference(c *gin.Context) {
 	helper := context_helper.New(c)
 	// 菜单

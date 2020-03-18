@@ -1,7 +1,7 @@
 package service
 
 import (
-	"cgin/model/model_interface"
+	"cgin/model/modelinterface"
 	"github.com/jinzhu/gorm"
 )
 
@@ -9,7 +9,7 @@ type pagingService struct {}
 
 var PagingService pagingService
 
-func (p *pagingService) GetList(model model_interface.Paging, info model_interface.PageSizeInfo) (err error, query *gorm.DB, total int) {
+func (p *pagingService) GetList(model modelinterface.Paging, info modelinterface.PageSizeInfo) (err error, query *gorm.DB, total int) {
 	// default query ten record of per page.
 	if info.Page <=0 {
 		info.Page = 1

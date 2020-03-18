@@ -112,11 +112,11 @@ func SendUserTemplateMsg(msg *TemplateMsg) *SendTemplateResponse {
 	return sendTemplateResponse
 }
 
-func DecodeWchatUserInfo(iv, code, encryptedData string) (*WechatUserInfo, error) {
+func DecodeWeChatUserInfo(iv, code, encryptedData string) (*WechatUserInfo, error) {
 	sess, err := code2Session(code)
-	wechatUserInfo := &WechatUserInfo{}
+	weChatUserInfo := &WechatUserInfo{}
 	if err != nil {
-		return wechatUserInfo, err
+		return weChatUserInfo, err
 	}
 
 	pc := wxbizdatacrypt.WxBizDataCrypt{
@@ -126,12 +126,12 @@ func DecodeWchatUserInfo(iv, code, encryptedData string) (*WechatUserInfo, error
 
 	var result interface{}
 	if result, err = pc.Decrypt(encryptedData, iv, true); err != nil {
-		return wechatUserInfo, err
+		return weChatUserInfo, err
 	}
 
-	json.Unmarshal([]byte(result.(string)), &wechatUserInfo)
+	json.Unmarshal([]byte(result.(string)), &weChatUserInfo)
 
-	return wechatUserInfo, nil
+	return weChatUserInfo, nil
 }
 
 func code2Session(code string) (*code2SessionResp, error) {
