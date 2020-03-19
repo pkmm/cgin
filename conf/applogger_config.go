@@ -1,9 +1,10 @@
 package conf
 
 import (
-	"cgin/util"
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego/logs"
+	"os"
 	"path"
 )
 
@@ -26,8 +27,8 @@ func InitLogger() *logs.BeeLogger {
 		Separate []string `json:"separate"`
 	}
 
-	wd := util.GetCurrentCodePath()
-	logFileStorageIn := path.Join(wd, "..", "storage/logs/gin.log")
+	wd, _ := os.Getwd()
+	logFileStorageIn := path.Join(wd, "storage/logs/gin.log")
 	lf := &logConfig{
 		Filename: logFileStorageIn,
 		Level:    7,
@@ -50,6 +51,6 @@ func InitLogger() *logs.BeeLogger {
 	}
 
 	// print config ini file path.
-	logger.Info("log file storage in: %#v", logFileStorageIn)
+	fmt.Printf("log file storage in: %#v\n", logFileStorageIn)
 	return logger
 }

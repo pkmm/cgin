@@ -1,8 +1,9 @@
 package conf
 
 import (
-	"cgin/util"
+	"fmt"
 	"github.com/astaxie/beego/config"
+	"os"
 	"path"
 )
 
@@ -10,14 +11,12 @@ import (
 var AppConfig = InitAppConfig()
 
 func InitAppConfig() config.Configer {
-	wd := util.GetCurrentCodePath()
-	confPath := path.Join(wd, ".env")
+	wd, _ := os.Getwd()
+	confPath := path.Join(wd, "conf/.env")
 	myAppConfig, err := config.NewConfig("ini", confPath)
 	if err != nil {
 		panic(err)
 	}
-	if Logger != nil {
-		Logger.Info("conf path: %#v", confPath)
-	}
+	fmt.Printf("conf path: %#v\n", confPath)
 	return myAppConfig
 }

@@ -1,24 +1,27 @@
-package service
+package main
 
-import "testing"
+import (
+	"cgin/service"
+	"testing"
+)
 
 func TestWeChatNotificationService_Notify(t *testing.T) {
-	_, err := WeChatNotificationService.Notify(
+	_, err := service.WeChatNotificationService.Notify(
 		"This is title",
 		"This is content.",
-		ServerSister,
-		PlainText,
+		service.ServerSister,
+		service.PlainText,
 		[]string{""},
 	)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	_, err = WeChatNotificationService.Notify(
+	_, err = service.WeChatNotificationService.Notify(
 		"This is title",
 		"This is content.",
-		WxPusher,
-		PlainText,
+		service.WxPusher,
+		service.PlainText,
 		[]string{"UID_Jo3zGWQgT9WmyKGQpVr4Oy2Juhkp"},
 	)
 	if err != nil {

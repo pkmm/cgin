@@ -15,7 +15,7 @@ type HermannMemorial struct {
 	// 设置一共有多少单元
 	TotalUnit uint `json:"total_unit" gorm:"default:24"`
 	// 计算当前进行到第几天
-	StartAt util.JSONTime `json:"start_at" gorm:"default:current_timestamp"`
+	StartAt util.JSONTime `json:"start_at" gorm:"type:timestamp"`
 	Model
 }
 

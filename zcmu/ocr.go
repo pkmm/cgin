@@ -1,10 +1,10 @@
 package zcmu
 
 import (
-	"cgin/util"
 	"fmt"
 	libSvm "github.com/ewalker544/libsvm-go"
 	"image"
+	"os"
 	"path"
 )
 
@@ -13,7 +13,7 @@ var (
 )
 
 func init() {
-	wd := util.GetCurrentCodePath()
+	wd, _ := os.Getwd()
 	modelPath := path.Join(wd, "zf.model")
 	fmt.Println(" === OCR model load in ", modelPath)
 	svmModel = libSvm.NewModelFromFile(modelPath)

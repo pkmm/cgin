@@ -2,8 +2,8 @@ package service
 
 import (
 	"cgin/conf"
-	"cgin/util"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"path"
 	"time"
@@ -31,7 +31,8 @@ func (b *baseService) BackupMysqlService(savePath string) {
 	}
 	nowTime := time.Now().Format("2006_01_02_15_04_05")
 	if savePath == "" {
-		savePath = path.Join(util.GetCurrentCodePath(), "..", "storage", "backup", "mysql_db_backup_"+nowTime+".sql")
+		wd, _ := os.Getwd()
+		savePath = path.Join(wd, "storage", "backup", "mysql_db_backup_"+nowTime+".sql")
 	}
 	err = ioutil.WriteFile(savePath, bytes, 7744)
 	if err != nil {

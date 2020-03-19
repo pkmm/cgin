@@ -9,10 +9,13 @@ import (
 /**
  需要注意的是gorm对于默认空值在查询的时候是忽略的，例如查询disabled=false,如果使用结构体
 	是无效的，因为怎么默认的空值行为是一致的
+
+	5.6以下版本的mysql time_stamp默认值设置有问题
+	因此取消默认值设置
  */
 type Model struct {
-	CreatedAt util.JSONTime `json:"created_at" gorm:"type:timestamp;DEFAULT:CURRENT_TIMESTAMP"`
-	UpdatedAt util.JSONTime `json:"updated_at" gorm:"type:timestamp;DEFAULT:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"`
+	CreatedAt util.JSONTime `json:"created_at" gorm:"type:timestamp;"`
+	UpdatedAt util.JSONTime `json:"updated_at" gorm:"type:timestamp;"`
 	//DeletedAt *time.Time `json:"-" gorm:"index:idx_deleted_at"`
 }
 
