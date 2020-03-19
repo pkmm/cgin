@@ -6,15 +6,17 @@ import (
 	"cgin/controller/context_helper"
 	"cgin/controller/respobj"
 	"cgin/errno"
+	"cgin/model"
+	"cgin/model/modelInterface"
 	"cgin/service"
+	"cgin/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"strconv"
 )
 
 // 微信小程序控制器，后台配置小程序各个页面，小程序获取配置接口
 
-type miniProgramController struct {}
+type miniProgramController struct{}
 
 var MiniProgramController = &miniProgramController{}
 
@@ -56,16 +58,18 @@ func (m *miniProgramController) DisposeMenu(c *gin.Context) {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
 
-	// 有一个创建失败就会全部创建失败 TODO: 可以支持部分创建成功
-	var savedMenus []interface{}
+	// 有一个创建失败就会全部创建失败
+	// TODO: 可以支持部分创建成功
 	for _, menu := range menus.Menus {
-		savedMenu, errI := service.MiniProgramService.DisposeMenu(menu.Desp, menu.Title, menu.Icon, menu.ActionType, menu.ActionValue)
-		if errI != nil {
-			panic(errno.NormalException.ReplaceErrorMsgWith(errI.Error()))
+		dbModel := model.Menu{}
+		util.BeanDeepCopy(menu, &dbModel)
+		err := dbModel.CreateMenu()
+		if err != nil {
+			panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
 		}
-		savedMenus = append(savedMenus, savedMenu)
 	}
-	helper.Response(savedMenus)
+	_, dbMenus := model.GetActiveMenus()
+	helper.Response(dbMenus)
 }
 
 // @summary 首页的配置
@@ -75,9 +79,9 @@ func (m *miniProgramController) DisposeMenu(c *gin.Context) {
 func (m *miniProgramController) GetIndexPreference(c *gin.Context) {
 	helper := context_helper.New(c)
 	// 菜单
-	menus := service.MiniProgramService.GetAllActiveMenus()
+	_, menus := model.GetActiveMenus()
 	// 首页配置 slogan等
-	indexConfig := service.MiniProgramService.GetIndexConfig()
+	_, indexConfig := new(model.IndexConfig).GetLatest()
 
 	data := gin.H{
 		"menus":        menus,
@@ -86,31 +90,47 @@ func (m *miniProgramController) GetIndexPreference(c *gin.Context) {
 	helper.Response(data)
 }
 
-// 首页slogan image等的配置信息
+// @Summary 首页slogan image等的配置信息
+// @Router /mini_program/set_index_config [post]
+// @Param config body co.IndexConfig true "小程序首页配置"
+// @Success 200 {object} service.Response
+// @Security ApiKeyAuth
+// @Produce json
+// @Accept json
 func (m *miniProgramController) SetIndexConfig(c *gin.Context) {
 	helper := context_helper.New(c)
 	config := &co.IndexConfig{}
 	if err := c.BindJSON(config); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
-	savedConfig := service.MiniProgramService.SetIndexConfig(config.Slogan, config.ImageUrl, config.ImageStyle)
+	ic := model.IndexConfig{
+		Slogan:     config.Slogan,
+		Motto:      config.Motto,
+		ImageUrl:   config.ImageUrl,
+		ImageStyle: config.ImageStyle,
+	}
+	_, savedConfig := ic.Save()
 	helper.Response(savedConfig)
 }
 
-// 获取notification 默认是显示最新的10条
 // @Security ApiKeyAuth
-// @Summary 获取notification
+// @Summary 获取notifications 分页查询
 // @Router /mini_program/get_notifications [get]
+// @Param pagingInfo query co.PageLimitOffset true "分页参数"
 // @Success 200 {object} service.Response
 // @Produce json
-func (m *miniProgramController) GetNotification(c *gin.Context) {
+func (m *miniProgramController) GetNotifications(c *gin.Context) {
 	helper := context_helper.New(c)
-	limit, err := strconv.ParseUint(c.DefaultQuery("count", "10"), 10, 64)
+	size := helper.GetInt("size")
+	page := helper.GetInt("page")
+	err, notifications, total := new(model.Notification).GetList(modelInterface.PageSizeInfo{
+		Page:     page,
+		PageSize: size,
+	})
 	if err != nil {
-		panic(errno.NormalException.AppendErrorMsg(err.Error()))
+		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
 	}
-	notifications := service.MiniProgramService.GetNotifications(limit)
-	helper.Response(gin.H{"notifications": notifications})
+	helper.Response(gin.H{"notifications": notifications, "total": total})
 }
 
 // 更新或者创建一个notification
@@ -127,25 +147,35 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 	if err := c.ShouldBindJSON(notification); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
+	dbModel := model.Notification{}
+	util.BeanDeepCopy(notification, &dbModel)
 	if notification.Id == 0 {
 		// 没有传id认为是创建一个notification
-		createdNotification := service.MiniProgramService.SaveNotification(notification.Content, notification.StartAt, notification.EndAt)
-		helper.Response(createdNotification)
-		return
+		_, saved := dbModel.CreateNotification()
+		helper.Response(saved)
+	} else {
+		// 更新已经存在的一个notification
+		_, updated := dbModel.UpdateNotification(notification.Id)
+		helper.Response(updated)
 	}
-	// 更新已经存在的一个notification
-	savedNotification := service.MiniProgramService.UpdateNotification(notification.Id, notification.Content, notification.StartAt, notification.EndAt)
-	helper.Response(savedNotification)
 }
 
-// 赞助的人
 // @Summary 查看赞助我的人
+// @Security ApiKeyAuth
 // @Router /mini_program/get_sponsors [get]
+// @Param pagingInfo query co.PageLimitOffset true "分页参数"
 // @Success 200 {object} service.Response
 // @Produce json
 func (m *miniProgramController) GetSponsors(c *gin.Context) {
 	helper := context_helper.New(c)
-	sponsors := service.MiniProgramService.GetSponsors()
+	err, data, total := new(model.Sponsor).GetList(modelInterface.PageSizeInfo{
+		Page:     helper.GetInt("page"),
+		PageSize: helper.GetInt("size"),
+	})
+	if err != nil {
+		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
+	}
+	sponsors := data.([]*model.Sponsor)
 	var result = make([]*respobj.Sponsor, len(sponsors))
 	for ind, s := range sponsors {
 		o := &respobj.Sponsor{
@@ -160,5 +190,6 @@ func (m *miniProgramController) GetSponsors(c *gin.Context) {
 	}
 	helper.Response(gin.H{
 		"sponsors": result,
+		"total":    total,
 	})
 }

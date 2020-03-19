@@ -276,7 +276,19 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "获取notification",
+                "summary": "获取notifications 分页查询",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -289,10 +301,27 @@
         },
         "/mini_program/get_sponsors": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "summary": "查看赞助我的人",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -325,24 +354,29 @@
                 }
             }
         },
-        "/scores": {
-            "get": {
+        "/mini_program/set_index_config": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "获取学生的成绩",
+                "summary": "首页slogan image等的配置信息",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "id of student",
-                        "name": "studentId",
-                        "in": "query",
-                        "required": true
+                        "description": "小程序首页配置",
+                        "name": "config",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.IndexConfig"
+                        }
                     }
                 ],
                 "responses": {
@@ -355,8 +389,34 @@
                 }
             }
         },
+        "/scores": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取学生的成绩",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/students/update_edu_account": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -514,7 +574,7 @@
                 },
                 "sign": {
                     "type": "string",
-                    "example": "559EB671B3E536C8B1705EA9BD90FCFE"
+                    "example": "67807AFF5A99880726B74D03F5A8F78C"
                 }
             }
         },
@@ -528,6 +588,27 @@
                 "student_number": {
                     "type": "string",
                     "example": "1923"
+                }
+            }
+        },
+        "co.IndexConfig": {
+            "type": "object",
+            "properties": {
+                "image_style": {
+                    "type": "string",
+                    "example": "fit"
+                },
+                "image_url": {
+                    "type": "string",
+                    "example": "http://ww1.sinaimg.cn/thumbnail/005uwVPtly1gcyif5da9lj305k05kjrb.jpg"
+                },
+                "motto": {
+                    "type": "string",
+                    "example": "好好活着每一天"
+                },
+                "slogan": {
+                    "type": "string",
+                    "example": "今天又是美好的一天"
                 }
             }
         },

@@ -3,7 +3,7 @@ package task
 // 后台运行的任务
 import (
 	"cgin/conf"
-	"cgin/service"
+	"cgin/model"
 	"cgin/service/workerpool"
 	"cgin/util"
 	"github.com/robfig/cron"
@@ -42,7 +42,7 @@ func init() {
 
 	// 在每天即将结束的时候，复位user的can_sync字段
 	c.AddFunc("0 55 23 * * *", func() {
-		service.StudentService.RestSyncStatus()
+		model.ResetStudentSyncScoreStatus()
 	})
 
 	// 测试用

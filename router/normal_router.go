@@ -9,21 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func mapNormalRouter(rootRouter *gin.Engine) {
+func initNormalRouter(normalRouter *gin.Engine) {
 	// 通用
-	rootRouter.Any("/", func(context *gin.Context) {
-		currentAppEnv := conf.AppConfig.String(conf.AppEnvironment)
+	normalRouter.Any("/", func(context *gin.Context) {
+		currentAppEnv := conf.AppEnvironment()
 		service.SendResponse(context, errno.Welcome, fmt.Sprintf("current enviorment is [%s].", currentAppEnv))
 	})
 
 	// 未找到的路由
-	rootRouter.NoRoute(func(context *gin.Context) {
+	normalRouter.NoRoute(func(context *gin.Context) {
 		service.SendResponse(context, errno.NotSuchRouteException, nil)
 	})
 
 	// 普通的资源
 	// api/
-	apiNormal := rootRouter.Group(RootApiPrefix)
+	apiNormal := normalRouter.Group(RootApiPrefix)
 	{
 		apiNormal.POST("/decode_verify_code", v1.VerifyCodeCtl.Recognize)
 		apiNormal.GET("/daily/image", v1.DailyController.GetImage)

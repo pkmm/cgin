@@ -18,7 +18,7 @@ func Test_video_91porn_parser(t *testing.T) {
 func TestParseCategory(t *testing.T) {
 	client := NewHttpClient()
 	resq, _ := http.NewRequest("GET", "http://91porn.com/v.php?category=mf&viewtype=basic", nil)
-	resp,_ := client.Do(resq)
+	resp, _ := client.Do(resq)
 	defer resp.Body.Close()
 	result := parseByCategory(resp.Body)
 	for _, item := range *result {

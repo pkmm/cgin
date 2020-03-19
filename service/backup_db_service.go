@@ -16,13 +16,8 @@ type backupService struct {
 var BackupDBService baseService
 
 func (b *baseService) BackupMysqlService(savePath string) {
-	host := conf.AppConfig.String(conf.MysqlHost)
-	port := conf.AppConfig.String(conf.MysqlPort)
-	user := conf.AppConfig.String(conf.MysqlUser)
-	password := conf.AppConfig.String(conf.MysqlPassword)
-	database := conf.AppConfig.String(conf.MysqlDatabase)
-
-	cmd := exec.Command("mysqldump", "-h"+host, "-P"+port, "-u"+user, "-p"+password, database)
+	info := conf.GetMysqlConfigInfo()
+	cmd := exec.Command("mysqldump", "-h"+info.Host, "-P"+info.Port, "-u"+info.User, "-p"+info.Pwd, info.Database)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		panic("备份mysql失败" + err.Error())

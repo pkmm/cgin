@@ -13,7 +13,7 @@ import (
 type JSONTime time.Time
 
 func (t *JSONTime) UnmarshalJSON(data []byte) (err error) {
-	now, err := time.ParseInLocation(`"` + "2006-01-02 15:04:05" + `"`, string(data), time.Local)
+	now, err := time.ParseInLocation(`"`+"2006-01-02 15:04:05"+`"`, string(data), time.Local)
 	*t = JSONTime(now)
 	return err
 }
@@ -42,4 +42,8 @@ func (t *JSONTime) Scan(v interface{}) error {
 		return nil
 	}
 	return fmt.Errorf("can not convert %v to timestamp", v)
+}
+
+func (t JSONTime) String() string {
+	return time.Time(t).Format("2006-01-02 15:04:05")
 }

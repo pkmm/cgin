@@ -2,7 +2,9 @@ package v1
 
 import (
 	"cgin/controller/context_helper"
-	"cgin/service"
+	"cgin/errno"
+	"cgin/model"
+	"cgin/model/modelInterface"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,6 +33,15 @@ func (t *thinkController) GetList(ctx *gin.Context) {
 	if size <= 0 {
 		size = 10
 	}
-	results := service.ThinkingService.GetList(page, size)
-	helper.Response(results)
+	err, results, total := new(model.Thinking).GetList(modelInterface.PageSizeInfo{
+		Page:     page,
+		PageSize: size,
+	})
+	if err != nil {
+		panic(errno.NormalException.AppendErrorMsg(err.Error()))
+	}
+	helper.Response(gin.H{
+		"sentence": results,
+		"total":    total,
+	})
 }

@@ -7,10 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func mapTaskRouter(router *gin.Engine) {
-	apiTrigger := router.Group(Trigger)
+func initTaskRouter(taskRouter *gin.Engine) {
+	apiTrigger := taskRouter.Group(Trigger)
 	{
-		if conf.AppConfig.String(conf.AppEnvironment) != conf.AppEnvDev {
+		if conf.IsProd() {
 			apiTrigger.Use(middleware.Auth)
 		}
 		apiTrigger.Any("/cron", v1.CronTaskController.TriggerTask)

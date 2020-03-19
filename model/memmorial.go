@@ -1,6 +1,9 @@
 package model
 
-import "cgin/util"
+import (
+	"cgin/conf"
+	"cgin/util"
+)
 
 // 艾宾斯浩背诵单词的记忆曲线
 // TODO: 支持多个记录
@@ -14,4 +17,15 @@ type HermannMemorial struct {
 	// 计算当前进行到第几天
 	StartAt util.JSONTime `json:"start_at" gorm:"default:current_timestamp"`
 	Model
+}
+
+func (h *HermannMemorial) GetOwnerTaskRecord() (error, *HermannMemorial) {
+	err := conf.DB.Last(h, HermannMemorial{UserId: h.UserId}).Error
+	return err, h
+}
+
+func (h *HermannMemorial) UpdateOrCreate() error {
+	return conf.DB.Where(HermannMemorial{UserId: h.UserId}).
+		Assign(*h).
+		FirstOrCreate(&h).Error
 }

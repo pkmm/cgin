@@ -1,9 +1,8 @@
 package main
 
 import (
-	"cgin/service"
+	"cgin/model"
 	"cgin/util"
-	"fmt"
 	"runtime"
 	"testing"
 )
@@ -47,7 +46,7 @@ func Test_RandomString(t *testing.T) {
 }
 
 func Test_RestStudentSyncStatus(t *testing.T) {
-	if err := service.StudentService.RestSyncStatus(); err != nil {
+	if err := model.ResetStudentSyncScoreStatus(); err != nil {
 		t.Error("测试重置状态失败", err.Error())
 	} else {
 		t.Log("测试重置状态成功")
@@ -56,37 +55,43 @@ func Test_RestStudentSyncStatus(t *testing.T) {
 }
 
 func Test_GetNeedSyncScoreStudents(t *testing.T) {
-	students, err := service.StudentService.GetStudentNeedSyncScore(0, 1)
-	if err != nil || len(students) != 1 {
-		if err != nil {
-			t.Error(err.Error())
-		} else {
-			t.Log("没有学生需要同步， 测试通过")
-		}
-	} else {
-		t.Log("测试获取学生成功")
+	err, students, total := new(model.Student).GetStudentsNeedSyncScore(0, 100)
+	if err != nil {
+		t.Fatal(err)
 	}
+	t.Log("students number: ", len(*students) == 100)
+	t.Log("total: ", total)
 }
 
 func TestSystemInfo(t *testing.T) {
 	t.Log("cpu number:", runtime.NumCPU())
-	t.Log("运行环境:",  runtime.GOOS)
+	t.Log("运行环境:", runtime.GOOS)
 	t.Log("go root:", runtime.GOROOT())
 }
 
 func TestConvert(t *testing.T) {
+
+	//var user model.User
+	//fmt.Printf("%#v", &user == nil)
+
 	//i, err := strconv.ParseInt("", 10, 64)
 	//t.Log(err)
 	//t.Log(i == 0)
-
-	type name struct {
-		H int
-	}
-
-	a := make([]*name, 10)
-	a[0] = &name{23}
-	b := a
-	b[0] = &name{34}
-	fmt.Printf("a == b %#v\n", a[0])
-	fmt.Printf("a == b %#v", b[0])
+	//
+	//type name struct {
+	//	H int
+	//}
+	//
+	//a := make([]*name, 10)
+	//a[0] = &name{23}
+	//b := a
+	//b[0] = &name{34}
+	//fmt.Printf("a == b %#v\n", a[0])
+	//fmt.Printf("a == b %#v", b[0])
+	//
+	//
+	//// test gorm firstOrInit
+	//var user model.User
+	//conf.DB.FirstOrCreate(&user, model.User{OpenId:"33"}).Assign(model.User{RoleId: 4})
+	//fmt.Printf("user model %#v", user)
 }

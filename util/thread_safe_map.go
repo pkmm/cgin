@@ -32,4 +32,5 @@ func (this *SafeMap) DeleteKey(key string) {
 	delete(this.Map, key)
 	this.Unlock()
 }
+
 // === 线程安全的 map End ===

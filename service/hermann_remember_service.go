@@ -1,9 +1,8 @@
 package service
 
 import (
+	"cgin/conf"
 	"cgin/errno"
-	"cgin/model"
-	"cgin/util"
 )
 
 type hermannService struct {
@@ -99,34 +98,12 @@ func (h *hermannService) getNthRememberList(n, unit int) *UnitInterval {
 	return &UnitInterval{n*unit - unit + 1, n * unit}
 }
 
-func (h *hermannService) GetTaskRecord(userId uint64) *model.HermannMemorial {
-	var result model.HermannMemorial
-	if err := db.Model(&model.HermannMemorial{}).
-		Where("user_id = ?", userId).
-		First(&result).Error; err != nil {
-		// TODO: LOG something.
-		return nil
-	}
-	return &result
-}
-
 func (h *hermannService) GetHoursPastOfTask(userId uint64) *HoursPast {
 	var result HoursPast
-	if err := db.
+	if err := conf.DB.
 		Raw("SELECT DATEDIFF(NOW(), start_at) + 1 AS days, remember_unit AS unit, total_unit as total FROM hermann_memorials WHERE user_id = ?", userId).
 		Scan(&result).Error; err != nil {
 		return nil
 	}
 	return &result
-}
-
-func (h *hermannService) SaveTask(unit, totalUnit uint, startAt util.JSONTime, userId uint64) error {
-	var result model.HermannMemorial
-	if err := db.Model(&model.HermannMemorial{}).
-		Where("user_id = ?", userId).
-		Assign(model.HermannMemorial{RememberUnit: unit, StartAt: startAt, UserId: userId, TotalUnit: totalUnit}).
-		FirstOrCreate(&result).Error; err != nil {
-		return err
-	}
-	return nil
 }

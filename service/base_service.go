@@ -10,4 +10,3 @@ func (b *baseService) CheckError(err error) {
 		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
 	}
 }
-

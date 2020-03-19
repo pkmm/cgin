@@ -8,6 +8,7 @@ import (
 )
 
 var wg sync.WaitGroup
+
 func toSleep(i int) error {
 	time.Sleep(time.Duration(i) * time.Second)
 	wg.Done()
@@ -37,7 +38,7 @@ func TestSimplePool_RunPool(t *testing.T) {
 func TestWorkerPool_Start(t *testing.T) {
 	var tt sync.WaitGroup
 	count := 200
-	wp := &workerPool{MaxWorkersCount:50, lock: &sync.Mutex{}}
+	wp := &workerPool{MaxWorkersCount: 50, lock: &sync.Mutex{}}
 	wp.cond = sync.NewCond(wp.lock)
 	wp.Start()
 	tt.Add(count)

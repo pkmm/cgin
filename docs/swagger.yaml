@@ -21,7 +21,7 @@ definitions:
         example: openid_xxsd
         type: string
       sign:
-        example: 559EB671B3E536C8B1705EA9BD90FCFE
+        example: 67807AFF5A99880726B74D03F5A8F78C
         type: string
     type: object
   co.EduAccount:
@@ -31,6 +31,21 @@ definitions:
         type: string
       student_number:
         example: "1923"
+        type: string
+    type: object
+  co.IndexConfig:
+    properties:
+      image_style:
+        example: fit
+        type: string
+      image_url:
+        example: http://ww1.sinaimg.cn/thumbnail/005uwVPtly1gcyif5da9lj305k05kjrb.jpg
+        type: string
+      motto:
+        example: 好好活着每一天
+        type: string
+      slogan:
+        example: 今天又是美好的一天
         type: string
     type: object
   co.Menu:
@@ -259,6 +274,13 @@ paths:
       summary: 首页的配置
   /mini_program/get_notifications:
     get:
+      parameters:
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: size
+        type: integer
       produces:
       - application/json
       responses:
@@ -268,9 +290,16 @@ paths:
             $ref: '#/definitions/service.Response'
       security:
       - ApiKeyAuth: []
-      summary: 获取notification
+      summary: 获取notifications 分页查询
   /mini_program/get_sponsors:
     get:
+      parameters:
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: size
+        type: integer
       produces:
       - application/json
       responses:
@@ -278,6 +307,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 查看赞助我的人
   /mini_program/send_template_msg:
     get:
@@ -293,14 +324,29 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 发送微信小程序订阅消息
+  /mini_program/set_index_config:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 小程序首页配置
+        in: body
+        name: config
+        required: true
+        schema:
+          $ref: '#/definitions/co.IndexConfig'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 首页slogan image等的配置信息
   /scores:
     get:
-      parameters:
-      - description: id of student
-        in: query
-        name: studentId
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -345,6 +391,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
+      security:
+      - ApiKeyAuth: []
       summary: 更新学生的信息
   /thinking/list:
     post:

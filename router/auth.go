@@ -6,13 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func mapAuthRouter(router *gin.Engine) {
-	apiAuth := router.Group(AuthPrefix).Use(middleware.Auth)
+func initAuthRouter(authRouter *gin.Engine) {
+	apiAuth := authRouter.Group(AuthPrefix).Use(middleware.Auth)
 	{
 		apiAuth.POST("/me", v1.AuthController.Me)
 	}
 
-	apiNotAuth := router.Group(AuthPrefix)
+	apiNotAuth := authRouter.Group(AuthPrefix)
 	{
 		apiNotAuth.POST("/login", v1.AuthController.Login)
 	}

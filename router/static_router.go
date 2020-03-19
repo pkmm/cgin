@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func mapStaticRouter(router *gin.Engine) {
+func initStaticRouter(router *gin.Engine) {
 	router.StaticFS("/static", http.Dir("static"))
 	router.StaticFile("/favicon.ico", "./static/favicon.ico")
 	router.StaticFile("/admin", "static/web_front/index.html")

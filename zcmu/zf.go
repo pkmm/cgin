@@ -77,6 +77,24 @@ type Crawl struct {
 	isPasswordWrong bool
 }
 
+func NewCrawl(num, pwd string) (*Crawl, error) {
+	timeout := time.Duration(3 * time.Second) // 超时5s
+	crawl := &Crawl{
+		num: num,
+		pwd: pwd,
+	}
+	tmpJar, err := cookiejar.New(nil)
+	if err != nil {
+		return nil, errors.New("初始化cookie jar失败")
+	}
+	crawl.client = &http.Client{
+		Jar:     tmpJar,
+		Timeout: timeout,
+	}
+
+	return crawl, nil
+}
+
 func (c *Crawl) GetStudentName() string {
 	return c.name
 }
@@ -142,24 +160,6 @@ func (c *Crawl) GetScores() ([]*Score, error) {
 	}
 
 	return c.retrieveScores(), nil
-}
-
-func NewCrawl(num, pwd string) (*Crawl, error) {
-	timeout := time.Duration(5 * time.Second) // 超时5s
-	crawl := &Crawl{
-		num: num,
-		pwd: pwd,
-	}
-	tmpJar, err := cookiejar.New(nil)
-	if err != nil {
-		return nil, errors.New("初始化cookie jar失败")
-	}
-	crawl.client = &http.Client{
-		Jar:     tmpJar,
-		Timeout: timeout,
-	}
-
-	return crawl, nil
 }
 
 func (c *Crawl) getViewState(html []byte) (string, error) {

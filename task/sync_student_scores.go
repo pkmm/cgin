@@ -3,7 +3,6 @@ package task
 import (
 	"cgin/conf"
 	"cgin/model"
-	"cgin/service"
 	"cgin/service/workerpool"
 	"cgin/util"
 	"cgin/zcmu"
@@ -121,16 +120,15 @@ func UpdateStudentScore() {
 	//conf.Logger.Info("sync %d students scores finish, use time %s", len(students), stopAt.String())
 }
 
-
 func _updateStudentScore() {
 	// TODO: chunk 分块查询 优化查询 保存成绩， 更新爬虫的代码
-	students, err := service.StudentService.GetStudentNeedSyncScore(0, 100000)
+	err, students, _ := new(model.Student).GetStudentsNeedSyncScore(1, 10)
 	if err != nil {
-		conf.Logger.Info("查询学生成绩失败 [%s]",err.Error())
+		conf.Logger.Info("查询学生成绩失败 [%s]", err.Error())
 		return
 	}
-	ts := make([]*workerpool.Task, len(students))
-	for i, stu := range students {
+	ts := make([]*workerpool.Task, len(*students))
+	for i, stu := range *students {
 		stuCopy := stu
 		ts[i] = workerpool.NewTask(func() error {
 			wk, err := zcmu.NewCrawl(stuCopy.Number, stuCopy.Password)
@@ -149,7 +147,7 @@ func _updateStudentScore() {
 				score.StudentId = stuCopy.Id
 				modelScores = append(modelScores, score)
 			}
-			service.ScoreService.BatchCreate(modelScores)
+			model.BatchCreateScores(modelScores)
 			return nil
 		})
 	}

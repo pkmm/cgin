@@ -3,7 +3,7 @@ package task
 import (
 	"cgin/conf"
 	"cgin/model"
-	"cgin/service"
+	"cgin/model/modelInterface"
 	"cgin/service/workerpool"
 	"fmt"
 	"github.com/pkmm/gb/baidu"
@@ -11,11 +11,12 @@ import (
 
 // 签到百度贴吧
 func SignBaiduForums() {
-	budsss := service.TiebaService.GetAll()
-	if len(budsss) == 0 {
-		budsss = append(budsss, &model.Tieba{Bduss: conf.AppConfig.String("bduss")})
+	_, data, _ := new(model.Tieba).GetList(modelInterface.PageSizeInfo{1, 200})
+	tiebaUsers := data.([]*model.Tieba)
+	if len(tiebaUsers) == 0 {
+		tiebaUsers = append(tiebaUsers, &model.Tieba{Bduss: conf.AppConfig.String("bduss")})
 	}
-	for _, record := range budsss {
+	for _, record := range tiebaUsers {
 		if record.Bduss == "" {
 			continue
 		}

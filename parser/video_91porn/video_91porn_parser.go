@@ -88,7 +88,6 @@ func ParseIndex() *[]videoItem {
 	return &videos
 }
 
-
 // 解析其他的类别
 func parseByCategory(html io.Reader) *[]videoItem {
 	videoItemList := make([]videoItem, 0)
@@ -99,14 +98,14 @@ func parseByCategory(html io.Reader) *[]videoItem {
 	doc.Find("#fullside").Find(".listchannel").Each(func(i int, element *goquery.Selection) {
 		item := videoItem{}
 		contentUrl := element.Find("a").First().AttrOr("href", "")
-		contentUrl = contentUrl[0: strings.Index(contentUrl, "&")]
+		contentUrl = contentUrl[0:strings.Index(contentUrl, "&")]
 		item.ViewKey = contentUrl[strings.Index(contentUrl, "=")+1:]
 		tmpElement := element.Find("a").First().Find("img").First()
 		item.ImgUrl = tmpElement.AttrOr("src", "")
 		item.Title = tmpElement.AttrOr("title", "")
 		allInfo := element.Text()
 		startIndex := strings.Index(allInfo, "时长")
-		item.Duration = allInfo[startIndex+6: startIndex+12]
+		item.Duration = allInfo[startIndex+6 : startIndex+12]
 		//start := strings.Index(allInfo, "添加时间")
 		//info := allInfo[start:]
 		//item.Info = strings.Replace(info, "还未被评分", "", -1)

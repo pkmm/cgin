@@ -1,22 +1,17 @@
 package v1
 
 import (
+	"cgin/controller/co"
 	"cgin/controller/context_helper"
 	"cgin/errno"
+	"cgin/model"
 	"cgin/service"
-	"cgin/util"
 	"github.com/gin-gonic/gin"
 )
 
-type hermannRememberController struct {}
+type hermannRememberController struct{}
 
 var HermannRememberController = &hermannRememberController{}
-
-type taskDetail struct {
-	Unit      uint          `json:"unit"`
-	TotalUnit uint          `json:"total_unit"`
-	StartAt   util.JSONTime `json:"start_at,string"`
-}
 
 // @Summary 背单词：今天的任务
 // @Security ApiKeyAuth
@@ -42,14 +37,21 @@ func (h *hermannRememberController) GetTodayTaskInfo(c *gin.Context) {
 // @Param addData body co.AddHermannMemorial true "data"
 func (h *hermannRememberController) SaveUserRememberTask(c *gin.Context) {
 	helper := context_helper.New(c)
-	var params taskDetail
+	var params co.AddHermannMemorial
 	if err := c.ShouldBindJSON(&params); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
-	err := service.HermannService.SaveTask(params.Unit, params.TotalUnit, params.StartAt, helper.GetAuthUserId())
+	dbModel := model.HermannMemorial{
+		TotalUnit:    params.TotalUnit,
+		StartAt:      params.StartAt,
+		RememberUnit: params.Unit,
+		UserId:       helper.GetAuthUserId(),
+	}
+
+	err := dbModel.UpdateOrCreate()
 	if err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
-	newTask := service.HermannService.GetTaskRecord(helper.GetAuthUserId())
+	_, newTask := dbModel.GetOwnerTaskRecord()
 	helper.Response(newTask)
 }

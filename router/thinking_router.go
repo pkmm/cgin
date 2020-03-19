@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func mapThinkingRouter(router *gin.Engine) {
-	thinkingApi := router.Group(Thinking)
+func initThinkingRouter(thinkRouter *gin.Engine) {
+	thinkingApi := thinkRouter.Group(Thinking)
 	{
 		thinkingApi.Any("/list", v1.ThinkingController.GetList)
 	}

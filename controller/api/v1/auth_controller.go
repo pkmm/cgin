@@ -5,8 +5,10 @@ import (
 	"cgin/constant/devicetype"
 	"cgin/controller/context_helper"
 	"cgin/errno"
+	"cgin/model"
 	"cgin/service"
 	"cgin/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -36,6 +38,9 @@ func (a *authController) Login(c *gin.Context) {
 	case devicetype.MiniProgram:
 		sign2 := util.Md5String(conf.AppConfig.String("normal.random.str") + conf.AppConfig.String("miniprogram_app_id") + openid)
 		if sign != sign2 {
+			if conf.IsDev() {
+				fmt.Println("签名：", sign2)
+			}
 			panic(errno.InvalidParameters.AppendErrorMsg("签名验证失败"))
 		}
 		user := service.AuthService.LoginFromMiniProgram(openid)
@@ -60,7 +65,10 @@ func (a *authController) Login(c *gin.Context) {
 // @Success 200 {object} service.Response
 func (a *authController) Me(c *gin.Context) {
 	helper := context_helper.New(c)
-	user := service.User.GetUser(helper.GetAuthUserId())
+	err, user := model.GetUserById(helper.GetAuthUserId())
+	if err != nil {
+		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
+	}
 	data := gin.H{
 		"user": user,
 	}

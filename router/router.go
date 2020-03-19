@@ -22,25 +22,23 @@ const (
 	Score         = RootApiPrefix + "/scores"
 )
 
-func MapRoute() *gin.Engine {
-
+func InitRouter() *gin.Engine {
 	router := gin.New()
 	// 全局的中间件
 	router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler())
-
 	// dev export swagger api.
-	if conf.AppEnvDev == conf.AppConfig.DefaultString(conf.AppEnvironment, conf.AppEnvProd) {
+	if conf.IsDev() {
 		router.GET("/swagger/*any", ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "xx"))
 	}
 
-	mapNormalRouter(router)
-	mapStudentRouter(router)
-	mapStaticRouter(router)
-	mapMiniProgramRouter(router)
-	mapTaskRouter(router)
-	mapThinkingRouter(router)
-	mapScoresRouter(router)
-	mapAuthRouter(router)
+	initNormalRouter(router)
+	initStudentRouter(router)
+	initStaticRouter(router)
+	initMiniProgramRouter(router)
+	initTaskRouter(router)
+	initThinkingRouter(router)
+	initScoresRouter(router)
+	initAuthRouter(router)
 
 	return router
 }

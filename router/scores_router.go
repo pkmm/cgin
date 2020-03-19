@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func mapScoresRouter(router *gin.Engine) {
-	api := router.Group(Score).Use(middleware.Auth)
+func initScoresRouter(scoreRouter *gin.Engine) {
+	api := scoreRouter.Group(Score).Use(middleware.Auth)
 	{
 		api.GET("/", v1.Student.GetScores)
 	}

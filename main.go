@@ -4,23 +4,12 @@ import (
 	"cgin/conf"
 	"cgin/router"
 	"cgin/task"
-	_ "cgin/task"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-var env = conf.AppEnvDev
 var port = "8654"
-
-func init() {
-	env = conf.AppConfig.DefaultString(conf.AppEnvironment, conf.AppEnvProd)
-	if env == conf.AppEnvProd {
-		gin.SetMode(gin.ReleaseMode)
-	} else {
-		gin.SetMode(gin.DebugMode)
-	}
-}
 
 // @title My Server cgin
 // @version 1.0
@@ -37,9 +26,16 @@ func main() {
 		// release some resource.
 		fmt.Println("do some clean work.")
 		task.CleanPool()
+		_ = conf.DB.Close()
 	}()
 
-	handlers := router.MapRoute()
+	if conf.IsProd() {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
+
+	handlers := router.InitRouter()
 	server := &http.Server{
 		Addr:    "0.0.0.0:" + port,
 		Handler: handlers,

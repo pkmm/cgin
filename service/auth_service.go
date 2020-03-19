@@ -1,6 +1,7 @@
 package service
 
 import (
+	"cgin/conf"
 	"cgin/model"
 	"sync"
 )
@@ -17,7 +18,7 @@ var AuthService = &authService{
 func (a *authService) LoginFromMiniProgram(openid string) *model.User {
 	user := &model.User{}
 	// 第一个记录或者是创建记录
-	if err := db.Model(&model.User{}).Where("open_id = ?", openid).
+	if err := conf.DB.Model(&model.User{}).Where("open_id = ?", openid).
 		Preload("Student").
 		Attrs(model.User{OpenId: openid}).
 		FirstOrCreate(&user).Error; err != nil {

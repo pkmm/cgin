@@ -59,8 +59,6 @@ func Decimal(value float64) float64 {
 	return value
 }
 
-
-
 func GenerateToken(key uint64) string {
 	now := time.Now().Unix()
 	str := RandomString(100)
@@ -112,6 +110,7 @@ func Date() string {
 func TimeString() string {
 	return time.Now().Format("15:04:05")
 }
+
 // time func end
 
 func PathExists(path string) bool {

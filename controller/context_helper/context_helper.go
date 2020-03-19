@@ -15,7 +15,7 @@ type contextHelper struct {
 }
 
 func New(c *gin.Context) *contextHelper {
-	return &contextHelper{UserId: 0, Params: nil, ctx:c}
+	return &contextHelper{UserId: 0, Params: nil, ctx: c}
 }
 
 func (b *contextHelper) checkContext() {

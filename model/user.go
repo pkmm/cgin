@@ -1,8 +1,9 @@
 package model
 
+import "cgin/conf"
 
 const (
-	RoleAdmin = iota -1
+	RoleAdmin = iota - 1
 	RoleUser
 )
 
@@ -14,4 +15,10 @@ type User struct {
 	// 指针类型 保证关联数据不存在的时候能正常显示为null
 	Student *Student `json:"student" gorm:"ForeignKey:UserId;AssociationForeignKey:Id"`
 	Model
+}
+
+func GetUserById(userId uint64) (error, *User) {
+	var user User
+	err := conf.DB.Find(&user, User{Id: userId}).Error
+	return err, &user
 }

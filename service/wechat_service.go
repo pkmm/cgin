@@ -32,12 +32,12 @@ type WechatUserInfo struct {
 
 // 模板消息 发送 接受的结构体
 type TemplateMsg struct {
-	AccessToken string           `json:"access_token"`
-	ToUser      string           `json:"touser"`
-	TemplateId  string           `json:"template_id"`
-	Page        string           `json:"page"`
+	AccessToken string `json:"access_token"`
+	ToUser      string `json:"touser"`
+	TemplateId  string `json:"template_id"`
+	Page        string `json:"page"`
 	//FormId      string           `json:"form_id"`
-	Data        TemplateMsgData `json:"data"`
+	Data TemplateMsgData `json:"data"`
 }
 
 type TemplateMsgData struct {
