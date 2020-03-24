@@ -11,3 +11,6 @@ tmp/
 # 忽略vendor目录下除了vendor.json以外的文件
 # /vendor/*
 # !/vendor/vendor.json
+static/web_front/test-admin/node_modules
+static/web_front/test-admin/public
+storage/backup/

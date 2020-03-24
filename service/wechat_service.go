@@ -19,7 +19,7 @@ type code2SessionResp struct {
 	ErrMsg     string `json:"errMsg"`
 }
 
-type WechatUserInfo struct {
+type WeChatUserInfo struct {
 	OpenId    string `json:"OpenId"`
 	NickName  string `json:"nickName"`
 	Language  string `json:"language"`
@@ -78,7 +78,7 @@ func getAccessToken() (token string, err error) {
 		Token string `json:"access_token"`
 	}
 	t := new(tmp)
-	json.Unmarshal(data, &t)
+	_ = json.Unmarshal(data, &t)
 	return t.Token, nil
 }
 
@@ -112,9 +112,9 @@ func SendUserTemplateMsg(msg *TemplateMsg) *SendTemplateResponse {
 	return sendTemplateResponse
 }
 
-func DecodeWeChatUserInfo(iv, code, encryptedData string) (*WechatUserInfo, error) {
+func DecodeWeChatUserInfo(iv, code, encryptedData string) (*WeChatUserInfo, error) {
 	sess, err := code2Session(code)
-	weChatUserInfo := &WechatUserInfo{}
+	weChatUserInfo := &WeChatUserInfo{}
 	if err != nil {
 		return weChatUserInfo, err
 	}
@@ -129,7 +129,7 @@ func DecodeWeChatUserInfo(iv, code, encryptedData string) (*WechatUserInfo, erro
 		return weChatUserInfo, err
 	}
 
-	json.Unmarshal([]byte(result.(string)), &weChatUserInfo)
+	_ = json.Unmarshal([]byte(result.(string)), &weChatUserInfo)
 
 	return weChatUserInfo, nil
 }
@@ -155,7 +155,7 @@ func code2Session(code string) (*code2SessionResp, error) {
 		return sess, err
 	}
 
-	json.Unmarshal(body, &sess)
+	_ = json.Unmarshal(body, &sess)
 
 	return sess, nil
 }
