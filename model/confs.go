@@ -8,6 +8,7 @@ import (
 // all app models.
 // register model here.
 var Models = []interface{}{
+	&Role{},
 	&User{},
 	&Score{},
 	&SyncDetail{},
@@ -19,6 +20,8 @@ var Models = []interface{}{
 	&Sponsor{},
 	&Tieba{},
 	&Thinking{},
+	&Resource{},
+	&Permission{},
 }
 
 func init() {

@@ -14,12 +14,12 @@ type Student struct {
 	IsSync   bool   `json:"is_sync" gorm:"type:bool"`
 	Model
 
-	Scores     []*Score    `gorm:"ForeignKey:StudentId;AssociationForeignKey:Id" json:"scores"`
+	Scores     []Score    `gorm:"ForeignKey:StudentId;AssociationForeignKey:Id" json:"scores"`
 	SyncDetail *SyncDetail `json:"sync_detail" gorm:"ForeignKey:StudentId;AssociationForeignKey:Id"`
 }
 
 func (s *Student) UpdateOrCreate() (err error, _s *Student) {
-	err = conf.DB.Where(Student{UserId:s.UserId}).Assign(*s).FirstOrCreate(s).Error
+	err = conf.DB.Where(Student{UserId: s.UserId}).Assign(*s).FirstOrCreate(s).Error
 	return err, s
 }
 
@@ -49,10 +49,10 @@ func ResetStudentSyncScoreStatus() error {
 	return err
 }
 func GetStudentByUserId(userId uint64) (err error, _s *Student) {
-	student := &Student{}
+	var student Student
 	err = conf.DB.Where("user_id = ?", userId).
 		Preload("Scores").
 		Preload("SyncDetail").
 		First(&student).Error
-	return err, student
+	return err, &student
 }

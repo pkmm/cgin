@@ -26,7 +26,7 @@ func initNormalRouter(normalRouter *gin.Engine) {
 	apiNormal := normalRouter.Group(RootApiPrefix)
 	{
 		apiNormal.POST("/decode_verify_code", v1.VerifyCodeCtl.Recognize)
-		apiNormal.GET("/daily/image", v1.DailyController.GetImage)
-		apiNormal.GET("/daily/sentence", v1.DailyController.GetSentence)
+		apiNormal.GET("/daily/images", v1.DailyController.GetImage)
+		apiNormal.GET("/daily/sentences", v1.DailyController.GetSentence)
 	}
 }

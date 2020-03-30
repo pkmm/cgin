@@ -12,6 +12,7 @@ var (
 	Welcome                = &BusinessErrorInfo{10006, "Hello, I am still alive"}
 	NotSuchRouteException  = &BusinessErrorInfo{10007, "Not found resource"}
 	NormalException        = &BusinessErrorInfo{10008, "Exception:"}
+	PermissionDenied       = &BusinessErrorInfo{10009, "Permission Denied"}
 
 	// user errors
 	// error code begin with 2... for business error

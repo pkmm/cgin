@@ -15,7 +15,7 @@ import (
 //	Token string `json:"token"`
 //}
 
-func Auth(c *gin.Context) {
+func Auth() gin.HandlerFunc {
 	// 创建buffer 备份body
 	//buf, _ := ioutil.ReadAll(c.Request.Body)
 	//rdr1 := ioutil.NopCloser(bytes.NewBuffer(buf))
@@ -34,14 +34,16 @@ func Auth(c *gin.Context) {
 	//	}
 	//}
 	//c.Request.Body = rdr2
-	token := c.Request.Header.Get("Authorization")
-	if 0 == len(token) {
-		panic(errno.TokenNotValid)
+	return func(c *gin.Context) {
+		token := c.Request.Header.Get("Authorization")
+		if 0 == len(token) {
+			panic(errno.TokenNotValid)
+		}
+		claims, err := service.JWTSrv.GetAuthClaims(token)
+		if err != nil {
+			panic(errno.TokenNotValid)
+		}
+		c.Set("claims", claims)
+		c.Next()
 	}
-	claims, err := service.JWTSrv.GetAuthClaims(token)
-	if err != nil {
-		panic(errno.TokenNotValid)
-	}
-	c.Set("claims", claims)
-	c.Next()
 }

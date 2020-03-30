@@ -13,7 +13,7 @@ var port = "8654"
 
 // @title My Server cgin
 // @version 1.0
-// @description this is a custom server of my interesting.
+// @description 小程序【Retain吧】的服务端代码，其他小的功能
 
 // @host localhost:8654
 // @BasePath /api/v1

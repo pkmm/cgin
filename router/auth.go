@@ -7,7 +7,7 @@ import (
 )
 
 func initAuthRouter(authRouter *gin.Engine) {
-	apiAuth := authRouter.Group(AuthPrefix).Use(middleware.Auth)
+	apiAuth := authRouter.Group(AuthPrefix).Use(middleware.Auth())
 	{
 		apiAuth.POST("/me", v1.AuthController.Me)
 	}

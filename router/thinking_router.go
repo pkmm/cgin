@@ -8,6 +8,6 @@ import (
 func initThinkingRouter(thinkRouter *gin.Engine) {
 	thinkingApi := thinkRouter.Group(Thinking)
 	{
-		thinkingApi.Any("/list", v1.ThinkingController.GetList)
+		thinkingApi.GET("/", v1.ThinkingController.Index)
 	}
 }

@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "this is a custom server of my interesting.",
+        "description": "小程序【Retain吧】的服务端代码，其他小的功能",
         "title": "My Server cgin",
         "contact": {},
         "license": {},
@@ -64,7 +64,7 @@
                 }
             }
         },
-        "/daily/image": {
+        "/daily/images": {
             "get": {
                 "security": [
                     {
@@ -85,15 +85,12 @@
                 }
             }
         },
-        "/daily/sentence": {
+        "/daily/sentences": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
-                ],
-                "produces": [
-                    "application/json"
                 ],
                 "summary": "一句话",
                 "responses": {
@@ -134,7 +131,26 @@
                 }
             }
         },
-        "/mini_program/add_hermann_memorial": {
+        "/mini_program/hermann_memorials": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "背单词：今天的任务",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -166,25 +182,28 @@
                 }
             }
         },
-        "/mini_program/change_notification": {
+        "/mini_program/index_config": {
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "更新创建一个notification",
+                "summary": "首页slogan image等的配置信息",
                 "parameters": [
                     {
-                        "description": "one notification",
-                        "name": "notification",
+                        "description": "小程序首页配置",
+                        "name": "config",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/co.Notification"
+                            "$ref": "#/definitions/co.IndexConfig"
                         }
                     }
                 ],
@@ -198,7 +217,25 @@
                 }
             }
         },
-        "/mini_program/config_menu": {
+        "/mini_program/index_preferences": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "summary": "首页的配置",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/mini_program/menus": {
             "post": {
                 "security": [
                     {
@@ -227,46 +264,7 @@
                 }
             }
         },
-        "/mini_program/get_hermann_memorial": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "背单词：今天的任务",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/mini_program/get_index_preference": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "summary": "首页的配置",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/service.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/mini_program/get_notifications": {
+        "/mini_program/notifications": {
             "get": {
                 "security": [
                     {
@@ -297,10 +295,8 @@
                         }
                     }
                 }
-            }
-        },
-        "/mini_program/get_sponsors": {
-            "get": {
+            },
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -309,17 +305,16 @@
                 "produces": [
                     "application/json"
                 ],
-                "summary": "查看赞助我的人",
+                "summary": "更新创建一个notification",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "name": "page",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "name": "size",
-                        "in": "query"
+                        "description": "one notification",
+                        "name": "notification",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/co.Notification"
+                        }
                     }
                 ],
                 "responses": {
@@ -334,6 +329,11 @@
         },
         "/mini_program/send_template_msg": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "summary": "发送微信小程序订阅消息",
                 "parameters": [
                     {
@@ -354,29 +354,27 @@
                 }
             }
         },
-        "/mini_program/set_index_config": {
-            "post": {
+        "/mini_program/sponsors": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "首页slogan image等的配置信息",
+                "summary": "查看赞助我的人",
                 "parameters": [
                     {
-                        "description": "小程序首页配置",
-                        "name": "config",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/co.IndexConfig"
-                        }
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -472,8 +470,8 @@
                 }
             }
         },
-        "/thinking/list": {
-            "post": {
+        "/thinking": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -488,13 +486,14 @@
                 "summary": "值得深思的句子",
                 "parameters": [
                     {
-                        "description": "page size",
-                        "name": "paging",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/co.PageLimitOffset"
-                        }
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -507,8 +506,8 @@
                 }
             }
         },
-        "/trigger/cron": {
-            "post": {
+        "/trigger/tasks": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -523,13 +522,15 @@
                 "summary": "定时任务触发器",
                 "parameters": [
                     {
+                        "enum": [
+                            "sign_baidu_tieba",
+                            "sync_student_score"
+                        ],
+                        "type": "string",
                         "description": "任务名称",
                         "name": "job_name",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/co.TaskName"
-                        }
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -679,15 +680,6 @@
                 "size": {
                     "type": "integer",
                     "example": 100
-                }
-            }
-        },
-        "co.TaskName": {
-            "type": "object",
-            "properties": {
-                "job_name": {
-                    "type": "string",
-                    "example": "sign_baidu_tieba"
                 }
             }
         },

@@ -2,7 +2,7 @@ package v1
 
 import (
 	"cgin/conf"
-	"cgin/controller/context_helper"
+	"cgin/controller/contextHelper"
 	"cgin/errno"
 	"cgin/task"
 	"github.com/gin-gonic/gin"
@@ -16,12 +16,12 @@ var CronTaskController = cronTaskController{}
 // @Security ApiKeyAuth
 // @Produce json
 // @Accept json
-// @Param job_name body co.TaskName true "任务名称"
-// @Router /trigger/cron [post]
+// @Param job_name query string true "任务名称" Enums(sign_baidu_tieba, sync_student_score)
+// @Router /trigger/tasks [get]
 // @Failure 200 {object} service.Response
 // @Success 200 {object} service.Response
-func (this *cronTaskController) TriggerTask(c *gin.Context) {
-	helper := context_helper.New(c)
+func (*cronTaskController) IndexTriggerTask(c *gin.Context) {
+	helper := contextHelper.New(c)
 	if conf.AppConfig.String("appEnv") != "dev" {
 		helper.GetAuthUserId() // prod 需要认证
 		// TODO 记录操作人

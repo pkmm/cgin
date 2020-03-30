@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"cgin/controller/context_helper"
+	"cgin/controller/contextHelper"
 	"cgin/errno"
 	"cgin/model"
 	"cgin/service"
@@ -20,8 +20,13 @@ var Student = &studentController{}
 // @Success 200 {object} service.Response
 // @Security ApiKeyAuth
 func (s *studentController) GetStudent(c *gin.Context) {
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
+	studentId := helper.GetPathUint64("studentId")
 	err, student := model.GetStudentByUserId(helper.GetAuthUserId())
+	if student.Id != studentId && !model.IsAdmin(helper.GetAuthUserId()) {
+		panic(errno.PermissionDenied)
+	}
+
 	if err != nil {
 		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
 	}
@@ -37,7 +42,7 @@ func (s *studentController) GetStudent(c *gin.Context) {
 // @Success 200 {object} service.Response
 // @Security ApiKeyAuth
 func (s *studentController) GetScores(c *gin.Context) {
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
 	err, scores := service.ScoreService.GetOwnScores(helper.GetAuthUserId())
 	if err != nil {
 		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
@@ -73,7 +78,7 @@ func (s *studentController) GetScores(c *gin.Context) {
 // @Param auth body co.EduAccount true "update edu account info"
 // @Success 200 {object} service.Response
 func (s *studentController) UpdateOrCreateEduAccount(c *gin.Context) {
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
 	var (
 		number, password string
 	)

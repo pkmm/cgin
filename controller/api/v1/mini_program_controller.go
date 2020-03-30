@@ -3,7 +3,7 @@ package v1
 import (
 	"cgin/conf"
 	"cgin/controller/co"
-	"cgin/controller/context_helper"
+	"cgin/controller/contextHelper"
 	"cgin/controller/respobj"
 	"cgin/errno"
 	"cgin/model"
@@ -25,8 +25,9 @@ var MiniProgramController = &miniProgramController{}
 // @Router /mini_program/send_template_msg [GET]
 // @Param open_id query string true "用户的open id"
 // @Success 200 {object} service.Response
+// @Security ApiKeyAuth
 func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
 	//formId := helper.GetString("form_id")
 	openId := helper.GetString("open_id")
 	templateKeyData := service.TemplateMsgData{}
@@ -47,11 +48,11 @@ func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 // 配置小程序首页的菜单项
 // @Summary 配置菜单项
 // @Security ApiKeyAuth
-// @Router /mini_program/config_menu [post]
+// @Router /mini_program/menus [post]
 // @Success 200 {object} service.Response
 // @Param menus body co.Menus true "dispose menus"
-func (m *miniProgramController) DisposeMenu(c *gin.Context) {
-	helper := context_helper.New(c)
+func (m *miniProgramController) CreateMenus(c *gin.Context) {
+	helper := contextHelper.New(c)
 	var menus = &co.Menus{}
 	helper.NeedAuthOrPanic()
 	if err := c.ShouldBindJSON(&menus); err != nil {
@@ -73,11 +74,11 @@ func (m *miniProgramController) DisposeMenu(c *gin.Context) {
 }
 
 // @summary 首页的配置
-// @router /mini_program/get_index_preference [get]
+// @router /mini_program/index_preferences [get]
 // @Security ApiKeyAuth
 // @Success 200 {object} service.Response
-func (m *miniProgramController) GetIndexPreference(c *gin.Context) {
-	helper := context_helper.New(c)
+func (m *miniProgramController) IndexPreference(c *gin.Context) {
+	helper := contextHelper.New(c)
 	// 菜单
 	_, menus := model.GetActiveMenus()
 	// 首页配置 slogan等
@@ -91,14 +92,14 @@ func (m *miniProgramController) GetIndexPreference(c *gin.Context) {
 }
 
 // @Summary 首页slogan image等的配置信息
-// @Router /mini_program/set_index_config [post]
+// @Router /mini_program/index_config [post]
 // @Param config body co.IndexConfig true "小程序首页配置"
 // @Success 200 {object} service.Response
 // @Security ApiKeyAuth
 // @Produce json
 // @Accept json
-func (m *miniProgramController) SetIndexConfig(c *gin.Context) {
-	helper := context_helper.New(c)
+func (m *miniProgramController) CreateIndexConfig(c *gin.Context) {
+	helper := contextHelper.New(c)
 	config := &co.IndexConfig{}
 	if err := c.BindJSON(config); err != nil {
 		panic(errno.NormalException.AppendErrorMsg(err.Error()))
@@ -115,12 +116,12 @@ func (m *miniProgramController) SetIndexConfig(c *gin.Context) {
 
 // @Security ApiKeyAuth
 // @Summary 获取notifications 分页查询
-// @Router /mini_program/get_notifications [get]
+// @Router /mini_program/notifications [get]
 // @Param pagingInfo query co.PageLimitOffset true "分页参数"
 // @Success 200 {object} service.Response
 // @Produce json
 func (m *miniProgramController) GetNotifications(c *gin.Context) {
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
 	size := helper.GetInt("size")
 	page := helper.GetInt("page")
 	err, notifications, total := new(model.Notification).GetList(modelInterface.PageSizeInfo{
@@ -133,15 +134,14 @@ func (m *miniProgramController) GetNotifications(c *gin.Context) {
 	helper.Response(gin.H{"notifications": notifications, "total": total})
 }
 
-// 更新或者创建一个notification
 // @Security ApiKeyAuth
 // @Summary 更新创建一个notification
-// @Router /mini_program/change_notification [post]
+// @Router /mini_program/notifications [put]
 // @Success 200 {object} service.Response
 // @Param notification body co.Notification true "one notification"
 // @Produce json
 func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
 	helper.GetAuthUserId()
 	notification := &co.Notification{}
 	if err := c.ShouldBindJSON(notification); err != nil {
@@ -162,12 +162,12 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 
 // @Summary 查看赞助我的人
 // @Security ApiKeyAuth
-// @Router /mini_program/get_sponsors [get]
+// @Router /mini_program/sponsors [get]
 // @Param pagingInfo query co.PageLimitOffset true "分页参数"
 // @Success 200 {object} service.Response
 // @Produce json
 func (m *miniProgramController) GetSponsors(c *gin.Context) {
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
 	err, data, total := new(model.Sponsor).GetList(modelInterface.PageSizeInfo{
 		Page:     helper.GetInt("page"),
 		PageSize: helper.GetInt("size"),

@@ -3,7 +3,7 @@ package v1
 import (
 	"cgin/conf"
 	"cgin/constant/devicetype"
-	"cgin/controller/context_helper"
+	"cgin/controller/contextHelper"
 	"cgin/errno"
 	"cgin/model"
 	"cgin/service"
@@ -29,7 +29,7 @@ func (a *authController) Login(c *gin.Context) {
 		loginDeviceType     devicetype.DeviceType
 		err                 error
 	)
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
 	loginDeviceType = devicetype.DeviceType(helper.GetInt("device_type"))
 	openid = helper.GetString("openid")
 	sign = strings.ToUpper(helper.GetString("sign"))
@@ -64,7 +64,7 @@ func (a *authController) Login(c *gin.Context) {
 // @Router /auth/me [post]
 // @Success 200 {object} service.Response
 func (a *authController) Me(c *gin.Context) {
-	helper := context_helper.New(c)
+	helper := contextHelper.New(c)
 	err, user := model.GetUserById(helper.GetAuthUserId())
 	if err != nil {
 		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))

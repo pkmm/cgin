@@ -28,6 +28,7 @@ func InitRouter() *gin.Engine {
 	router.Use(gzip.Gzip(gzip.DefaultCompression), middleware.BusinessErrorHandler())
 	// dev export swagger api.
 	if conf.IsDev() {
+		router.Use(middleware.AllowCors()) // 允许跨域 正式环境配置nginx不跨域
 		router.GET("/swagger/*any", ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "xx"))
 	}
 

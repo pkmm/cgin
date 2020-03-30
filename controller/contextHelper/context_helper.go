@@ -1,4 +1,4 @@
-package context_helper
+package contextHelper
 
 import (
 	"cgin/errno"
@@ -24,6 +24,7 @@ func (b *contextHelper) checkContext() {
 	}
 }
 
+// 获取query或者body中的参数
 func (b *contextHelper) get(key string) interface{} {
 	b.checkContext()
 	switch b.ctx.Request.Method {
@@ -62,11 +63,13 @@ func (b *contextHelper) GetInt64(key string) int64 {
 	}
 }
 
-// 获取query或者body中的参数
 func (b *contextHelper) GetString(key string) string {
 	return b.get(key).(string)
 }
 
+// 获取body 或者是 query中参数方法结束
+
+//--- 获取当前认证的用户id ----
 func (b *contextHelper) GetAuthUserId() uint64 {
 	if b.UserId != 0 {
 		return b.UserId
@@ -90,7 +93,15 @@ func (b *contextHelper) NeedAuthOrPanic() {
 	b.GetAuthUserId()
 }
 
-// 获取路径参数
+// 获取 path params
+func (b *contextHelper) GetPathInt(key string) int {
+	i, err := strconv.Atoi(b.ctx.Param(key))
+	if err != nil {
+		panic(errno.InvalidParameters.ReplaceErrorMsgWith("参数不合法"))
+	}
+	return i
+}
+
 func (b *contextHelper) GetPathInt64(key string) int64 {
 	if i64, err := strconv.ParseInt(b.ctx.Param(key), 10, 64); err == nil {
 		return i64
@@ -103,10 +114,4 @@ func (b *contextHelper) GetPathUint64(key string) uint64 {
 	return uint64(b.GetPathInt64(key))
 }
 
-func (b *contextHelper) GetPathInt(key string) int {
-	i, err := strconv.Atoi(b.ctx.Param(key))
-	if err != nil {
-		panic(errno.InvalidParameters.ReplaceErrorMsgWith("参数不合法"))
-	}
-	return i
-}
+// 结束获取params
