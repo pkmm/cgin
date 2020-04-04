@@ -11,7 +11,7 @@ type Tieba struct {
 	Model
 }
 
-func (t *Tieba) GetList(info modelInterface.PageSizeInfo) (err error, data interface{}, total int) {
+func (t *Tieba) GetList(info modelInterface.PageSizeInfo) (error, interface{}, int) {
 	err, query, total := basicPagination(info, t)
 	if err != nil {
 		return err, nil, 0

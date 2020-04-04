@@ -51,6 +51,6 @@ func InitLogger() *logs.BeeLogger {
 	}
 
 	// print config ini file path.
-	fmt.Printf("log file storage in: %#v\n", logFileStorageIn)
+	fmt.Printf("日志文件存储在: %s\n", logFileStorageIn)
 	return logger
 }

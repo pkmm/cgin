@@ -17,6 +17,6 @@ func InitAppConfig() config.Configer {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("conf path: %#v\n", confPath)
+	fmt.Printf("配置文件路径: %s\n", confPath)
 	return myAppConfig
 }

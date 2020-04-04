@@ -5,6 +5,7 @@ import (
 	"cgin/errno"
 	"cgin/service"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func BusinessErrorHandler() gin.HandlerFunc {
@@ -15,7 +16,15 @@ func BusinessErrorHandler() gin.HandlerFunc {
 				switch err.(type) {
 				case *errno.BusinessErrorInfo:
 					e := err.(*errno.BusinessErrorInfo)
-					service.SendResponse(ctx, e, nil)
+					switch e.Code {
+					// 设置状态码
+					case errno.TokenNotValid.Code:
+						service.SendResponseWithStatus(ctx, e, nil, http.StatusUnauthorized)
+					case errno.PermissionDenied.Code:
+						service.SendResponseWithStatus(ctx, e, nil, http.StatusForbidden)
+					default:
+						service.SendResponse(ctx, e, nil)
+					}
 				case string, error:
 					conf.Logger.Error("服务器错误:[%s] => %#v", ctx.Request.RequestURI, err)
 					service.SendResponse(ctx, errno.InternalServerError, err)

@@ -17,7 +17,7 @@ var HermannRememberController = &hermannRememberController{}
 // @Security ApiKeyAuth
 // @Produce json
 // @Router /mini_program/hermann_memorials [get]
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 func (h *hermannRememberController) IndexHermannMemorial(c *gin.Context) {
 	helper := contextHelper.New(c)
 	tasks, err := service.HermannService.GetTodayTask(helper.GetAuthUserId())
@@ -33,7 +33,7 @@ func (h *hermannRememberController) IndexHermannMemorial(c *gin.Context) {
 // @Produce json
 // @Security ApiKeyAuth
 // @Router /mini_program/hermann_memorials [post]
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Param addData body co.AddHermannMemorial true "data"
 func (h *hermannRememberController) CreateHermannMemorial(c *gin.Context) {
 	helper := contextHelper.New(c)

@@ -17,7 +17,7 @@ var ThinkingController = new(thinkController)
 // @Accept json
 // @Produce json
 // @Router /thinking [get]
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Param paging query co.PageLimitOffset true "page size"
 func (t *thinkController) Index(ctx *gin.Context) {
 	helper := contextHelper.New(ctx)

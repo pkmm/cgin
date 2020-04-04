@@ -11,8 +11,16 @@ import (
 // RESTFul api 权限控制
 
 func PermissionCheck() gin.HandlerFunc {
-	// TODO: admin can operate all resources.
 	return func(context *gin.Context) {
+		claims, ok := context.MustGet("claims").(*service.AuthClaims)
+		if !ok {
+			panic(errno.TokenNotValid)
+		}
+		if claims.RoleId == model.RoleAdmin {
+			context.Next()
+			return
+		}
+		// not admin user
 		// 获取请求的资源
 		urlPath := context.Request.URL.Path
 		// add slash
@@ -31,23 +39,14 @@ func PermissionCheck() gin.HandlerFunc {
 		if permission.Effect == model.EffectAllow {
 			context.Next()
 		} else if permission.Effect == model.EffectOwner {
-			claims, ok := context.MustGet("claims").(*service.AuthClaims)
-			if !ok {
+			ok = model.HasPermission(permission.ID, claims.RoleId)
+			if ok {
+				context.Next()
+			} else {
 				panic(errno.PermissionDenied)
 			}
-			roleIds := claims.RoleIds
-			flag := true
-			for _, roleId := range roleIds {
-				ok := model.HasPermission(permission.ID, roleId)
-				if ok {
-					flag = false
-					context.Next()
-					break
-				}
-			}
-			if flag {
-				panic(errno.PermissionDenied)
-			}
+		} else {
+			panic(errno.PermissionDenied)
 		}
 	}
 }

@@ -17,7 +17,7 @@ var Student = &studentController{}
 // @Produce json
 // @Router /students/{studentId} [get]
 // @Param studentId path uint64 true "student id"
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Security ApiKeyAuth
 func (s *studentController) GetStudent(c *gin.Context) {
 	helper := contextHelper.New(c)
@@ -30,16 +30,15 @@ func (s *studentController) GetStudent(c *gin.Context) {
 	if err != nil {
 		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
 	}
-	data := gin.H{
+	helper.Response(gin.H{
 		"student": student,
-	}
-	helper.Response(data)
+	})
 }
 
 // @Summary 获取学生的成绩
 // @Produce json
 // @Router /scores [get]
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Security ApiKeyAuth
 func (s *studentController) GetScores(c *gin.Context) {
 	helper := contextHelper.New(c)
@@ -76,7 +75,7 @@ func (s *studentController) GetScores(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /students/update_edu_account [post]
 // @Param auth body co.EduAccount true "update edu account info"
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 func (s *studentController) UpdateOrCreateEduAccount(c *gin.Context) {
 	helper := contextHelper.New(c)
 	var (
@@ -102,8 +101,7 @@ func (s *studentController) UpdateOrCreateEduAccount(c *gin.Context) {
 	if err != nil {
 		panic(errno.NormalException.AppendErrorMsg("创建学生失败: " + err.Error()))
 	}
-	data := gin.H{
+	helper.Response(gin.H{
 		"student": student,
-	}
-	helper.Response(data)
+	})
 }

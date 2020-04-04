@@ -6,6 +6,7 @@ import (
 	"cgin/errno"
 	"cgin/task"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type cronTaskController struct{}
@@ -18,8 +19,7 @@ var CronTaskController = cronTaskController{}
 // @Accept json
 // @Param job_name query string true "任务名称" Enums(sign_baidu_tieba, sync_student_score)
 // @Router /trigger/tasks [get]
-// @Failure 200 {object} service.Response
-// @Success 200 {object} service.Response
+// @Success 202 object service.Response
 func (*cronTaskController) IndexTriggerTask(c *gin.Context) {
 	helper := contextHelper.New(c)
 	if conf.AppConfig.String("appEnv") != "dev" {
@@ -49,5 +49,5 @@ func (*cronTaskController) IndexTriggerTask(c *gin.Context) {
 			return
 		}
 	}()
-	helper.Response("任务已经在后台执行，请稍后查看")
+	helper.ResponseWithStatus(nil, "任务已经在后台执行，请稍后查看", http.StatusAccepted)
 }

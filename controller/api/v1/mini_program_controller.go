@@ -24,7 +24,7 @@ var MiniProgramController = &miniProgramController{}
 // @Summary 发送微信小程序订阅消息
 // @Router /mini_program/send_template_msg [GET]
 // @Param open_id query string true "用户的open id"
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Security ApiKeyAuth
 func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 	helper := contextHelper.New(c)
@@ -45,12 +45,11 @@ func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 	helper.Response(ret)
 }
 
-// 配置小程序首页的菜单项
 // @Summary 配置菜单项
 // @Security ApiKeyAuth
 // @Router /mini_program/menus [post]
-// @Success 200 {object} service.Response
-// @Param menus body co.Menus true "dispose menus"
+// @Success 200 object service.Response
+// @Param menus body co.Menus true "配置小程序首页的菜单项"
 func (m *miniProgramController) CreateMenus(c *gin.Context) {
 	helper := contextHelper.New(c)
 	var menus = &co.Menus{}
@@ -76,7 +75,7 @@ func (m *miniProgramController) CreateMenus(c *gin.Context) {
 // @summary 首页的配置
 // @router /mini_program/index_preferences [get]
 // @Security ApiKeyAuth
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 func (m *miniProgramController) IndexPreference(c *gin.Context) {
 	helper := contextHelper.New(c)
 	// 菜单
@@ -94,7 +93,7 @@ func (m *miniProgramController) IndexPreference(c *gin.Context) {
 // @Summary 首页slogan image等的配置信息
 // @Router /mini_program/index_config [post]
 // @Param config body co.IndexConfig true "小程序首页配置"
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Security ApiKeyAuth
 // @Produce json
 // @Accept json
@@ -118,7 +117,7 @@ func (m *miniProgramController) CreateIndexConfig(c *gin.Context) {
 // @Summary 获取notifications 分页查询
 // @Router /mini_program/notifications [get]
 // @Param pagingInfo query co.PageLimitOffset true "分页参数"
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Produce json
 func (m *miniProgramController) GetNotifications(c *gin.Context) {
 	helper := contextHelper.New(c)
@@ -137,7 +136,7 @@ func (m *miniProgramController) GetNotifications(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Summary 更新创建一个notification
 // @Router /mini_program/notifications [put]
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Param notification body co.Notification true "one notification"
 // @Produce json
 func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
@@ -164,7 +163,7 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /mini_program/sponsors [get]
 // @Param pagingInfo query co.PageLimitOffset true "分页参数"
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 // @Produce json
 func (m *miniProgramController) GetSponsors(c *gin.Context) {
 	helper := contextHelper.New(c)

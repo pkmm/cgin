@@ -7,7 +7,7 @@ import (
 
 func TestUserModel(t *testing.T) {
 	user := model.User{Id: 1}
-	err, roles := user.GetRoles()
+	err, roles := user.GetRole()
 	t.Log(err)
 	t.Log(roles)
 

@@ -88,6 +88,10 @@ func (b *contextHelper) Response(responseData interface{}) {
 	service.SendResponseSuccess(b.ctx, responseData)
 }
 
+func (c *contextHelper) ResponseWithStatus(err error, data interface{}, code int) {
+	service.SendResponseWithStatus(c.ctx, err, data, code)
+}
+
 // 需要认证的 check
 func (b *contextHelper) NeedAuthOrPanic() {
 	b.GetAuthUserId()

@@ -6,14 +6,13 @@ import "cgin/model/modelInterface"
 // what is significance of living.
 
 type Thinking struct {
-	Id        uint64 `json:"id" gorm:"primary_key;auto_increment;"`
-	UserId    uint64 `json:"user_id" gorm:"index:user_id;not null;"`
-	Content   string `json:"content" gorm:"type:varchar(255);not null;"`
-	IsDeleted bool   `json:"is_deleted" gorm:"default:false"`
+	Id      uint64 `json:"id" gorm:"primary_key;auto_increment;"`
+	UserId  uint64 `json:"user_id" gorm:"index:user_id;not null;"`
+	Content string `json:"content" gorm:"type:varchar(255);not null;"`
 	Model
 }
 
-func (t *Thinking) GetList(info modelInterface.PageSizeInfo) (err error, data interface{}, total int) {
+func (t *Thinking) GetList(info modelInterface.PageSizeInfo) (error, interface{}, int) {
 	err, query, total := basicPagination(info, t)
 	if err != nil {
 		return err, nil, 0

@@ -3,8 +3,8 @@ package model
 import "cgin/conf"
 
 const (
-	RoleAdmin = "admin"
-	RoleUser = "user"
+	RoleAdmin = iota + 1
+	RoleUser
 )
 type Role struct {
 	ID          int          `json:"id" gorm:"primary_key;"`
@@ -31,6 +31,6 @@ func HasPermission(permissionId int, roleId int) bool {
 
 func AdminRoleId() int {
 	var r Role
-	conf.DB.Where(Role{Name:RoleAdmin}).Find(&r)
+	conf.DB.Where(Role{ID:RoleAdmin}).Find(&r)
 	return r.ID
 }

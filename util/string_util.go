@@ -16,12 +16,17 @@ import (
 	"time"
 )
 
+var snowflakeNode *snowflake.Node
 func init() {
 	snowflake.Epoch = time.Now().Unix()
+	snowflakeNode,_ = snowflake.NewNode(1)
+}
+
+func GUID() string {
+	return snowflakeNode.Generate().String()
 }
 
 // 实用函数
-
 func Signature(params map[string]string) string {
 	var keys []string
 	for key := range params {

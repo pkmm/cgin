@@ -21,7 +21,7 @@
                 "summary": "登录",
                 "parameters": [
                     {
-                        "description": "auth model",
+                        "description": "认证的信息",
                         "name": "auth_model",
                         "in": "body",
                         "required": true,
@@ -245,7 +245,7 @@
                 "summary": "配置菜单项",
                 "parameters": [
                     {
-                        "description": "dispose menus",
+                        "description": "配置小程序首页的菜单项",
                         "name": "menus",
                         "in": "body",
                         "required": true,
@@ -487,12 +487,12 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "name": "size",
+                        "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "name": "page",
+                        "name": "size",
                         "in": "query"
                     }
                 ],
@@ -534,8 +534,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "202": {
+                        "description": "Accepted",
                         "schema": {
                             "$ref": "#/definitions/service.Response"
                         }
@@ -573,9 +573,17 @@
                     "type": "string",
                     "example": "openid_xxsd"
                 },
+                "password": {
+                    "type": "string",
+                    "example": "x"
+                },
                 "sign": {
                     "type": "string",
                     "example": "67807AFF5A99880726B74D03F5A8F78C"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "cc"
                 }
             }
         },

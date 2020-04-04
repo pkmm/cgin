@@ -18,7 +18,7 @@ const (
 	PayChannelAlipay
 )
 
-func (s *Sponsor) GetList(info modelInterface.PageSizeInfo) (err error, data interface{}, total int) {
+func (s *Sponsor) GetList(info modelInterface.PageSizeInfo) (error, interface{}, int) {
 	err, query, total := basicPagination(info, s)
 	if err != nil {
 		return err, nil, 0

@@ -20,8 +20,14 @@ definitions:
       openid:
         example: openid_xxsd
         type: string
+      password:
+        example: x
+        type: string
       sign:
         example: 67807AFF5A99880726B74D03F5A8F78C
+        type: string
+      username:
+        example: cc
         type: string
     type: object
   co.EduAccount:
@@ -119,7 +125,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: auth model
+      - description: 认证的信息
         in: body
         name: auth_model
         required: true
@@ -251,7 +257,7 @@ paths:
   /mini_program/menus:
     post:
       parameters:
-      - description: dispose menus
+      - description: 配置小程序首页的菜单项
         in: body
         name: menus
         required: true
@@ -392,10 +398,10 @@ paths:
       - application/json
       parameters:
       - in: query
-        name: size
+        name: page
         type: integer
       - in: query
-        name: page
+        name: size
         type: integer
       produces:
       - application/json
@@ -423,8 +429,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "202":
+          description: Accepted
           schema:
             $ref: '#/definitions/service.Response'
       security:

@@ -5,6 +5,7 @@ import (
 	"cgin/service/workerpool"
 	"cgin/util"
 	"cgin/zcmu"
+	"github.com/jinzhu/gorm"
 	"sync"
 )
 
@@ -16,13 +17,16 @@ var ScoreService = &scoreService{
 	mutex: &sync.Mutex{},
 }
 
-func (s *scoreService) GetOwnScores(userId uint64) (err error, _scores *[]*model.Score) {
+func (s *scoreService) GetOwnScores(userId uint64) (error, *[]model.Score) {
 	err, student := model.GetStudentByUserId(userId)
-	if student == nil {
-		return nil, nil
+	if err != nil {
+		// 记录没有找到
+		if err == gorm.ErrRecordNotFound {
+			return nil, &[]model.Score{}
+		}
+		return err, nil
 	}
-	err, scores := model.GetScoresByStudentId(student.Id)
-	return err, &scores
+	return nil, &student.Scores
 }
 
 func (s *scoreService) SaveStudentScoresFromCrawl(scores []*zcmu.Score, studentId uint64) []*model.Score {

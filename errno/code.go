@@ -4,20 +4,20 @@ var (
 	// common errors
 	// error code begin with 1... for system error
 	Success                = &BusinessErrorInfo{10000, "success"}
-	InternalServerError    = &BusinessErrorInfo{10001, "Internal server error"}
-	InvalidParameters      = &BusinessErrorInfo{10002, "Invalid Parameters"}
-	TokenNotValid          = &BusinessErrorInfo{10003, "Token is not valid"}
-	GenerateJwtTokenFailed = &BusinessErrorInfo{10004, "Generate token was failed"}
-	UserNotAuth            = &BusinessErrorInfo{10005, "You must login"}
-	Welcome                = &BusinessErrorInfo{10006, "Hello, I am still alive"}
-	NotSuchRouteException  = &BusinessErrorInfo{10007, "Not found resource"}
-	NormalException        = &BusinessErrorInfo{10008, "Exception:"}
-	PermissionDenied       = &BusinessErrorInfo{10009, "Permission Denied"}
+	InternalServerError    = &BusinessErrorInfo{10001, "internal server error"}
+	InvalidParameters      = &BusinessErrorInfo{10002, "invalid Parameters"}
+	TokenNotValid          = &BusinessErrorInfo{10003, "token is not valid"}
+	GenerateJwtTokenFailed = &BusinessErrorInfo{10004, "generate token was failed"}
+	UserNotAuth            = &BusinessErrorInfo{10005, "you must login"}
+	Welcome                = &BusinessErrorInfo{10006, "hello, I am still alive"}
+	NotSuchRouteException  = &BusinessErrorInfo{10007, "not found resource"}
+	NormalException        = &BusinessErrorInfo{10008, "exception:"}
+	PermissionDenied       = &BusinessErrorInfo{10009, "permission Denied"}
 
 	// user errors
 	// error code begin with 2... for business error
-	UserNotFoundException         = &BusinessErrorInfo{20001, "The user was not found"}
-	CheckZfAccountFailedException = &BusinessErrorInfo{20002, "Check account failed of education system"}
+	UserNotFoundException         = &BusinessErrorInfo{20001, "the user was not found"}
+	CheckZfAccountFailedException = &BusinessErrorInfo{20002, "check account failed of education system"}
 
 	// 背单词的错误信息
 	RememberTaskNotBegin   = &BusinessErrorInfo{3001, "任务还未开始"}

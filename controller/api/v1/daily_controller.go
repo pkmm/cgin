@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"cgin/conf"
 	"cgin/controller/contextHelper"
 	"cgin/service"
 	"github.com/gin-gonic/gin"
@@ -14,19 +15,18 @@ var DailyController = &dailyController{}
 // @Security ApiKeyAuth
 // @Router /daily/images [get]
 // @Produce image/jpeg
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 func (d *dailyController) GetImage(c *gin.Context) {
-	//c.File(service.DailyService.GetImage())
 	helper := contextHelper.New(c)
 	helper.Response(gin.H{
-		"image_url": service.DailyService.GetImage(),
+		"image_url": conf.Host() + "/" + service.DailyService.GetImage(),
 	})
 }
 
 // @Summary 一句话
 // @Security ApiKeyAuth
 // @Router /daily/sentences [get]
-// @Success 200 {object} service.Response
+// @Success 200 object service.Response
 func (d *dailyController) GetSentence(c *gin.Context) {
 	helper := contextHelper.New(c)
 	helper.Response(gin.H{

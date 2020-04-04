@@ -38,6 +38,15 @@ func IsDev() bool {
 	return AppConfig.String(appEnvironment) == appEnvDev
 }
 
+
+func Host() string {
+	if IsDev() {
+		return "http://localhost:8654"
+	} else {
+		return AppConfig.String("host")
+	}
+}
+
 // 天数对应的小时 1天
 // 返回值单位小时
 func GetJwtExpiresAt() time.Duration {

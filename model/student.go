@@ -48,11 +48,14 @@ func ResetStudentSyncScoreStatus() error {
 	err := conf.DB.Model(&Student{}).Update("is_sync", true).Error
 	return err
 }
-func GetStudentByUserId(userId uint64) (err error, _s *Student) {
+func GetStudentByUserId(userId uint64) (error, *Student) {
 	var student Student
-	err = conf.DB.Where("user_id = ?", userId).
+	err := conf.DB.Where("user_id = ?", userId).
 		Preload("Scores").
 		Preload("SyncDetail").
 		First(&student).Error
-	return err, &student
+	if err != nil {
+		return err, nil
+	}
+	return nil, &student
 }
