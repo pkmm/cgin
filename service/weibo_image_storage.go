@@ -25,23 +25,19 @@ const (
 )
 
 type UploadImageResponse struct {
-	Code string                  `json:"code"`
-	Data uploadImageResponseData `json:"data"`
-}
-
-type uploadImageResponseData struct {
-	Data  string          `json:"data"`
-	Count int             `json:"count"`
-	Pics  map[string]pics `json:"pics"`
-}
-
-type pics struct {
-	Width  int    `json:"width"`
-	Size   int    `json:"size"`
-	Ret    int    `json:"ret"`
-	Height int    `json:"height"`
-	Name   string `json:"name"`
-	Pid    string `json:"pid"`
+	Code string `json:"code"`
+	Data struct {
+		Data  string `json:"data"`
+		Count int    `json:"count"`
+		Pics  map[string]struct {
+			Width  int    `json:"width"`
+			Size   int    `json:"size"`
+			Ret    int    `json:"ret"`
+			Height int    `json:"height"`
+			Name   string `json:"name"`
+			Pid    string `json:"pid"`
+		} `json:"pics"`
+	} `json:"data"`
 }
 
 // 上传图片并返回可访问的地址
