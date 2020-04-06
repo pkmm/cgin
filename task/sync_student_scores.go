@@ -130,7 +130,7 @@ func _updateStudentScore() {
 	ts := make([]*workerpool.Task, len(*students))
 	for i, stu := range *students {
 		stuCopy := stu
-		ts[i] = workerpool.NewTask(func() error {
+		ts[i] = workerpool.NewTask(func() {
 			wk, err := zcmu.NewCrawl(stuCopy.Number, stuCopy.Password)
 			if err != nil {
 				conf.Logger.Error("Init crawl of student[%s] failed [%s]", stuCopy.Number, err.Error())
@@ -148,7 +148,6 @@ func _updateStudentScore() {
 				modelScores = append(modelScores, score)
 			}
 			model.BatchCreateScores(modelScores)
-			return nil
 		})
 	}
 	pool.AddTasks(ts)

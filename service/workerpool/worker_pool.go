@@ -20,15 +20,15 @@ func init() {
 
 // 用于线程池执行的任务task
 type Task struct {
-	f func() error
+	f func()
 }
 
-func NewTask(fn func() error) *Task {
+func NewTask(fn func()) *Task {
 	return &Task{f: fn}
 }
 
-func (t *Task) Execute() error {
-	return t.f()
+func (t *Task) Execute() {
+	t.f()
 }
 
 // 线程池
@@ -79,9 +79,7 @@ func (s *SimplePool) worker(workerId int) {
 		}
 	}()
 	for t := range s.jobQueue {
-		if err := t.Execute(); err != nil {
-			conf.Logger.Debug("task execute err: %s", err.Error())
-		}
+		t.Execute()
 	}
 	conf.Logger.Debug("worker %d stopped", workerId)
 }

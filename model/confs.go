@@ -22,6 +22,7 @@ var Models = []interface{}{
 	&Thinking{},
 	&Resource{},
 	&Permission{},
+	&ImageStorageInfo{},
 }
 
 func init() {

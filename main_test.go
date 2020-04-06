@@ -1,8 +1,12 @@
 package main
 
 import (
+	"cgin/conf"
 	"cgin/model"
+	"cgin/service"
 	"cgin/util"
+	"fmt"
+	"io/ioutil"
 	"runtime"
 	"testing"
 )
@@ -69,8 +73,14 @@ func TestSystemInfo(t *testing.T) {
 	t.Log("go root:", runtime.GOROOT())
 }
 
-func TestConvert(t *testing.T) {
-
+func TestSomething(t *testing.T) {
+	cookie := conf.WeiBoCookie()
+	file, err := ioutil.ReadFile("static/xiaocc.jpeg")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t4 := service.NewWeiBoStorage(cookie).UploadImage(file)
+	fmt.Printf("%#v", t4)
 	//var user model.User
 	//fmt.Printf("%#v", &user == nil)
 

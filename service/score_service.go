@@ -37,9 +37,8 @@ func (s *scoreService) SaveStudentScoresFromCrawl(scores []*zcmu.Score, studentI
 		modelScore.StudentId = studentId
 		dbScores = append(dbScores, modelScore)
 	}
-	workerpool.TaskPool.AddTasks([]*workerpool.Task{workerpool.NewTask(func() error {
+	workerpool.TaskPool.AddTasks([]*workerpool.Task{workerpool.NewTask(func() {
 		model.BatchCreateScores(dbScores)
-		return nil
 	})})
 	//go s.BatchCreate(dbScores)
 	return dbScores

@@ -9,10 +9,9 @@ import (
 
 var wg sync.WaitGroup
 
-func toSleep(i int) error {
+func toSleep(i int) {
 	time.Sleep(time.Duration(i) * time.Second)
 	wg.Done()
-	return nil
 }
 
 func TestSimplePool_RunPool(t *testing.T) {
@@ -20,8 +19,8 @@ func TestSimplePool_RunPool(t *testing.T) {
 	tasks := make([]*Task, count)
 	wg.Add(count)
 	for i := 0; i < count; i++ {
-		tasks[i] = NewTask(func() error {
-			return toSleep(2)
+		tasks[i] = NewTask(func() {
+			toSleep(2)
 		})
 	}
 

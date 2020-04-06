@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"cgin/conf"
 	"cgin/controller/contextHelper"
 	"cgin/service"
 	"github.com/gin-gonic/gin"
@@ -19,7 +18,7 @@ var DailyController = &dailyController{}
 func (d *dailyController) GetImage(c *gin.Context) {
 	helper := contextHelper.New(c)
 	helper.Response(gin.H{
-		"image_url": conf.Host() + "/" + service.DailyService.GetImage(),
+		"image_url": service.DailyService.GetImage(),
 	})
 }
 

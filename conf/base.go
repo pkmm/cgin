@@ -38,13 +38,14 @@ func IsDev() bool {
 	return AppConfig.String(appEnvironment) == appEnvDev
 }
 
-
+// 服务运行的主机名称
 func Host() string {
-	if IsDev() {
-		return "http://localhost:8654"
-	} else {
-		return AppConfig.String("host")
-	}
+	return AppConfig.String("host")
+}
+
+// 微博存储图片用的cookie
+func WeiBoCookie() string {
+	return AppConfig.String("weibo.sub")
 }
 
 // 天数对应的小时 1天

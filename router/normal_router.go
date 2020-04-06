@@ -21,8 +21,6 @@ func initNormalRouter(normalRouter *gin.Engine) {
 		service.SendResponse(context, errno.NotSuchRouteException, nil)
 	})
 
-	// 普通的资源
-	// api/
 	apiNormal := normalRouter.Group(RootApiPrefix)
 	{
 		apiNormal.POST("/decode_verify_code", v1.VerifyCodeCtl.Recognize)

@@ -4,6 +4,7 @@ package task
 import (
 	"cgin/conf"
 	"cgin/model"
+	"cgin/service"
 	"cgin/service/workerpool"
 	"cgin/util"
 	"github.com/robfig/cron"
@@ -47,15 +48,21 @@ func init() {
 
 	// 测试用
 	c.AddFunc("0 */10 * * * *", func() {
-		task := workerpool.NewTask(func() error {
-			conf.Logger.Info(time.Now().Format("2006-01-02 15:04:05"))
-			return nil
+		task := workerpool.NewTask(func() {
+			conf.Logger.Info("测试task任务: %s", time.Now().Format("2006-01-02 15:04:05"))
 		})
 		pool.AddTasks([]*workerpool.Task{task})
 	})
 
 	// 百度贴吧签到
 	c.AddFunc("0 0 0 * * *", taskWrapper(SignBaiduForums, FlagBaiduTiebaSign))
+
+	// 自己加载每日一图保存在weibo图床
+	c.AddFunc("0 0 0 * * *", func() {
+		service.DailyService.GetImage()
+		//file, _ := ioutil.ReadFile(imagePath)
+		//service.NewWeiBoStorage(conf.WeiBoCookie()).UploadImage(file)
+	})
 
 	// 数据库备份
 	c.AddFunc("0 0 3 * * *", taskWrapper(backupMysql, FlagBackupMysql))
