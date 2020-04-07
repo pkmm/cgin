@@ -40,6 +40,7 @@ func InitRouter() *gin.Engine {
 	initThinkingRouter(router)
 	initScoresRouter(router)
 	initAuthRouter(router)
+	initHealthCheck(router)
 
 	return router
 }
