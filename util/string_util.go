@@ -17,9 +17,10 @@ import (
 )
 
 var snowflakeNode *snowflake.Node
+
 func init() {
 	snowflake.Epoch = time.Now().Unix()
-	snowflakeNode,_ = snowflake.NewNode(1)
+	snowflakeNode, _ = snowflake.NewNode(1)
 }
 
 func GUID() string {

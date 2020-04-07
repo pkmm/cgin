@@ -105,3 +105,7 @@ func TestSomething(t *testing.T) {
 	//conf.DB.FirstOrCreate(&user, model.User{OpenId:"33"}).Assign(model.User{RoleId: 4})
 	//fmt.Printf("user model %#v", user)
 }
+
+func TestUtil(t *testing.T) {
+	t.Log(util.IpAddressOfLocal())
+}

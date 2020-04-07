@@ -14,7 +14,7 @@ type Student struct {
 	IsSync   bool   `json:"is_sync" gorm:"type:bool"`
 	Model
 
-	Scores     []Score    `gorm:"ForeignKey:StudentId;AssociationForeignKey:Id" json:"scores"`
+	Scores     []Score     `gorm:"ForeignKey:StudentId;AssociationForeignKey:Id" json:"scores"`
 	SyncDetail *SyncDetail `json:"sync_detail" gorm:"ForeignKey:StudentId;AssociationForeignKey:Id"`
 }
 

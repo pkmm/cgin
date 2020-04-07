@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "小程序【Retain吧】的服务端代码，其他小的功能",
-        "title": "My Server cgin",
+        "title": "小程序cgogo的服务端",
         "contact": {},
         "license": {},
         "version": "1.0"

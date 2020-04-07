@@ -6,6 +6,7 @@ const (
 	RoleAdmin = iota + 1
 	RoleUser
 )
+
 type Role struct {
 	ID          int          `json:"id" gorm:"primary_key;"`
 	Name        string       `json:"name" gorm:"type:char(32);default:null;"`
@@ -13,6 +14,7 @@ type Role struct {
 	Permissions []Permission `json:"permissions" gorm:"many2many:role_permissions;"`
 	Model
 }
+
 // 角色的所有权限
 func (r *Role) GetPermissions() (error, *[]Permission) {
 	var t []Permission
@@ -31,6 +33,6 @@ func HasPermission(permissionId int, roleId int) bool {
 
 func AdminRoleId() int {
 	var r Role
-	conf.DB.Where(Role{ID:RoleAdmin}).Find(&r)
+	conf.DB.Where(Role{ID: RoleAdmin}).Find(&r)
 	return r.ID
 }

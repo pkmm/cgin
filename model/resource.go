@@ -20,6 +20,6 @@ func (r *Resource) GetPermissions() (error, *[]Permission) {
 
 func GetResourceByIdentity(identity string) (error, *Resource) {
 	var t Resource
-	err := conf.DB.Where(Resource{Identity:identity}).Find(&t).Error
+	err := conf.DB.Where(Resource{Identity: identity}).Find(&t).Error
 	return err, &t
 }

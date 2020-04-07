@@ -1,6 +1,7 @@
 package co
 
 import "cgin/constant/devicetype"
+
 // deviceType是2的时候使用openid 和sign字段
 // 是3的时候使用username 和 password字段
 type AuthModel struct {

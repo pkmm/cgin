@@ -10,7 +10,6 @@ import (
 	"cgin/model/modelInterface"
 	"cgin/service"
 	"cgin/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,14 +27,11 @@ var MiniProgramController = &miniProgramController{}
 // @Security ApiKeyAuth
 func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 	helper := contextHelper.New(c)
-	//formId := helper.GetString("form_id")
 	openId := helper.GetString("open_id")
-	templateKeyData := service.TemplateMsgData{}
+	templateKeyData := service.Keys{}
 	templateKeyData.Key1.Value = "背单词签到"
 	templateKeyData.Key2.Value = "手机App签到"
-	fmt.Printf("%#v\n", templateKeyData)
 	msg := &service.TemplateMsg{
-		//FormId:     formId,
 		ToUser:     openId,
 		TemplateId: conf.AppConfig.String("miniprogram.template_id"),
 		Page:       conf.AppConfig.String("miniprogram.open_page"),

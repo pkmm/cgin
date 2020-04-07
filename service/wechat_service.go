@@ -36,13 +36,15 @@ type TemplateMsg struct {
 	ToUser      string `json:"touser"`
 	TemplateId  string `json:"template_id"`
 	Page        string `json:"page"`
-	Data        struct {
-		Key1 KeywordData `json:"thing1,omitempty"`
-		Key2 KeywordData `json:"thing2,omitempty"`
-	} `json:"data"`
+	Data        Keys   `json:"data"`
 }
 
-type KeywordData struct {
+type Keys struct {
+	Key1 keywordData `json:"thing1,omitempty"`
+	Key2 keywordData `json:"thing2,omitempty"`
+}
+
+type keywordData struct {
 	Value interface{} `json:"value"`
 }
 

@@ -55,7 +55,7 @@ func (w *WeiBoStorage) UploadImage(imageData []byte) string {
 	_ = json.Unmarshal(w.processResponseBody(body), &t)
 	if t.Code == "A00006" {
 		return w.pid2url(t.Data.Pics["pic_1"].Pid, "large")
-	} else if t.Code == "A200001" {
+	} else if t.Code == "A20001" {
 		panic("WeiBo需要更新登录cookie")
 	} else {
 		panic("未知意义code：" + t.Code)

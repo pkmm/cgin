@@ -11,7 +11,7 @@ import (
 
 var port = "8654"
 
-// @title My Server cgin
+// @title 小程序cgogo的服务端
 // @version 1.0
 // @description 小程序【Retain吧】的服务端代码，其他小的功能
 
@@ -24,7 +24,7 @@ func main() {
 
 	defer func() {
 		// release some resource.
-		fmt.Println("do some clean work.")
+		fmt.Println("doing some clean work...")
 		task.CleanPool()
 		_ = conf.DB.Close()
 	}()
