@@ -18,6 +18,7 @@ type authController struct{}
 var AuthController = &authController{}
 
 // @Summary 登录
+// @Tags Auth
 // @Produce json
 // @Accept json
 // @Router /auth/login [post]
@@ -68,6 +69,7 @@ func (a *authController) Login(c *gin.Context) {
 }
 
 // @Summary 获取认证的自己
+// @Tags Auth
 // @Security ApiKeyAuth
 // @Accept json
 // @Produce json

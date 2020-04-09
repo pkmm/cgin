@@ -14,6 +14,7 @@ type hermannRememberController struct{}
 var HermannRememberController = &hermannRememberController{}
 
 // @Summary 背单词：今天的任务
+// @Tags 背单词
 // @Security ApiKeyAuth
 // @Produce json
 // @Router /mini_program/hermann_memorials [get]
@@ -31,6 +32,7 @@ func (h *hermannRememberController) IndexHermannMemorial(c *gin.Context) {
 
 // @Summary 添加背单词的任务
 // @Produce json
+// @Tags 背单词
 // @Security ApiKeyAuth
 // @Router /mini_program/hermann_memorials [post]
 // @Success 200 object service.Response

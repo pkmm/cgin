@@ -14,6 +14,7 @@ type studentController struct{}
 var Student = &studentController{}
 
 // @Summary 获取当前用户的学生信息
+// @Tags Student
 // @Produce json
 // @Router /students/{studentId} [get]
 // @Param studentId path uint64 true "student id"
@@ -37,6 +38,7 @@ func (s *studentController) GetStudent(c *gin.Context) {
 
 // @Summary 获取学生的成绩
 // @Produce json
+// @Tags Student
 // @Router /scores [get]
 // @Success 200 object service.Response
 // @Security ApiKeyAuth
@@ -72,6 +74,7 @@ func (s *studentController) GetScores(c *gin.Context) {
 
 // @Summary 更新学生的信息
 // @Produce json
+// @Tags Student
 // @Security ApiKeyAuth
 // @Router /students/update_edu_account [post]
 // @Param auth body co.EduAccount true "update edu account info"

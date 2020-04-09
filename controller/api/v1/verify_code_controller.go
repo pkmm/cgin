@@ -13,6 +13,7 @@ type verifyCodeController struct{}
 var VerifyCodeCtl = &verifyCodeController{}
 
 // @Summary 验证码识别
+// @Tags 验证码识别
 // @Param img formData file true "image of verify code"
 // @Router /decode_verify_code [post]
 // @Success 200 object service.Response

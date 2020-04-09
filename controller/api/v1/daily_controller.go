@@ -11,6 +11,7 @@ type dailyController struct{}
 var DailyController = &dailyController{}
 
 // @Summary 随机图片
+// @Tags Daily
 // @Security ApiKeyAuth
 // @Router /daily/images [get]
 // @Produce image/jpeg
@@ -24,6 +25,7 @@ func (d *dailyController) GetImage(c *gin.Context) {
 
 // @Summary 一句话
 // @Security ApiKeyAuth
+// @Tags Daily
 // @Router /daily/sentences [get]
 // @Success 200 object service.Response
 func (d *dailyController) GetSentence(c *gin.Context) {

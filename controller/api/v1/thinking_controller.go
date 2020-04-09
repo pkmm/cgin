@@ -14,6 +14,7 @@ var ThinkingController = new(thinkController)
 
 // @Summary 值得深思的句子
 // @Security ApiKeyAuth
+// @Tags 思考
 // @Accept json
 // @Produce json
 // @Router /thinking [get]

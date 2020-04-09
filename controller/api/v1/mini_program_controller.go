@@ -20,6 +20,7 @@ type miniProgramController struct{}
 var MiniProgramController = &miniProgramController{}
 
 // 发送模板消息
+// @Tags Mini program
 // @Summary 发送微信小程序订阅消息
 // @Router /mini_program/send_template_msg [GET]
 // @Param open_id query string true "用户的open id"
@@ -42,6 +43,7 @@ func (m *miniProgramController) SendTemplateMsg(c *gin.Context) {
 }
 
 // @Summary 配置菜单项
+// @Tags Mini program
 // @Security ApiKeyAuth
 // @Router /mini_program/menus [post]
 // @Success 200 object service.Response
@@ -69,6 +71,7 @@ func (m *miniProgramController) CreateMenus(c *gin.Context) {
 }
 
 // @summary 首页的配置
+// @Tags Mini program
 // @router /mini_program/index_preferences [get]
 // @Security ApiKeyAuth
 // @Success 200 object service.Response
@@ -87,6 +90,7 @@ func (m *miniProgramController) IndexPreference(c *gin.Context) {
 }
 
 // @Summary 首页slogan image等的配置信息
+// @Tags Mini program
 // @Router /mini_program/index_config [post]
 // @Param config body co.IndexConfig true "小程序首页配置"
 // @Success 200 object service.Response
@@ -110,6 +114,7 @@ func (m *miniProgramController) CreateIndexConfig(c *gin.Context) {
 }
 
 // @Security ApiKeyAuth
+// @Tags Mini program
 // @Summary 获取notifications 分页查询
 // @Router /mini_program/notifications [get]
 // @Param pagingInfo query co.PageLimitOffset true "分页参数"
@@ -130,6 +135,7 @@ func (m *miniProgramController) GetNotifications(c *gin.Context) {
 }
 
 // @Security ApiKeyAuth
+// @Tags Mini program
 // @Summary 更新创建一个notification
 // @Router /mini_program/notifications [put]
 // @Success 200 object service.Response
@@ -156,6 +162,7 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 }
 
 // @Summary 查看赞助我的人
+// @Tags Mini program
 // @Security ApiKeyAuth
 // @Router /mini_program/sponsors [get]
 // @Param pagingInfo query co.PageLimitOffset true "分页参数"

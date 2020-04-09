@@ -139,6 +139,8 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 登录
+      tags:
+      - Auth
   /auth/me:
     post:
       consumes:
@@ -153,6 +155,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 获取认证的自己
+      tags:
+      - Auth
   /daily/images:
     get:
       produces:
@@ -165,6 +169,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 随机图片
+      tags:
+      - Daily
   /daily/sentences:
     get:
       responses:
@@ -175,6 +181,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 一句话
+      tags:
+      - Daily
   /decode_verify_code:
     post:
       consumes:
@@ -193,6 +201,8 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       summary: 验证码识别
+      tags:
+      - 验证码识别
   /mini_program/hermann_memorials:
     get:
       produces:
@@ -205,6 +215,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 背单词：今天的任务
+      tags:
+      - 背单词
     post:
       parameters:
       - description: data
@@ -223,6 +235,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 添加背单词的任务
+      tags:
+      - 背单词
   /mini_program/index_config:
     post:
       consumes:
@@ -244,6 +258,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 首页slogan image等的配置信息
+      tags:
+      - Mini program
   /mini_program/index_preferences:
     get:
       responses:
@@ -254,6 +270,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 首页的配置
+      tags:
+      - Mini program
   /mini_program/menus:
     post:
       parameters:
@@ -271,6 +289,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 配置菜单项
+      tags:
+      - Mini program
   /mini_program/notifications:
     get:
       parameters:
@@ -290,6 +310,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 获取notifications 分页查询
+      tags:
+      - Mini program
     put:
       parameters:
       - description: one notification
@@ -308,6 +330,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 更新创建一个notification
+      tags:
+      - Mini program
   /mini_program/send_template_msg:
     get:
       parameters:
@@ -324,6 +348,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 发送微信小程序订阅消息
+      tags:
+      - Mini program
   /mini_program/sponsors:
     get:
       parameters:
@@ -343,6 +369,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 查看赞助我的人
+      tags:
+      - Mini program
   /scores:
     get:
       produces:
@@ -355,6 +383,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 获取学生的成绩
+      tags:
+      - Student
   /students/{studentId}:
     get:
       parameters:
@@ -373,6 +403,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 获取当前用户的学生信息
+      tags:
+      - Student
   /students/update_edu_account:
     post:
       parameters:
@@ -392,6 +424,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 更新学生的信息
+      tags:
+      - Student
   /thinking:
     get:
       consumes:
@@ -413,6 +447,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 值得深思的句子
+      tags:
+      - 思考
   /trigger/tasks:
     get:
       consumes:
@@ -436,6 +472,8 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 定时任务触发器
+      tags:
+      - Trigger
 securityDefinitions:
   ApiKeyAuth:
     in: header

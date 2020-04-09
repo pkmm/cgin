@@ -18,6 +18,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "登录",
                 "parameters": [
                     {
@@ -53,6 +56,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "获取认证的自己",
                 "responses": {
                     "200": {
@@ -74,6 +80,9 @@
                 "produces": [
                     "image/jpeg"
                 ],
+                "tags": [
+                    "Daily"
+                ],
                 "summary": "随机图片",
                 "responses": {
                     "200": {
@@ -91,6 +100,9 @@
                     {
                         "ApiKeyAuth": []
                     }
+                ],
+                "tags": [
+                    "Daily"
                 ],
                 "summary": "一句话",
                 "responses": {
@@ -110,6 +122,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "验证码识别"
                 ],
                 "summary": "验证码识别",
                 "parameters": [
@@ -141,6 +156,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "背单词"
+                ],
                 "summary": "背单词：今天的任务",
                 "responses": {
                     "200": {
@@ -159,6 +177,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "背单词"
                 ],
                 "summary": "添加背单词的任务",
                 "parameters": [
@@ -195,6 +216,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Mini program"
+                ],
                 "summary": "首页slogan image等的配置信息",
                 "parameters": [
                     {
@@ -224,6 +248,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
+                "tags": [
+                    "Mini program"
+                ],
                 "summary": "首页的配置",
                 "responses": {
                     "200": {
@@ -241,6 +268,9 @@
                     {
                         "ApiKeyAuth": []
                     }
+                ],
+                "tags": [
+                    "Mini program"
                 ],
                 "summary": "配置菜单项",
                 "parameters": [
@@ -274,6 +304,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Mini program"
+                ],
                 "summary": "获取notifications 分页查询",
                 "parameters": [
                     {
@@ -305,6 +338,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Mini program"
+                ],
                 "summary": "更新创建一个notification",
                 "parameters": [
                     {
@@ -333,6 +369,9 @@
                     {
                         "ApiKeyAuth": []
                     }
+                ],
+                "tags": [
+                    "Mini program"
                 ],
                 "summary": "发送微信小程序订阅消息",
                 "parameters": [
@@ -363,6 +402,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Mini program"
                 ],
                 "summary": "查看赞助我的人",
                 "parameters": [
@@ -397,6 +439,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Student"
+                ],
                 "summary": "获取学生的成绩",
                 "responses": {
                     "200": {
@@ -417,6 +462,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Student"
                 ],
                 "summary": "更新学生的信息",
                 "parameters": [
@@ -450,6 +498,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Student"
+                ],
                 "summary": "获取当前用户的学生信息",
                 "parameters": [
                     {
@@ -482,6 +533,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "思考"
                 ],
                 "summary": "值得深思的句子",
                 "parameters": [
@@ -518,6 +572,9 @@
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Trigger"
                 ],
                 "summary": "定时任务触发器",
                 "parameters": [
