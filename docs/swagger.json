@@ -146,6 +146,23 @@
                 }
             }
         },
+        "/health_check/mem": {
+            "get": {
+                "description": "查看系统的内存信息",
+                "tags": [
+                    "系统信息"
+                ],
+                "summary": "系统健康检查",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/mini_program/hermann_memorials": {
             "get": {
                 "security": [
@@ -541,12 +558,12 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "name": "page",
+                        "name": "size",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "name": "size",
+                        "name": "page",
                         "in": "query"
                     }
                 ],

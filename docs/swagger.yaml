@@ -203,6 +203,17 @@ paths:
       summary: 验证码识别
       tags:
       - 验证码识别
+  /health_check/mem:
+    get:
+      description: 查看系统的内存信息
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Response'
+      summary: 系统健康检查
+      tags:
+      - 系统信息
   /mini_program/hermann_memorials:
     get:
       produces:
@@ -432,10 +443,10 @@ paths:
       - application/json
       parameters:
       - in: query
-        name: page
+        name: size
         type: integer
       - in: query
-        name: size
+        name: page
         type: integer
       produces:
       - application/json
