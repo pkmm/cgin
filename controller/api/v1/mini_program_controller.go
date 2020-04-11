@@ -179,11 +179,21 @@ func (m *miniProgramController) GetSponsors(c *gin.Context) {
 	}
 	sponsors := data.([]*model.Sponsor)
 	var result = make([]*respobj.Sponsor, len(sponsors))
+
+	// 处理用户名
+	processUsername := func(user *model.User) string {
+		if user == nil || len(user.Username) == 0 {
+			return "不愿意透露姓名的: Alice"
+		}
+		return user.Username
+	}
+
 	for ind, s := range sponsors {
 		o := &respobj.Sponsor{
 			Id:        s.Id,
 			Money:     s.Money,
 			CreatedAt: s.CreatedAt,
+			Username:  processUsername(s.User),
 		}
 		if s.User != nil {
 			o.OpenId = s.User.OpenId
