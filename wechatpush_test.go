@@ -8,7 +8,7 @@ import (
 
 func TestWxPusher(t *testing.T) {
 	wp := wechatpush.NewPushBear([]string{"UID_Jo3zGWQgT9WmyKGQpVr4Oy2Juhkp"}, 1)
-	worker := wechatpush.NewPusherContext(wp, "Hello", "pusher bear" + util.DateTime())
+	worker := wechatpush.NewPusherContext(wp, "Hello", "pusher bear"+util.DateTime())
 	_, err := worker.Push()
 	if err != nil {
 		t.Fatal(err)

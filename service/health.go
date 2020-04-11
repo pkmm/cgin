@@ -5,7 +5,7 @@ import (
 	"github.com/shirou/gopsutil/mem"
 )
 
-type healthService struct {}
+type healthService struct{}
 
 var HealthService healthService
 

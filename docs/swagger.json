@@ -558,12 +558,12 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "name": "size",
+                        "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "name": "page",
+                        "name": "size",
                         "in": "query"
                     }
                 ],

@@ -7,7 +7,7 @@ import (
 )
 
 func initStudentRouter(studentRouter *gin.Engine) {
-	apiStudent := studentRouter.Group(Student).Use(middleware.Auth(), middleware.PermissionCheck())
+	apiStudent := studentRouter.Group(Student).Use(middleware.Auth())
 	{
 		// 尝试使用路径参数restful api
 		// TODO: 权限控制

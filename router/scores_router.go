@@ -7,7 +7,7 @@ import (
 )
 
 func initScoresRouter(scoreRouter *gin.Engine) {
-	api := scoreRouter.Group(Score).Use(middleware.Auth(), middleware.PermissionCheck())
+	api := scoreRouter.Group(Score).Use(middleware.Auth())
 	{
 		api.GET("", v1.Student.GetScores)
 	}

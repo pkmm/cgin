@@ -443,10 +443,10 @@ paths:
       - application/json
       parameters:
       - in: query
-        name: size
+        name: page
         type: integer
       - in: query
-        name: page
+        name: size
         type: integer
       produces:
       - application/json

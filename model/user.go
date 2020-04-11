@@ -16,12 +16,40 @@ type User struct {
 	Model
 }
 
+func (u *User) Create() *User {
+	conf.DB.Create(u)
+	return u
+}
+
+func GetUserByOpenId(openid string) *User {
+	var user User
+	if err := conf.DB.
+		Preload("Student").
+		Preload("Role").
+		Where("open_id = ?", openid).
+		First(&user).Error; err != nil {
+		return nil
+	}
+	return &user
+}
+
+func GetUserByUsername(username string) *User {
+	var user User
+	if err := conf.DB.
+		Preload("Student").
+		Preload("Role").
+		First(&user, "username = ?", username).Error; err != nil {
+		return nil
+	}
+	return &user
+}
+
 func GetUserById(userId uint64) (error, *User) {
 	var user User
 	err := conf.DB.
 		Preload("Student").
 		Preload("Role").
-		Find(&user, User{Id: userId}).
+		First(&user, User{Id: userId}).
 		Error
 	return err, &user
 }
@@ -37,6 +65,7 @@ func (u *User) GetStudent() (error, *Student) {
 	err := conf.DB.Model(u).Related(&stu).Error
 	return err, &stu
 }
+
 func IsAdmin(userId uint64) bool {
 	var t int = 0
 	conf.DB.Table("users").Where("id = ?", userId).Select("role_id").Scan(&t)

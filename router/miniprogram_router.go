@@ -16,7 +16,7 @@ func initMiniProgramRouter(miniProgramRouter *gin.Engine) {
 		apiMiniProgram.GET("/send_template_msg", v1.MiniProgramController.SendTemplateMsg)
 
 		// 以下的API 需要认证
-		apiMiniProgramNeedAuth := apiMiniProgram.Use(middleware.Auth(), middleware.PermissionCheck())
+		apiMiniProgramNeedAuth := apiMiniProgram.Use(middleware.Auth())
 		apiMiniProgramNeedAuth.POST("/index_config", v1.MiniProgramController.CreateIndexConfig)
 		apiMiniProgramNeedAuth.POST("/menus", v1.MiniProgramController.CreateMenus)
 		apiMiniProgramNeedAuth.PUT("/notifications", v1.MiniProgramController.UpdateOrCreateNotification)

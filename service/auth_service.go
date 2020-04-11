@@ -12,15 +12,16 @@ var AuthService = &authService{}
 
 // 小程序的注册方式
 func (a *authService) LoginFromMiniProgram(openid string) (error, *model.User) {
-	user := model.User{}
-	// 第一个记录或者是创建记录
-	err := conf.DB.Model(&user).
-		Where("open_id = ?", openid).
-		Preload("Student").
-		Preload("Role").
-		Attrs(model.User{OpenId: openid, Password: util.RandomString(10), RoleId: model.RoleUser}).
-		FirstOrCreate(&user).Error
-	return err, &user
+	user := model.GetUserByOpenId(openid)
+	if user != nil {
+		return nil, user
+	}
+	// user not found
+	user = &model.User{OpenId: openid, Password: util.RandomString(10)}
+	user = user.Create()
+	// query user form db
+	user = model.GetUserByOpenId(openid)
+	return nil, user
 }
 
 func (a *authService) LoginFromWebBrowser(username, password string) (error, *model.User) {

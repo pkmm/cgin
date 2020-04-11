@@ -11,7 +11,7 @@ func initTaskRouter(taskRouter *gin.Engine) {
 	apiTrigger := taskRouter.Group(Trigger)
 	{
 		if conf.IsProd() {
-			apiTrigger.Use(middleware.Auth(), middleware.PermissionCheck())
+			apiTrigger.Use(middleware.Auth())
 		}
 		apiTrigger.GET("/tasks", v1.CronTaskController.IndexTriggerTask)
 	}

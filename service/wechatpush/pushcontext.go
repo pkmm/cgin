@@ -10,7 +10,7 @@ type PusherContext struct {
 	title, content string
 }
 
-func NewPusherContext(n Notify, title , content string) *PusherContext {
+func NewPusherContext(n Notify, title, content string) *PusherContext {
 	return &PusherContext{n: n, title: title, content: content}
 }
 
