@@ -1,7 +1,5 @@
 package model
 
-import "cgin/model/modelInterface"
-
 // 赞助者
 type Sponsor struct {
 	Id         uint64 `json:"id" gorm:"primary_key;auto_increment;"`
@@ -18,8 +16,8 @@ const (
 	PayChannelAlipay
 )
 
-func (s *Sponsor) GetList(info modelInterface.PageSizeInfo) (error, interface{}, int) {
-	err, query, total := basicPagination(info, s)
+func (s *Sponsor) GetList(page, size int) (error, interface{}, int) {
+	err, query, total := basicPagination(page, size, s)
 	if err != nil {
 		return err, nil, 0
 	} else {

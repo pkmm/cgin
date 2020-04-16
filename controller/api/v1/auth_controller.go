@@ -39,7 +39,7 @@ func (a *authController) Login(c *gin.Context) {
 	case devicetype.MiniProgram:
 		openid = helper.GetString("openid")
 		sign = strings.ToUpper(helper.GetString("sign"))
-		sign2 := util.Md5String(conf.AppConfig.String("normal.random.str") + conf.AppConfig.String("miniprogram_app_id") + openid)
+		sign2 := util.MD5(conf.AppConfig.String("normal.random.str") + conf.AppConfig.String("miniprogram_app_id") + openid)
 		if sign != sign2 {
 			if conf.IsDev() {
 				fmt.Println("签名：", sign2)

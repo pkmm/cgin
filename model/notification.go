@@ -2,7 +2,6 @@ package model
 
 import (
 	"cgin/conf"
-	"cgin/model/modelInterface"
 	"cgin/util"
 )
 
@@ -33,8 +32,8 @@ func (n *Notification) UpdateNotification(nid uint64) (err error, _n *Notificati
 	return err, &result
 }
 
-func (n *Notification) GetList(info modelInterface.PageSizeInfo) (error, interface{}, int) {
-	err, gq, total := basicPagination(info, n)
+func (n *Notification) GetList(page, size int) (error, interface{}, int) {
+	err, gq, total := basicPagination(page, size, n)
 	if err != nil {
 		return err, nil, 0
 	} else {

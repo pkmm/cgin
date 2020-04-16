@@ -12,7 +12,6 @@ import (
 	"runtime"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -42,7 +41,7 @@ func Signature(params map[string]string) string {
 			buffer.WriteString(fmt.Sprintf("&%s=%s", key, params[key]))
 		}
 	}
-	return strings.ToUpper(Md5String(buffer.String()))
+	return MD5(buffer.String())
 }
 
 func IpAddressOfLocal() string {
@@ -68,9 +67,9 @@ func Decimal(value float64) float64 {
 func GenerateToken(key uint64) string {
 	now := time.Now().Unix()
 	str := RandomString(100)
-	newKey := fmt.Sprintf("%s_%s_%d_%d", str, Md5String(str), now, key)
+	newKey := fmt.Sprintf("%s_%s_%d_%d", str, MD5(str), now, key)
 
-	return Md5String(newKey)
+	return MD5(newKey)
 }
 
 // 获取当前代码的路径

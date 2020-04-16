@@ -20,15 +20,15 @@ type Model struct {
 	DeletedAt *util.JSONTime `json:"-" gorm:"index:idx_deleted_at;"`
 }
 
-func basicPagination(info modelInterface.PageSizeInfo, model modelInterface.PaginatedModel) (err error, query *gorm.DB, total int) {
+func basicPagination(page int, size int, model modelInterface.PaginatedModel) (err error, query *gorm.DB, total int) {
 	// default query ten record of per page.
-	if info.Page <= 0 {
-		info.Page = 1
+	if page <= 0 {
+		page = 1
 	}
-	if info.PageSize <= 0 {
-		info.PageSize = 10
+	if size <= 0 {
+		size = 10
 	}
 	err = conf.DB.Model(model).Count(&total).Error
-	query = conf.DB.Limit(info.PageSize).Offset((info.Page - 1) * info.PageSize).Order("id DESC")
+	query = conf.DB.Limit(size).Offset((page - 1) * size).Order("id DESC")
 	return err, query, total
 }

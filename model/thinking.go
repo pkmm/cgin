@@ -1,7 +1,5 @@
 package model
 
-import "cgin/model/modelInterface"
-
 // this is model, which to record some interesting sentence.
 // what is significance of living.
 
@@ -12,8 +10,8 @@ type Thinking struct {
 	Model
 }
 
-func (t *Thinking) GetList(info modelInterface.PageSizeInfo) (error, interface{}, int) {
-	err, query, total := basicPagination(info, t)
+func (t *Thinking) GetList(page, size int) (error, interface{}, int) {
+	err, query, total := basicPagination(page, size, t)
 	if err != nil {
 		return err, nil, 0
 	} else {

@@ -7,7 +7,6 @@ import (
 	"cgin/controller/respobj"
 	"cgin/errno"
 	"cgin/model"
-	"cgin/model/modelInterface"
 	"cgin/service"
 	"cgin/util"
 	"github.com/gin-gonic/gin"
@@ -124,10 +123,7 @@ func (m *miniProgramController) GetNotifications(c *gin.Context) {
 	helper := contextHelper.New(c)
 	size := helper.GetInt("size")
 	page := helper.GetInt("page")
-	err, notifications, total := new(model.Notification).GetList(modelInterface.PageSizeInfo{
-		Page:     page,
-		PageSize: size,
-	})
+	err, notifications, total := new(model.Notification).GetList(page, size)
 	if err != nil {
 		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
 	}
@@ -170,10 +166,7 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 // @Produce json
 func (m *miniProgramController) GetSponsors(c *gin.Context) {
 	helper := contextHelper.New(c)
-	err, data, total := new(model.Sponsor).GetList(modelInterface.PageSizeInfo{
-		Page:     helper.GetInt("page"),
-		PageSize: helper.GetInt("size"),
-	})
+	err, data, total := new(model.Sponsor).GetList(helper.GetInt("page"), helper.GetInt("size"))
 	if err != nil {
 		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
 	}

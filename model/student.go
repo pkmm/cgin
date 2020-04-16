@@ -2,7 +2,6 @@ package model
 
 import (
 	"cgin/conf"
-	"cgin/model/modelInterface"
 )
 
 type Student struct {
@@ -23,8 +22,8 @@ func (s *Student) UpdateOrCreate() (err error, _s *Student) {
 	return err, s
 }
 
-func (s *Student) GetList(info modelInterface.PageSizeInfo) (error, interface{}, int) {
-	err, query, total := basicPagination(info, s)
+func (s *Student) GetList(page, size int) (error, interface{}, int) {
+	err, query, total := basicPagination(page, size, s)
 	if err != nil {
 		return err, nil, 0
 	} else {
@@ -35,7 +34,7 @@ func (s *Student) GetList(info modelInterface.PageSizeInfo) (error, interface{},
 }
 
 func (s *Student) GetStudentsNeedSyncScore(page, size int) (err error, _s *[]*Student, t int) {
-	err, query, total := basicPagination(modelInterface.PageSizeInfo{Page: page, PageSize: size}, s)
+	err, query, total := basicPagination(page, size, s)
 	if err != nil {
 		return err, nil, 0
 	} else {

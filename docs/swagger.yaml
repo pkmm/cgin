@@ -455,8 +455,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
-      security:
-      - ApiKeyAuth: []
       summary: 值得深思的句子
       tags:
       - 思考
