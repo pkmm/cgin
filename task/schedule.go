@@ -3,8 +3,6 @@ package task
 // 后台运行的任务
 import (
 	"cgin/conf"
-	"cgin/model"
-	"cgin/service"
 	"cgin/service/workerpool"
 	"cgin/util"
 	"github.com/robfig/cron"
@@ -38,13 +36,13 @@ func init() {
 	c := cron.New()
 	// 定义任务列表
 
-	// 同步学生的成绩
-	c.AddFunc("0 */10 * * * *", taskWrapper(UpdateStudentScore, FlagSyncStudentScore))
+	//// 同步学生的成绩
+	//c.AddFunc("0 */10 * * * *", taskWrapper(UpdateStudentScore, FlagSyncStudentScore))
 
-	// 在每天即将结束的时候，复位user的can_sync字段
-	c.AddFunc("0 55 23 * * *", func() {
-		model.ResetStudentSyncScoreStatus()
-	})
+	//// 在每天即将结束的时候，复位user的can_sync字段
+	//c.AddFunc("0 55 23 * * *", func() {
+	//	model.ResetStudentSyncScoreStatus()
+	//})
 
 	// 测试用
 	c.AddFunc("0 */10 * * * *", func() {
@@ -57,12 +55,12 @@ func init() {
 	// 百度贴吧签到
 	c.AddFunc("0 0 0 * * *", taskWrapper(SignBaiduForums, FlagBaiduTiebaSign))
 
-	// 自己加载每日一图保存在weibo图床
-	c.AddFunc("0 0 0 * * *", func() {
-		service.DailyService.GetImage()
-		//file, _ := ioutil.ReadFile(imagePath)
-		//service.NewWeiBoStorage(conf.WeiBoCookie()).UploadImage(file)
-	})
+	//// 自己加载每日一图保存在weibo图床
+	//c.AddFunc("0 0 0 * * *", func() {
+	//	service.DailyService.GetImage()
+	//	//file, _ := ioutil.ReadFile(imagePath)
+	//	//service.NewWeiBoStorage(conf.WeiBoCookie()).UploadImage(file)
+	//})
 
 	// 数据库备份
 	c.AddFunc("0 0 3 * * *", taskWrapper(backupMysql, FlagBackupMysql))

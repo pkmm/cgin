@@ -5,6 +5,7 @@ import (
 	"cgin/model"
 	"cgin/service"
 	"cgin/util"
+	"cgin/zcmu"
 	"fmt"
 	"io/ioutil"
 	"runtime"
@@ -108,4 +109,18 @@ func TestSomething(t *testing.T) {
 
 func TestUtil(t *testing.T) {
 	t.Log(util.IpAddressOfLocal())
+}
+
+// Output: Tr1zshCyI/14NfLZ8SOIbo5qmPxwL3JoqsOayDvcYx3eLAz6vDcQ9ZZ8jfyv0EbPDICZ/OctL7Hor9kUrdR3Ck0w4ZCFbR9xHbB0S+RnuK7kicHt7fEK4VCcIORlHs9LxlfOk6+08rzn/2VdwJ6beVRaGuVpKx6RtxVvGWrraA8=
+func TestExample(t *testing.T) {
+	o := zcmu.New("201312203501029", "520zhang")
+	err := o.Login()
+	t.Log(err)
+	kcs, err := o.GetKcs()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, k := range kcs.Items {
+		fmt.Printf("%#v\n", k)
+	}
 }

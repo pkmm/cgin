@@ -32,9 +32,10 @@ require (
 	github.com/swaggo/swag v1.6.5
 	github.com/xlstudio/wxbizdatacrypt v0.0.0-20190418111444-c3e116880c11
 	golang.org/x/image v0.0.0-20191214001246-9130b4cfad52
-	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
+	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa
 	golang.org/x/text v0.3.2
 	golang.org/x/tools v0.0.0-20200119215504-eb0d8dd85bcc // indirect
+	google.golang.org/appengine v1.4.0
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 	moul.io/http2curl v1.0.0 // indirect
 )

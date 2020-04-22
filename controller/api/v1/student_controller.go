@@ -44,32 +44,22 @@ func (s *studentController) GetStudent(c *gin.Context) {
 // @Security ApiKeyAuth
 func (s *studentController) GetScores(c *gin.Context) {
 	helper := contextHelper.New(c)
-	err, scores := service.ScoreService.GetOwnScores(helper.GetAuthUserId())
+	err, student := model.GetStudentByUserId(helper.GetAuthUserId())
+	if student == nil {
+		panic(errno.NormalException.AppendErrorMsg("用户没有学生信息"))
+	}
+	robot := zcmu.New(student.Number, student.Password)
+	err = robot.Login()
 	if err != nil {
-		panic(errno.NormalException.ReplaceErrorMsgWith(err.Error()))
+		panic(errno.CheckZfAccountFailedException.AppendErrorMsg(err.Error()))
 	}
-	if len(*scores) == 0 {
-		err, student := model.GetStudentByUserId(helper.GetAuthUserId())
-		if student == nil {
-			panic(errno.NormalException.AppendErrorMsg("用户没有学生信息"))
-		}
-		worker, err := zcmu.NewCrawl(student.Number, student.Password)
-		if err != nil {
-			panic(errno.NormalException.AppendErrorMsg(err.Error()))
-		}
-		if scores, err := worker.GetScores(); err == nil {
-			modelScores := service.ScoreService.SaveStudentScoresFromCrawl(scores, student.Id)
-			service.SendResponseSuccess(c, gin.H{
-				"scores": modelScores,
-			})
-			return
-		} else {
-			panic(errno.NormalException.AppendErrorMsg(err.Error()))
-		}
+	if ret, err := robot.GetKcs(); err == nil {
+		service.SendResponseSuccess(c, gin.H{
+			"scores": ret.Items,
+		})
+	} else {
+		panic(errno.NormalException.AppendErrorMsg(err.Error()))
 	}
-	helper.Response(gin.H{
-		"scores": scores,
-	})
 }
 
 // @Summary 更新学生的信息
@@ -87,14 +77,10 @@ func (s *studentController) UpdateOrCreateEduAccount(c *gin.Context) {
 	number = helper.GetString("student_number")
 	password = helper.GetString("password")
 	// 检测账号密码是否正确
-	checker, err := zcmu.NewCrawl(number, password)
-	if err != nil {
-		panic(errno.NormalException.AppendErrorMsg(err.Error()))
+	robotgg := zcmu.New(number, password)
+	if err := robotgg.Login(); err != nil {
+		panic(errno.CheckZfAccountFailedException.AppendErrorMsg(err.Error()))
 	}
-	if msg := checker.CheckAccount(); msg != "" {
-		panic(errno.NormalException.ReplaceErrorMsgWith(msg))
-	}
-
 	err, student := (&model.Student{
 		UserId:   helper.GetAuthUserId(),
 		Password: password,

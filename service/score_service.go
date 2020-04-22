@@ -2,9 +2,6 @@ package service
 
 import (
 	"cgin/model"
-	"cgin/service/workerpool"
-	"cgin/util"
-	"cgin/zcmu"
 	"github.com/jinzhu/gorm"
 	"sync"
 )
@@ -29,17 +26,17 @@ func (s *scoreService) GetOwnScores(userId uint64) (error, *[]model.Score) {
 	return nil, &student.Scores
 }
 
-func (s *scoreService) SaveStudentScoresFromCrawl(scores []*zcmu.Score, studentId uint64) []*model.Score {
-	dbScores := make([]*model.Score, 0, len(scores))
-	for _, s := range scores {
-		modelScore := &model.Score{}
-		util.BeanDeepCopy(s, modelScore)
-		modelScore.StudentId = studentId
-		dbScores = append(dbScores, modelScore)
-	}
-	workerpool.TaskPool.AddTasks([]*workerpool.Task{workerpool.NewTask(func() {
-		model.BatchCreateScores(dbScores)
-	})})
-	//go s.BatchCreate(dbScores)
-	return dbScores
-}
+//func (s *scoreService) SaveStudentScoresFromCrawl(scores *[]zcmu.KcItem, studentId uint64) []*model.Score {
+//	dbScores := make([]*model.Score, 0, len(*scores))
+//	for _, s := range *scores {
+//		modelScore := &model.Score{}
+//		util.BeanDeepCopy(s, modelScore)
+//		modelScore.StudentId = studentId
+//		dbScores = append(dbScores, modelScore)
+//	}
+//	workerpool.TaskPool.AddTasks([]*workerpool.Task{workerpool.NewTask(func() {
+//		model.BatchCreateScores(dbScores)
+//	})})
+//	//go s.BatchCreate(dbScores)
+//	return dbScores
+//}
