@@ -7,6 +7,7 @@ type Thinking struct {
 	Id      uint64 `json:"id" gorm:"primary_key;auto_increment;"`
 	UserId  uint64 `json:"user_id" gorm:"index:user_id;not null;"`
 	Content string `json:"content" gorm:"type:varchar(255);not null;"`
+	From string `json:"from" grom:"type:varchar(64);default null;"`
 	Model
 }
 

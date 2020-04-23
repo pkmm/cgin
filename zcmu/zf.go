@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 )
+// @Deprecated
 
 // 登录正方教务系统
 // 密码错误五次后 当天是不能登录的

@@ -135,8 +135,8 @@ func (z *ZSpider) Login() error {
 }
 
 type KcItem struct {
-	Bfzcj              int    `json:"bfzcj"`     //
-	BhId               string `json:"bh_id"`     //
+	Bfzcj              int    `json:"bfzcj"`     // 百分制 成绩
+	BhId               string `json:"bh_id"`     // 编号id
 	Bj                 string `json:"bj"`        // 班级信息
 	Cj                 string `json:"cj"`        // 成绩 字符串
 	Cjsfzf             string `json:"cjsfzf"`    //
@@ -146,13 +146,13 @@ type KcItem struct {
 	Day                string `json:"day"`   // 几天是几号 23号
 	Jd                 string `json:"jd"`    // 绩点
 	JgId               string `json:"jg_id"` //
-	Jgmc               string `json:"jgmc"`  // 学院信息
-	Kcbj               string `json:"kcbj"`  // 课程的类型 主修
-	Kch                string `json:"kch"`   //
-	KchId              string `json:"kch_id"`
-	Kclbmc             string `json:"kclbmc"`
+	Jgmc               string `json:"jgmc"`  // 机构信息
+	Kcbj               string `json:"kcbj"`  // 课程背景 主修
+	Kch                string `json:"kch"`   // 课程号
+	KchId              string `json:"kch_id"` // 课程号id
+	Kclbmc             string `json:"kclbmc"` // ? 课程列表名称
 	Kcmc               string `json:"kcmc"` // 课程名称
-	Kcxzdm             string `json:"kcxzdm"`
+	Kcxzdm             string `json:"kcxzdm"`  // ?? 课程行政代码
 	Kcxzmc             string `json:"kcxzmc"`  // 必修课
 	Key                string `json:"key"`     // 课程key
 	Kkbmmc             string `json:"kkbmmc"`  // 课程开设的学院
