@@ -143,15 +143,15 @@ type KcItem struct {
 	Date               string `json:"date"`      // 大写日期
 	DateDigit          string `json:"dateDigit"` // 数字日期
 	DateDigitSeparator string `json:"dateDigitSeparator"`
-	Day                string `json:"day"`   // 几天是几号 23号
-	Jd                 string `json:"jd"`    // 绩点
-	JgId               string `json:"jg_id"` //
-	Jgmc               string `json:"jgmc"`  // 机构信息
-	Kcbj               string `json:"kcbj"`  // 课程背景 主修
-	Kch                string `json:"kch"`   // 课程号
-	KchId              string `json:"kch_id"` // 课程号id
-	Kclbmc             string `json:"kclbmc"` // ? 课程列表名称
-	Kcmc               string `json:"kcmc"` // 课程名称
+	Day                string `json:"day"`     // 几天是几号 23号
+	Jd                 string `json:"jd"`      // 绩点
+	JgId               string `json:"jg_id"`   //
+	Jgmc               string `json:"jgmc"`    // 机构信息
+	Kcbj               string `json:"kcbj"`    // 课程背景 主修
+	Kch                string `json:"kch"`     // 课程号
+	KchId              string `json:"kch_id"`  // 课程号id
+	Kclbmc             string `json:"kclbmc"`  // ? 课程列表名称
+	Kcmc               string `json:"kcmc"`    // 课程名称
 	Kcxzdm             string `json:"kcxzdm"`  // ?? 课程行政代码
 	Kcxzmc             string `json:"kcxzmc"`  // 必修课
 	Key                string `json:"key"`     // 课程key
