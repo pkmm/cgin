@@ -95,7 +95,7 @@ func (d *dailyServe) GetImage() string {
 	if util.PathExists(fileName) {
 		return conf.Host() + "/" + fileName
 	}
-	if errs := d.getImageFromAPI(fileName, true, true); len(errs) != 0 {
+	if errs := d.getImageFromAPI(fileName, true, false); len(errs) != 0 {
 		panic(errno.NormalException.ReplaceErrorByErrors(errs))
 	}
 	return conf.Host() + "/" + fileName
