@@ -34,7 +34,7 @@ require (
 	golang.org/x/image v0.0.0-20191214001246-9130b4cfad52
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa
 	golang.org/x/text v0.3.2
-	golang.org/x/tools v0.0.0-20200119215504-eb0d8dd85bcc // indirect
+	golang.org/x/tools v0.0.0-20200119215504-eb0d8dd85bcc
 	google.golang.org/appengine v1.4.0
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 	moul.io/http2curl v1.0.0 // indirect

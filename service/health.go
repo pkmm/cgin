@@ -19,5 +19,5 @@ const (
 
 func (h *healthService) MemoryUseInfo() string {
 	info, _ := mem.VirtualMemory()
-	return fmt.Sprintf("Total: %dMB, USED: %dMB, PERCENT: %.2f%%", info.Total/MB, info.Used/MB, info.UsedPercent)
+	return fmt.Sprintf("TOTAL: %dMB, USED: %dMB, PERCENT: %.2f%%", info.Total/MB, info.Used/MB, info.UsedPercent)
 }

@@ -3,6 +3,7 @@ package middleware
 import (
 	"cgin/errno"
 	"cgin/service"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,18 +31,25 @@ func Auth() gin.HandlerFunc {
 	//} else if c.Request.Method == http.MethodGet {
 	//	data.Token = c.DefaultQuery(Token, "")
 	//	if data.Token == "" {
-	//		panic(errno.TokenNotValid)
+	//		panic(errno.ErrorTokenNotValid)
 	//	}
 	//}
 	//c.Request.Body = rdr2
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("Authorization")
 		if 0 == len(token) {
-			panic(errno.TokenNotValid)
+			panic(errno.ErrorTokenNotValid)
 		}
 		claims, err := service.JWTSrv.GetAuthClaims(token)
+		if vErr, ok := err.(jwt.ValidationError); ok {
+			if (vErr.Errors & jwt.ValidationErrorExpired) != 0 {
+				// token 过期了 直接进行刷新
+				panic(errno.ErrorTokenExpired)
+			}
+		}
+
 		if err != nil {
-			panic(errno.TokenNotValid)
+			panic(errno.ErrorTokenNotValid)
 		}
 		c.Set("claims", claims)
 		c.Next()

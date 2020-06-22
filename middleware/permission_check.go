@@ -14,7 +14,7 @@ func PermissionCheck() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		claims, ok := context.MustGet("claims").(*service.AuthClaims)
 		if !ok {
-			panic(errno.TokenNotValid)
+			panic(errno.ErrorTokenNotValid)
 		}
 		if claims.RoleId == model.RoleAdmin {
 			context.Next()

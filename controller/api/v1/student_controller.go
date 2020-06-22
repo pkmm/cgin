@@ -13,6 +13,10 @@ type studentController struct{}
 
 var Student = &studentController{}
 
+const (
+	mockStudentNumber = "2013122"
+)
+
 // @Summary 获取当前用户的学生信息
 // @Tags Student
 // @Produce json
@@ -48,6 +52,13 @@ func (s *studentController) GetScores(c *gin.Context) {
 	if student == nil {
 		panic(errno.NormalException.AppendErrorMsg("用户没有学生信息"))
 	}
+	// 测试账号直接返回mock的数据
+	if student.Number == mockStudentNumber {
+		service.SendResponseSuccess(c, gin.H{
+			"scores": LoadData(),
+		})
+		return
+	}
 	robot := zcmu.New(student.Number, student.Password)
 	err = robot.Login()
 	if err != nil {
@@ -76,11 +87,16 @@ func (s *studentController) UpdateOrCreateEduAccount(c *gin.Context) {
 	)
 	number = helper.GetString("student_number")
 	password = helper.GetString("password")
-	// 检测账号密码是否正确
-	robotgg := zcmu.New(number, password)
-	if err := robotgg.Login(); err != nil {
-		panic(errno.CheckZfAccountFailedException.AppendErrorMsg(err.Error()))
+	if number == mockStudentNumber && password == "123qwe" {
+		// 测试账号
+	} else {
+		// 检测账号密码是否正确
+		robotgg := zcmu.New(number, password)
+		if err := robotgg.Login(); err != nil {
+			panic(errno.CheckZfAccountFailedException.AppendErrorMsg(err.Error()))
+		}
 	}
+
 	err, student := (&model.Student{
 		UserId:   helper.GetAuthUserId(),
 		Password: password,

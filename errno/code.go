@@ -6,13 +6,14 @@ var (
 	Success                = &BusinessErrorInfo{10000, "OK"}
 	InternalServerError    = &BusinessErrorInfo{10001, "internal server error"}
 	InvalidParameters      = &BusinessErrorInfo{10002, "invalid Parameters"}
-	TokenNotValid          = &BusinessErrorInfo{10003, "token is not valid"}
+	ErrorTokenNotValid     = &BusinessErrorInfo{10003, "token is not valid"}
 	GenerateJwtTokenFailed = &BusinessErrorInfo{10004, "generate token was failed"}
 	UserNotAuth            = &BusinessErrorInfo{10005, "you must login"}
 	Welcome                = &BusinessErrorInfo{10006, "hello, I am still alive"}
 	NotSuchRouteException  = &BusinessErrorInfo{10007, "not found resource"}
 	NormalException        = &BusinessErrorInfo{10008, "exception:"}
 	PermissionDenied       = &BusinessErrorInfo{10009, "permission Denied"}
+	ErrorTokenExpired      = &BusinessErrorInfo{10010, "token expired"}
 
 	// user errors
 	// error code begin with 2... for business error

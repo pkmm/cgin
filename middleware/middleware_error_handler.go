@@ -18,7 +18,7 @@ func BusinessErrorHandler() gin.HandlerFunc {
 					e := err.(*errno.BusinessErrorInfo)
 					switch e.Code {
 					// 设置状态码
-					case errno.TokenNotValid.Code:
+					case errno.ErrorTokenNotValid.Code:
 						service.SendResponseWithStatus(ctx, e, nil, http.StatusUnauthorized)
 					case errno.PermissionDenied.Code:
 						service.SendResponseWithStatus(ctx, e, nil, http.StatusForbidden)
