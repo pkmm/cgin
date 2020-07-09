@@ -11,15 +11,16 @@ import (
 )
 
 const (
-	Version = "v1"
-
+	Version       = "v1"
 	RootApiPrefix = "/api/" + Version
-	AuthPrefix    = RootApiPrefix + "/auth"
-	Student       = RootApiPrefix + "/students"
-	MiniProgram   = RootApiPrefix + "/mini_program"
-	Trigger       = RootApiPrefix + "/trigger/"
-	Thinking      = RootApiPrefix + "/thinking"
-	Score         = RootApiPrefix + "/scores"
+
+	AuthPrefix  = RootApiPrefix + "/auth"
+	Student     = RootApiPrefix + "/students"
+	MiniProgram = RootApiPrefix + "/mini_program"
+	Trigger     = RootApiPrefix + "/trigger/"
+	Thinking    = RootApiPrefix + "/thinking"
+	Score       = RootApiPrefix + "/scores"
+	Wx          = RootApiPrefix + "/wx"
 )
 
 func InitRouter() *gin.Engine {
@@ -41,6 +42,7 @@ func InitRouter() *gin.Engine {
 	initScoresRouter(router)
 	initAuthRouter(router)
 	initHealthCheck(router)
+	initWeChatRouter(router)
 
 	return router
 }

@@ -24,6 +24,12 @@ github.com/bradfitz/gomemcache v0.0.0-20180710155616-bc664df96737/go.mod h1:PmM6
 github.com/bwmarrin/snowflake v0.3.0 h1:xm67bEhkKh6ij1790JB83OujPR5CzNe8QuQqAgISZN0=
 github.com/bwmarrin/snowflake v0.3.0/go.mod h1:NdZxfVWX+oR6y2K0o6qAYv6gIOP9rjG0/E9WsDpxqwE=
 github.com/casbin/casbin v1.7.0/go.mod h1:c67qKN6Oum3UF5Q1+BByfFxkwKvhwW57ITjqwtzR1KE=
+github.com/chanxuehong/rand v0.0.0-20180830053958-4b3aff17f488 h1:6d1ijTov542DDRWsFdnPYeGWnlRxlzbpEaJuNJtBQiU=
+github.com/chanxuehong/rand v0.0.0-20180830053958-4b3aff17f488/go.mod h1:h13adSJmQ5tsaV9bR72eTp7ePXJ2WIWyK6heLeietxA=
+github.com/chanxuehong/util v0.0.0-20200304121633-ca8141845b13 h1:c1vUDbnwvu5d2ucfzXvMzBWzeu5IxPvtESOFPl3CieA=
+github.com/chanxuehong/util v0.0.0-20200304121633-ca8141845b13/go.mod h1:XEYt99iTxMqkv+gW85JX/DdUINHUe43Sbe5AtqSaDAQ=
+github.com/chanxuehong/wechat v0.0.0-20200409104612-0a1fd76d7a3a h1:VIpXUoKyBnQTCKZqJuhVBGG2qpBdTJBdAEDJWpuKvYE=
+github.com/chanxuehong/wechat v0.0.0-20200409104612-0a1fd76d7a3a/go.mod h1:u+9Q4tf4vndDvduUeFu+22H63ehFfSLBJlADV8n+RNw=
 github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58/go.mod h1:EOBUe0h4xcZ5GoxqC5SDxFQ8gwyZPKQoEzownBlhI80=
 github.com/couchbase/go-couchbase v0.0.0-20181122212707-3e9b6e1258bb/go.mod h1:TWI8EKQMs5u5jLKW/tsb9VwauIrMIxQG1r5fMsswK5U=
 github.com/couchbase/gomemcached v0.0.0-20181122193126-5125a94a666c/go.mod h1:srVSlQLB8iXBVXHgnqemxUXqN6FCvClgCMPCsjBDR7c=

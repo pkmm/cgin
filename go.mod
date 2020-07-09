@@ -8,6 +8,7 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/astaxie/beego v1.12.0
 	github.com/bwmarrin/snowflake v0.3.0
+	github.com/chanxuehong/wechat v0.0.0-20200409104612-0a1fd76d7a3a
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elazarl/goproxy v0.0.0-20191011121108-aa519ddbe484 // indirect
 	github.com/ewalker544/libsvm-go v0.0.0-20140912030911-ec8445221ede

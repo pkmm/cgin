@@ -5,6 +5,9 @@ import (
 	"cgin/conf"
 	"encoding/json"
 	"fmt"
+	"github.com/chanxuehong/wechat/mp/core"
+	"github.com/chanxuehong/wechat/mp/message/callback/request"
+	"github.com/chanxuehong/wechat/mp/message/callback/response"
 	"github.com/xlstudio/wxbizdatacrypt"
 	"io/ioutil"
 	"net/http"
@@ -157,4 +160,57 @@ func code2Session(code string) (*code2SessionResp, error) {
 	_ = json.Unmarshal(body, &sess)
 
 	return sess, nil
+}
+
+type weChatApp struct {
+	wxAppId         string
+	wxAppSecret     string
+	wxOriId         string
+	wxToken         string
+	wxEncodedAESKey string
+}
+
+/// config service
+var WeChatAppService *weChatApp
+
+func (w *weChatApp) Serve(wr http.ResponseWriter, r *http.Request) {
+	msgServer.ServeHTTP(wr, r, nil)
+}
+
+/// config service end ///
+
+//// config wechat sdk
+
+var (
+	msgServer *core.Server
+)
+
+func init() {
+	msgHandler := core.NewServeMux()
+	msgHandler.MsgHandleFunc(request.MsgTypeText, textMsgHandler)
+	msgHandler.EventHandleFunc(request.EventTypeSubscribe, subscribeEventHandler)
+	WeChatAppService = &weChatApp{
+		wxAppId:     conf.AppConfig.String("wxappid"),
+		wxAppSecret: conf.AppConfig.String("wxappsecret"),
+		wxToken:     conf.AppConfig.String("wxapptoken"),
+	}
+	msgServer = core.NewServer(WeChatAppService.wxOriId,
+		WeChatAppService.wxAppId,
+		WeChatAppService.wxToken,
+		WeChatAppService.wxEncodedAESKey,
+		msgHandler,
+		nil,
+	)
+}
+
+func textMsgHandler(ctx *core.Context) {
+	msg := request.GetText(ctx.MixedMsg)
+	resp := response.NewText(msg.FromUserName, msg.ToUserName, msg.CreateTime, fmt.Sprintf("内容【%s】已经保存, 可以在小程序【Retain吧】查看！", msg.Content))
+	_ = ctx.RawResponse(resp)
+}
+
+func subscribeEventHandler(ctx *core.Context) {
+	event := request.GetSubscribeEvent(ctx.MixedMsg)
+	resp := response.NewText(event.FromUserName, event.ToUserName, event.CreateTime, "感谢订阅，现在给我发消息，消息会记录在小程序首页，例如：可以给我发送单词，进行保存，以后可在小程序页查看复习！")
+	_ = ctx.RawResponse(resp)
 }
