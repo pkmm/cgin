@@ -5,7 +5,6 @@ import (
 	v1 "cgin/controller/api/v1"
 	"cgin/errno"
 	"cgin/service"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +12,20 @@ func initNormalRouter(normalRouter *gin.Engine) {
 	// 通用
 	normalRouter.Any("/", func(context *gin.Context) {
 		currentAppEnv := conf.AppEnvironment()
-		service.SendResponse(context, errno.Welcome, fmt.Sprintf("current enviorment is [%s].", currentAppEnv))
+		info := struct {
+			Github string `json:"github"`
+			Env string `json:"env"`
+			Author string `json:"author"`
+		}{
+			Github: "https://github.com/pkmm",
+			Env: currentAppEnv,
+			Author: "相顾无言",
+		}
+		service.SendResponse(
+			context,
+			errno.Welcome,
+			info,
+			)
 	})
 
 	// 未找到的路由

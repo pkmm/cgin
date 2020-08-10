@@ -5,14 +5,14 @@ var (
 	// error code begin with 1... for system error
 	Success                = &BusinessErrorInfo{10000, "OK"}
 	InternalServerError    = &BusinessErrorInfo{10001, "internal server error"}
-	InvalidParameters      = &BusinessErrorInfo{10002, "invalid Parameters"}
+	InvalidParameters      = &BusinessErrorInfo{10002, "invalid parameters"}
 	ErrorTokenNotValid     = &BusinessErrorInfo{10003, "token is not valid"}
 	GenerateJwtTokenFailed = &BusinessErrorInfo{10004, "generate token was failed"}
 	UserNotAuth            = &BusinessErrorInfo{10005, "you must login"}
-	Welcome                = &BusinessErrorInfo{10006, "hello, I am still alive"}
+	Welcome                = &BusinessErrorInfo{10006, "services developed by golang"}
 	NotSuchRouteException  = &BusinessErrorInfo{10007, "not found resource"}
 	NormalException        = &BusinessErrorInfo{10008, "exception:"}
-	PermissionDenied       = &BusinessErrorInfo{10009, "permission Denied"}
+	PermissionDenied       = &BusinessErrorInfo{10009, "permission denied"}
 	ErrorTokenExpired      = &BusinessErrorInfo{10010, "token expired"}
 
 	// user errors
