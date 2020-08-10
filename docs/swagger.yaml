@@ -123,16 +123,16 @@ paths:
   /auth/login:
     post:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: 认证的信息
-        in: body
-        name: auth_model
-        required: true
-        schema:
-          $ref: '#/definitions/co.AuthModel'
+        - description: 认证的信息
+          in: body
+          name: auth_model
+          required: true
+          schema:
+            $ref: '#/definitions/co.AuthModel'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -140,37 +140,37 @@ paths:
             $ref: '#/definitions/service.Response'
       summary: 登录
       tags:
-      - Auth
+        - Auth
   /auth/me:
     post:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 获取认证的自己
       tags:
-      - Auth
+        - Auth
   /daily/images:
     get:
       produces:
-      - image/jpeg
+        - image/jpeg
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 随机图片
       tags:
-      - Daily
+        - Daily
   /daily/sentences:
     get:
       responses:
@@ -179,22 +179,22 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 一句话
       tags:
-      - Daily
+        - Daily
   /decode_verify_code:
     post:
       consumes:
-      - image/gif
+        - image/gif
       parameters:
-      - description: image of verify code
-        in: formData
-        name: img
-        required: true
-        type: file
+        - description: image of verify code
+          in: formData
+          name: img
+          required: true
+          type: file
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -202,7 +202,7 @@ paths:
             $ref: '#/definitions/service.Response'
       summary: 验证码识别
       tags:
-      - 验证码识别
+        - 验证码识别
   /health_check/mem:
     get:
       description: 查看系统的内存信息
@@ -213,64 +213,64 @@ paths:
             $ref: '#/definitions/service.Response'
       summary: 系统健康检查
       tags:
-      - 系统信息
+        - 系统信息
   /mini_program/hermann_memorials:
     get:
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 背单词：今天的任务
       tags:
-      - 背单词
+        - 背单词
     post:
       parameters:
-      - description: data
-        in: body
-        name: addData
-        required: true
-        schema:
-          $ref: '#/definitions/co.AddHermannMemorial'
+        - description: data
+          in: body
+          name: addData
+          required: true
+          schema:
+            $ref: '#/definitions/co.AddHermannMemorial'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 添加背单词的任务
       tags:
-      - 背单词
+        - 背单词
   /mini_program/index_config:
     post:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: 小程序首页配置
-        in: body
-        name: config
-        required: true
-        schema:
-          $ref: '#/definitions/co.IndexConfig'
+        - description: 小程序首页配置
+          in: body
+          name: config
+          required: true
+          schema:
+            $ref: '#/definitions/co.IndexConfig'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 首页slogan image等的配置信息
       tags:
-      - Mini program
+        - Mini program
   /mini_program/index_preferences:
     get:
       responses:
@@ -279,177 +279,177 @@ paths:
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 首页的配置
       tags:
-      - Mini program
+        - Mini program
   /mini_program/menus:
     post:
       parameters:
-      - description: 配置小程序首页的菜单项
-        in: body
-        name: menus
-        required: true
-        schema:
-          $ref: '#/definitions/co.Menus'
+        - description: 配置小程序首页的菜单项
+          in: body
+          name: menus
+          required: true
+          schema:
+            $ref: '#/definitions/co.Menus'
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 配置菜单项
       tags:
-      - Mini program
+        - Mini program
   /mini_program/notifications:
     get:
       parameters:
-      - in: query
-        name: page
-        type: integer
-      - in: query
-        name: size
-        type: integer
+        - in: query
+          name: page
+          type: integer
+        - in: query
+          name: size
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 获取notifications 分页查询
       tags:
-      - Mini program
+        - Mini program
     put:
       parameters:
-      - description: one notification
-        in: body
-        name: notification
-        required: true
-        schema:
-          $ref: '#/definitions/co.Notification'
+        - description: one notification
+          in: body
+          name: notification
+          required: true
+          schema:
+            $ref: '#/definitions/co.Notification'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 更新创建一个notification
       tags:
-      - Mini program
+        - Mini program
   /mini_program/send_template_msg:
     get:
       parameters:
-      - description: 用户的open id
-        in: query
-        name: open_id
-        required: true
-        type: string
+        - description: 用户的open id
+          in: query
+          name: open_id
+          required: true
+          type: string
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 发送微信小程序订阅消息
       tags:
-      - Mini program
+        - Mini program
   /mini_program/sponsors:
     get:
       parameters:
-      - in: query
-        name: page
-        type: integer
-      - in: query
-        name: size
-        type: integer
+        - in: query
+          name: page
+          type: integer
+        - in: query
+          name: size
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 查看赞助我的人
       tags:
-      - Mini program
+        - Mini program
   /scores:
     get:
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 获取学生的成绩
       tags:
-      - Student
+        - Student
   /students/{studentId}:
     get:
       parameters:
-      - description: student id
-        in: path
-        name: studentId
-        required: true
-        type: integer
+        - description: student id
+          in: path
+          name: studentId
+          required: true
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 获取当前用户的学生信息
       tags:
-      - Student
+        - Student
   /students/update_edu_account:
     post:
       parameters:
-      - description: update edu account info
-        in: body
-        name: auth
-        required: true
-        schema:
-          $ref: '#/definitions/co.EduAccount'
+        - description: update edu account info
+          in: body
+          name: auth
+          required: true
+          schema:
+            $ref: '#/definitions/co.EduAccount'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 更新学生的信息
       tags:
-      - Student
+        - Student
   /thinking:
     get:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - in: query
-        name: page
-        type: integer
-      - in: query
-        name: size
-        type: integer
+        - in: query
+          name: page
+          type: integer
+        - in: query
+          name: size
+          type: integer
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -457,32 +457,32 @@ paths:
             $ref: '#/definitions/service.Response'
       summary: 值得深思的句子
       tags:
-      - 思考
+        - 思考
   /trigger/tasks:
     get:
       consumes:
-      - application/json
+        - application/json
       parameters:
-      - description: 任务名称
-        enum:
-        - sign_baidu_tieba
-        - sync_student_score
-        in: query
-        name: job_name
-        required: true
-        type: string
+        - description: 任务名称
+          enum:
+            - sign_baidu_tieba
+            - sync_student_score
+          in: query
+          name: job_name
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "202":
           description: Accepted
           schema:
             $ref: '#/definitions/service.Response'
       security:
-      - ApiKeyAuth: []
+        - ApiKeyAuth: []
       summary: 定时任务触发器
       tags:
-      - Trigger
+        - Trigger
 securityDefinitions:
   ApiKeyAuth:
     in: header

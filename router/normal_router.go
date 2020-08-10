@@ -14,18 +14,18 @@ func initNormalRouter(normalRouter *gin.Engine) {
 		currentAppEnv := conf.AppEnvironment()
 		info := struct {
 			Github string `json:"github"`
-			Env string `json:"env"`
+			Env    string `json:"env"`
 			Author string `json:"author"`
 		}{
 			Github: "https://github.com/pkmm",
-			Env: currentAppEnv,
+			Env:    currentAppEnv,
 			Author: "相顾无言",
 		}
 		service.SendResponse(
 			context,
 			errno.Welcome,
 			info,
-			)
+		)
 	})
 
 	// 未找到的路由
