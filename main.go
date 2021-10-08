@@ -12,11 +12,9 @@ import (
 //go:generate go mod tidy
 //go:generate go mod download
 
-var port = "8654"
-
-// @title 小程序cgogo的服务端
+// @title cgin server api
 // @version 1.0
-// @description 小程序【Retain吧】的服务端代码，其他小的功能
+// @description 实验性
 
 // @host localhost:8654
 // @BasePath /api/v1
@@ -27,7 +25,7 @@ func main() {
 
 	// 初始化需要的配置信息
 	global.G_VP = core.Viper()
-	global.G_LOG =core.Zap()
+	global.G_LOG = core.Zap()
 	global.G_DB = initialize.Gorm()
 
 	if global.G_DB != nil {
@@ -35,7 +33,7 @@ func main() {
 		db, _ := global.G_DB.DB()
 		defer db.Close()
 	} else {
-		fmt.Errorf("初始化数据库失败!")
+		_ = fmt.Errorf("初始化数据库失败!")
 	}
 
 	core.RunWindowsServer()

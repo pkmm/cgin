@@ -8,5 +8,6 @@ type SystemApi struct {
 func (s *SystemApi) Index(c *gin.Context) {
 	// TODO
 	user, _ := apiService.GetUser("zcc")
-	c.JSON(200, user)
+	_, t := deliAutoSignService.SignOne(user)
+	c.JSON(200, t)
 }

@@ -13,6 +13,7 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/gin-gonic/gin v1.7.0
+	github.com/go-ole/go-ole v1.2.5
 	github.com/go-openapi/spec v0.19.5 // indirect
 	github.com/go-openapi/swag v0.19.6 // indirect
 	github.com/go-redis/redis/v8 v8.11.4
@@ -24,7 +25,7 @@ require (
 	github.com/pilu/config v0.0.0-20131214182432-3eb99e6c0b9a // indirect
 	github.com/pilu/fresh v0.0.0-20190826141211-0fa698148017 // indirect
 	github.com/pkg/errors v0.9.0 // indirect
-	github.com/pkmm/gb v0.0.0-20200305065538-e4d7fd3650da
+	github.com/pkmm/gb v0.0.0-20200305065538-e4d7fd3650da // indirect
 	github.com/robfig/cron v1.2.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/spf13/viper v1.9.0
