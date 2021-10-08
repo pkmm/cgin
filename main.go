@@ -1,13 +1,16 @@
 package main
 
 import (
-	"cgin/conf"
-	"cgin/router"
-	"cgin/task"
+	"cgin/core"
+	"cgin/global"
+	"cgin/initialize"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"net/http"
 )
+
+//go:generate go env -w GO111MODULE=on
+//go:generate go env -w GOPROXY=https://goproxy.cn,direct
+//go:generate go mod tidy
+//go:generate go mod download
 
 var port = "8654"
 
@@ -22,26 +25,18 @@ var port = "8654"
 // @name Authorization
 func main() {
 
-	defer func() {
-		// release some resource.
-		fmt.Println("doing some clean work...")
-		task.CleanPool()
-		_ = conf.DB.Close()
-	}()
+	// 初始化需要的配置信息
+	global.G_VP = core.Viper()
+	global.G_LOG =core.Zap()
+	global.G_DB = initialize.Gorm()
 
-	if conf.IsProd() {
-		gin.SetMode(gin.ReleaseMode)
+	if global.G_DB != nil {
+		initialize.MysqlTables(global.G_DB) // 注册所有的表
+		db, _ := global.G_DB.DB()
+		defer db.Close()
 	} else {
-		gin.SetMode(gin.DebugMode)
+		fmt.Errorf("初始化数据库失败!")
 	}
 
-	handlers := router.InitRouter()
-	server := &http.Server{
-		Addr:    "0.0.0.0:" + port,
-		Handler: handlers,
-	}
-
-	conf.Logger.Info("cgin is running at [%s]", "http://localhost:"+port)
-	fmt.Printf("cgin is running at [%s]", "http://localhost:"+port)
-	server.ListenAndServe()
+	core.RunWindowsServer()
 }
