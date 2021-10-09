@@ -9,9 +9,9 @@ type ApiRouter struct {
 }
 
 func (a *ApiRouter) InitApiRouter(r *gin.RouterGroup) {
-	apiRouter := r.Group("api")
+	apiRouter := r.Group("user")
 	var api = v1.ApiGroupApp.SystemApiGroup.SystemApi
 	{
-		apiRouter.GET("index", api.Index)
+		apiRouter.GET("sign/:name", api.Index)
 	}
 }

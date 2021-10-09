@@ -2,13 +2,21 @@ package schedule
 
 import (
 	"cgin/global"
+	"cgin/service/system"
 	"fmt"
 	"github.com/pkmm/gb/baidu"
 )
 
 // SignBaiduForums 签到百度贴吧
 func SignBaiduForums() {
-	worker, err := baidu.NewBaiduTiebaCrawl("")
+	err, users := system.BaiduServiceApp.GetUsers()
+	if err != nil {
+		fmt.Printf("加载baidu用户失败 %v", err)
+		return
+	}
+	// TODO：处理所有的用户，当前只有一个人
+	bs := users[0].Bduss
+	worker, err := baidu.NewBaiduTiebaCrawl(bs)
 	if err != nil {
 		return
 	}

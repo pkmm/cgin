@@ -67,6 +67,7 @@ func gormConfig() *gorm.Config {
 func MysqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
 		system.DeliUser{},
+		system.BaiduUser{},
 	)
 	if err != nil {
 		global.GLog.Error("register table failed", zap.Any("err", err))

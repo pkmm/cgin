@@ -12,10 +12,10 @@ import (
 	"time"
 )
 
-type DeliAutoSign struct {
+type DeliAutoSignService struct {
 }
 
-var DeliAutoSignApp = new(DeliAutoSign)
+var DeliAutoSignApp = new(DeliAutoSignService)
 
 type CheckResultUrl struct {
 	Url string `json:"url"`
@@ -26,7 +26,7 @@ type CheckResult struct {
 	Errmsg string         `json:"errmsg"`
 }
 
-func (d *DeliAutoSign) SignOne(user *system.DeliUser) (err error, html string) {
+func (d *DeliAutoSignService) SignOne(user *system.DeliUser) (err error, html string) {
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{Jar: jar, Timeout: 60 * time.Second}
 	data := url.Values{
@@ -53,6 +53,10 @@ func (d *DeliAutoSign) SignOne(user *system.DeliUser) (err error, html string) {
 	var ret CheckResult
 	json.Unmarshal(body, &ret)
 
+	if ret.Data.Url == "" {
+		return nil, string(body)
+	}
+
 	if resp, err = client.Get(ret.Data.Url); err != nil {
 		return err, ""
 	}
@@ -63,7 +67,14 @@ func (d *DeliAutoSign) SignOne(user *system.DeliUser) (err error, html string) {
 	return nil, string(body)
 }
 
-func (d *DeliAutoSign) GetAllUsers() (err error, users []system.DeliUser) {
+func (d *DeliAutoSignService) GetAllUsers() (err error, users []system.DeliUser) {
 	err = global.DB.Where("cancel = 0").Find(&users).Error
 	return
+}
+
+func (d *DeliAutoSignService) GetUserByName(name string) (user *system.DeliUser) {
+	if err := global.DB.Where("username = ?", name).First(&user).Error; err != nil {
+		return nil
+	}
+	return user
 }
