@@ -1,7 +1,6 @@
 package wechatpush
 
 import (
-	"cgin/conf"
 	"net/http"
 	"net/url"
 )
@@ -17,7 +16,7 @@ func NewPusherSister() *pusherSister {
 }
 
 func (p *pusherSister) Send(title, desc string) (*http.Response, error) {
-	key := conf.AppConfig.String("server_push_key")
+	key := ""
 	client := &http.Client{}
 	if resp, err := client.PostForm("https://sc.ftqq.com/"+key+".send", url.Values{
 		"text": {title},

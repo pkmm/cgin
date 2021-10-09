@@ -1,7 +1,6 @@
 package wechatpush
 
 import (
-	"cgin/conf"
 	"github.com/parnurzeal/gorequest"
 	"net/http"
 )
@@ -27,7 +26,7 @@ func NewPushBear(uids []string, contentType wxPushContentType) *pushBear {
 }
 
 func (p *pushBear) Send(title, desc string) (*http.Response, error) {
-	appToken := conf.AppConfig.String("app_token")
+	appToken := ""
 	data := struct {
 		AppToken    string            `json:"appToken"`
 		Content     string            `json:"content"`
