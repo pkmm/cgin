@@ -49,9 +49,9 @@ func main() {
 	global.WorkerPool = pool
 
 	// 初始化任务调度
-	sc := schedule.NewSchedule()
-	sc.StartJobs()
-	defer sc.Stop()
+	schedule.SC = schedule.NewSchedule()
+	schedule.SC.StartJobs()
+	defer schedule.SC.Stop()
 
 	core.RunWindowsServer()
 }

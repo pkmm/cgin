@@ -14,6 +14,8 @@ const (
 	FlagDeli
 )
 
+var SC *Schedule
+
 // Schedule spec 秒 分 时 日 月 星期
 type Schedule struct {
 	slots *util.SafeMap // 分配每一个goroutine 一个id, 避免任务的重叠运行
@@ -70,4 +72,10 @@ func (s *Schedule) StartJobs() {
 
 	/// 在此函数上面进行任务的配置
 	s.sc.Start()
+}
+
+func (s *Schedule) Reload() {
+	fmt.Println("schedule已经被重新加载那")
+	s.Stop()
+	s.StartJobs()
 }

@@ -2,6 +2,7 @@ package core
 
 import (
 	"cgin/global"
+	"cgin/schedule"
 	"cgin/util"
 	"flag"
 	"fmt"
@@ -43,6 +44,8 @@ func Viper(path ...string) *viper.Viper {
 		if err := v.Unmarshal(&global.Config); err != nil {
 			fmt.Println(err)
 		}
+		// 重载任务调度
+		schedule.SC.Reload()
 	})
 
 	if err := v.Unmarshal(&global.Config); err != nil {
