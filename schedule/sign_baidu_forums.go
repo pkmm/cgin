@@ -1,6 +1,7 @@
-package task
+package schedule
 
 import (
+	"cgin/global"
 	"fmt"
 	"github.com/pkmm/gb/baidu"
 )
@@ -17,7 +18,7 @@ func SignBaiduForums() {
 	}
 	for i, t := range ties {
 		y := t
-		err = pool.Submit(func() {
+		err = global.WorkerPool.Submit(func() {
 			resp := worker.SignOne(y)
 			fmt.Printf("Sign[%d], name is [%s], result is %v\n", i, y, resp)
 		})

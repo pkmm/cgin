@@ -127,8 +127,8 @@ func (c *_logger) Trace(ctx context.Context, begin time.Time, fc func() (string,
 }
 
 func (c *_logger) Printf(message string, data ...interface{}) {
-	if global.G_CONFIG.Mysql.LogZap {
-		global.G_LOG.Info(fmt.Sprintf(message, data...))
+	if global.Config.Mysql.LogZap {
+		global.GLog.Info(fmt.Sprintf(message, data...))
 	} else {
 		c.Writer.Printf(message, data...)
 	}

@@ -1,6 +1,7 @@
 package system
 
 import (
+	"cgin/global"
 	"cgin/model/system"
 	"encoding/json"
 	"io/ioutil"
@@ -60,4 +61,9 @@ func (d *DeliAutoSign) SignOne(user *system.DeliUser) (err error, html string) {
 	}
 	defer resp.Body.Close()
 	return nil, string(body)
+}
+
+func (d *DeliAutoSign) GetAllUsers() (err error, users []system.DeliUser) {
+	err = global.DB.Where("cancel = 0").Find(&users).Error
+	return
 }

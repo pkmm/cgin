@@ -11,13 +11,13 @@ type server interface {
 }
 
 func RunWindowsServer() {
-	if global.G_DB != nil {
+	if global.DB != nil {
 		// TODO
 	}
 	Router := initialize.Routers()
-	address := fmt.Sprintf(":%d", global.G_CONFIG.System.Addr)
+	address := fmt.Sprintf(":%d", global.Config.System.Addr)
 
 	s := initServer(address, Router)
 	fmt.Printf("Cgin is running: http://127.0.0.1%s\n", address)
-	global.G_LOG.Error(s.ListenAndServe().Error())
+	global.GLog.Error(s.ListenAndServe().Error())
 }

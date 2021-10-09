@@ -2,35 +2,33 @@ package util
 
 import "sync"
 
-// === 线程安全的map ===
+// SafeMap 线程安全的map
 type SafeMap struct {
 	sync.RWMutex
-	Map map[string]interface{}
+	Map map[int32]interface{}
 }
 
 func NewSafeMap() *SafeMap {
 	sm := new(SafeMap)
-	sm.Map = make(map[string]interface{})
+	sm.Map = make(map[int32]interface{})
 	return sm
 }
 
-func (this *SafeMap) ReadSafeMap(key string) (interface{}, bool) {
-	this.RLock()
-	value, ok := this.Map[key]
-	this.RUnlock()
+func (m *SafeMap) ReadSafeMap(key int32) (interface{}, bool) {
+	m.RLock()
+	value, ok := m.Map[key]
+	m.RUnlock()
 	return value, ok
 }
 
-func (this *SafeMap) WriteSafeMap(key string, value interface{}) {
-	this.Lock()
-	this.Map[key] = value
-	this.Unlock()
+func (m *SafeMap) WriteSafeMap(key int32, value interface{}) {
+	m.Lock()
+	m.Map[key] = value
+	m.Unlock()
 }
 
-func (this *SafeMap) DeleteKey(key string) {
-	this.Lock()
-	delete(this.Map, key)
-	this.Unlock()
+func (m *SafeMap) DeleteKey(key int32) {
+	m.Lock()
+	delete(m.Map, key)
+	m.Unlock()
 }
-
-// === 线程安全的 map End ===

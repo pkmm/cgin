@@ -40,12 +40,12 @@ func Viper(path ...string) *viper.Viper {
 	v.WatchConfig()
 	v.OnConfigChange(func(in fsnotify.Event) {
 		fmt.Println("config file changed: ", in.Name)
-		if err := v.Unmarshal(&global.G_CONFIG); err != nil {
+		if err := v.Unmarshal(&global.Config); err != nil {
 			fmt.Println(err)
 		}
 	})
 
-	if err := v.Unmarshal(&global.G_CONFIG); err != nil {
+	if err := v.Unmarshal(&global.Config); err != nil {
 		fmt.Println(err)
 	}
 	return v

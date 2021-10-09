@@ -4,7 +4,10 @@ import (
 	"cgin/core"
 	"cgin/global"
 	"cgin/initialize"
+	"cgin/schedule"
+	"cgin/service/workerpool"
 	"fmt"
+	"time"
 )
 
 //go:generate go env -w GO111MODULE=on
@@ -25,16 +28,30 @@ func main() {
 
 	// 初始化需要的配置信息
 	global.G_VP = core.Viper()
-	global.G_LOG = core.Zap()
-	global.G_DB = initialize.Gorm()
+	global.GLog = core.Zap()
+	global.DB = initialize.Gorm()
 
-	if global.G_DB != nil {
-		initialize.MysqlTables(global.G_DB) // 注册所有的表
-		db, _ := global.G_DB.DB()
+	// 初始化数据库
+	if global.DB != nil {
+		initialize.MysqlTables(global.DB) // 注册所有的表
+		db, _ := global.DB.DB()
 		defer db.Close()
 	} else {
 		_ = fmt.Errorf("初始化数据库失败!")
 	}
+
+	// 初始化worker pool
+	pool, err := workerpool.NewPool(20, time.Second*10)
+	if err != nil {
+		panic("initialize worker pool failed.")
+	}
+	defer pool.Close()
+	global.WorkerPool = pool
+
+	// 初始化任务调度
+	sc := schedule.NewSchedule()
+	sc.StartJobs()
+	defer sc.Stop()
 
 	core.RunWindowsServer()
 }

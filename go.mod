@@ -18,6 +18,7 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.9.0 // indirect
+	github.com/pkmm/gb v0.0.0-20200316113953-0c9cce3b3b9d
 	github.com/robfig/cron v1.2.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/spf13/viper v1.9.0

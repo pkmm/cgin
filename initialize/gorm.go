@@ -12,7 +12,7 @@ import (
 )
 
 func Gorm() *gorm.DB {
-	switch global.G_CONFIG.System.DbType {
+	switch global.Config.System.DbType {
 	case "mysql":
 		return GormMysql()
 	default:
@@ -21,7 +21,7 @@ func Gorm() *gorm.DB {
 }
 
 func GormMysql() *gorm.DB {
-	m := global.G_CONFIG.Mysql
+	m := global.Config.Mysql
 	if m.Dbname == "" {
 		return nil
 	}
@@ -49,7 +49,7 @@ func GormMysql() *gorm.DB {
 
 func gormConfig() *gorm.Config {
 	config := &gorm.Config{DisableForeignKeyConstraintWhenMigrating: true}
-	switch global.G_CONFIG.Mysql.LogMode {
+	switch global.Config.Mysql.LogMode {
 	case "silent", "Silent":
 		config.Logger = internal.Default.LogMode(logger.Silent)
 	case "error", "Error":
@@ -69,8 +69,8 @@ func MysqlTables(db *gorm.DB) {
 		system.DeliUser{},
 	)
 	if err != nil {
-		global.G_LOG.Error("register table failed", zap.Any("err", err))
+		global.GLog.Error("register table failed", zap.Any("err", err))
 		os.Exit(0)
 	}
-	global.G_LOG.Info("register table success")
+	global.GLog.Info("register table success")
 }
