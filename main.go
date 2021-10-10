@@ -7,6 +7,7 @@ import (
 	"cgin/schedule"
 	"cgin/service/workerpool"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"time"
 )
 
@@ -53,5 +54,6 @@ func main() {
 	schedule.SC.StartJobs()
 	defer schedule.SC.Stop()
 
+	gin.SetMode(gin.ReleaseMode)
 	core.RunWindowsServer()
 }
