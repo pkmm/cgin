@@ -1,6 +1,8 @@
 package wechatpush
 
 import (
+	"cgin/global"
+	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"net/http"
 )
@@ -17,16 +19,17 @@ const (
 )
 
 type pushBear struct {
-	uids        []string
+	TopicIds    []int
 	contentType wxPushContentType
 }
 
-func NewPushBear(uids []string, contentType wxPushContentType) *pushBear {
-	return &pushBear{uids: uids, contentType: contentType}
+func NewPushBear(topicIds []int, contentType wxPushContentType) *pushBear {
+	return &pushBear{TopicIds: topicIds, contentType: contentType}
 }
 
 func (p *pushBear) Send(title, desc string) (*http.Response, error) {
-	appToken := ""
+	appToken := global.Config.Wxpusher.AppToken
+	fmt.Println(appToken)
 	data := struct {
 		AppToken    string            `json:"appToken"`
 		Content     string            `json:"content"`
@@ -38,7 +41,7 @@ func (p *pushBear) Send(title, desc string) (*http.Response, error) {
 		AppToken:    appToken,
 		Content:     title + ", " + desc,
 		ContentType: p.contentType,
-		Uids:        p.uids,
+		TopicIds:    p.TopicIds,
 	}
 	if resp, _, errs := gorequest.New().
 		Post("http://wxpusher.zjiecode.com/api/send/message").

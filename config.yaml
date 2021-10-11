@@ -67,3 +67,7 @@ local:
 deli:
   season: winter
   stop: false
+
+#推送
+wxpusher:
+  app_token: AT_sUmJCesQxMavfN9AXgq9JGn3d3RRREL7

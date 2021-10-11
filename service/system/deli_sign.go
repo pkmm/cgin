@@ -78,3 +78,8 @@ func (d *DeliAutoSignService) GetUserByName(name string) (user *system.DeliUser)
 	}
 	return user
 }
+
+func (d *DeliAutoSignService) UpdateUserWxpushUID(username, uid string) (err error) {
+	err = global.DB.Where("username = ?", username).Updates(&system.DeliUser{Uid: uid}).Error
+	return err
+}

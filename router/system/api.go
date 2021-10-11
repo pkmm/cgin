@@ -13,5 +13,6 @@ func (a *ApiRouter) InitApiRouter(r *gin.RouterGroup) {
 	var api = v1.ApiGroupApp.SystemApiGroup.SystemApi
 	{
 		apiRouter.GET("sign/:name", api.Index)
+		apiRouter.POST("wxpusher/cb", api.WXPushCallBack)
 	}
 }
