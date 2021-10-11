@@ -4,7 +4,6 @@ import (
 	"cgin/global"
 	"cgin/model/common/resposne"
 	"cgin/model/system/request"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/wxpusher/wxpusher-sdk-go"
 	"github.com/wxpusher/wxpusher-sdk-go/model"
@@ -39,8 +38,10 @@ func (s *SystemApi) WXPushCallBack(c *gin.Context) {
 	}
 	global.GLog.Info("收到wxpush的回调信息", zap.Any("data", cbInfo))
 
-	//deliAutoSignService.UpdateUserWxpushUID()
-
+	err := deliAutoSignService.UpdateUserWxpushUID(cbInfo.Data.Extra, cbInfo.Data.Uid)
+	if err != nil {
+		global.GLog.Error("更新用户的uid失败！", zap.Any("error", err))
+	}
 }
 
 // GenerateQRCode 创建个人的二维码
@@ -52,6 +53,5 @@ func (s *SystemApi) GenerateQRCode(c *gin.Context) {
 		resposne.FailWithMsg("创建二维码失败！", c)
 		return
 	}
-	fmt.Println(resp)
-	resposne.Ok(c)
+	resposne.OkWithData(resp, c)
 }
