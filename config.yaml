@@ -49,7 +49,7 @@ system:
 # 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://www.github.com/flipped-aurora/gin-vue-admin/server.com/docs/first）
 mysql:
   path: '127.0.0.1:3306'
-  config: ''
+  config: 'parseTime=true'
   db-name: 'cgin'
   username: 'root'
   password: '123456'

@@ -4,12 +4,8 @@ import (
 	"cgin/global"
 	"cgin/model/system"
 	"encoding/json"
-	"io/ioutil"
+	"github.com/parnurzeal/gorequest"
 	"net/http"
-	"net/http/cookiejar"
-	"net/url"
-	"strings"
-	"time"
 )
 
 type DeliAutoSignService struct {
@@ -27,44 +23,37 @@ type CheckResult struct {
 }
 
 func (d *DeliAutoSignService) SignOne(user *system.DeliUser) (err error, html string) {
-	jar, _ := cookiejar.New(nil)
-	client := &http.Client{Jar: jar, Timeout: 60 * time.Second}
-	data := url.Values{
-		"device_id":   {"210457"},
-		"device_type": {"0"},
-		"lat":         {"30.515479372560893"},
-		"lng":         {"114.42014366321327"},
+	data := struct {
+		DeviceId   int     `json:"device_id"`
+		DeviceType int     `json:"device_type"`
+		Lat        float64 `json:"lat"`
+		Lng        float64 `json:"lng"`
+	}{
+		210457,
+		0,
+		30.515479372560893,
+		114.42014366321327,
 	}
-	req, err := http.NewRequest(http.MethodPost,
-		"https://v2-kq.delicloud.com/attend/check/check", strings.NewReader(data.Encode()))
-	if err != nil {
-		return err, ""
-	}
-	req.AddCookie(&http.Cookie{Name: "deliUser", Value: user.Token})
-	resp, err := client.Do(req)
-	if err != nil {
-		return err, ""
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err, ""
-	}
-	defer resp.Body.Close()
-	var ret CheckResult
-	json.Unmarshal(body, &ret)
-
-	if ret.Data.Url == "" {
-		return nil, string(body)
-	}
-
-	if resp, err = client.Get(ret.Data.Url); err != nil {
-		return err, ""
-	}
-	if body, err = ioutil.ReadAll(resp.Body); err != nil {
-		return nil, ""
-	}
-	defer resp.Body.Close()
-	return nil, string(body)
+	err = nil
+	gorequest.New().Post("https://v2-kq.delicloud.com/attend/check/check").
+		AddCookie(&http.Cookie{Name: "deliUser", Value: user.Token}).
+		Send(data).
+		End(func(response gorequest.Response, body string, errs []error) {
+			var ret CheckResult
+			err = json.Unmarshal([]byte(body), &ret)
+			if err != nil {
+				return
+			}
+			if ret.Data.Url != "" {
+				_, html, errs = gorequest.New().Get(ret.Data.Url).End()
+				if len(errs) > 0 {
+					err = errs[0]
+					html = "<body> ERROR </body>"
+					return
+				}
+			}
+		})
+	return err, html
 }
 
 func (d *DeliAutoSignService) GetAllUsers() (err error, users []system.DeliUser) {

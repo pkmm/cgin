@@ -4,6 +4,7 @@ import (
 	"cgin/global"
 	"cgin/initialize/internal"
 	"cgin/model/system"
+	"fmt"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -26,6 +27,7 @@ func GormMysql() *gorm.DB {
 		return nil
 	}
 	dsn := m.Username + ":" + m.Password + "@tcp(" + m.Path + ")/" + m.Dbname + "?" + m.Config
+	fmt.Println(dsn)
 	mysqlConfig := mysql.Config{
 		DSN:                       dsn,   // DSN data source name
 		DefaultStringSize:         255,   // string 类型字段的默认长度
