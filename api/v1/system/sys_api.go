@@ -4,7 +4,10 @@ import (
 	"cgin/global"
 	"cgin/model/common/resposne"
 	"cgin/model/system/request"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/wxpusher/wxpusher-sdk-go"
+	"github.com/wxpusher/wxpusher-sdk-go/model"
 	"go.uber.org/zap"
 )
 
@@ -38,4 +41,17 @@ func (s *SystemApi) WXPushCallBack(c *gin.Context) {
 
 	//deliAutoSignService.UpdateUserWxpushUID()
 
+}
+
+// GenerateQRCode 创建个人的二维码
+func (s *SystemApi) GenerateQRCode(c *gin.Context) {
+	name := c.Param("name")
+	qrcode := model.Qrcode{AppToken: global.Config.Wxpusher.AppToken, Extra: name}
+	resp, err := wxpusher.CreateQrcode(&qrcode)
+	if err != nil {
+		resposne.FailWithMsg("创建二维码失败！", c)
+		return
+	}
+	fmt.Println(resp)
+	resposne.Ok(c)
 }
