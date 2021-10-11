@@ -3,7 +3,8 @@ package schedule
 import (
 	"cgin/global"
 	"cgin/service/system"
-	"cgin/service/wechatpush"
+	"github.com/wxpusher/wxpusher-sdk-go"
+	"github.com/wxpusher/wxpusher-sdk-go/model"
 	"go.uber.org/zap"
 	"math/rand"
 	"time"
@@ -29,8 +30,10 @@ func SignDeli() {
 				} else {
 					// send html as result.
 					global.GLog.Info("签到成功！", zap.Any("username", _user.Username))
-					bear := wechatpush.NewPushBear([]int{166}, wechatpush.Html)
-					_, err2 := bear.Send("签到成功", _user.Username, html)
+					msg := model.NewMessage(global.Config.Wxpusher.AppToken).
+						SetSummary("任务状态: " + _user.Username).
+						SetContentType(2).SetContent(html).AddUId(_user.Uid)
+					_, err2 := wxpusher.SendMessage(msg)
 					if err2 != nil {
 						global.GLog.Error("wxpusher 发送签到信息失败", zap.Any("error", err2))
 					}
