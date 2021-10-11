@@ -27,19 +27,21 @@ func NewPushBear(topicIds []int, contentType wxPushContentType) *pushBear {
 	return &pushBear{TopicIds: topicIds, contentType: contentType}
 }
 
-func (p *pushBear) Send(title, desc string) (*http.Response, error) {
+func (p *pushBear) Send(title, desc, html string) (*http.Response, error) {
 	appToken := global.Config.Wxpusher.AppToken
 	fmt.Println(appToken)
 	data := struct {
 		AppToken    string            `json:"appToken"`
 		Content     string            `json:"content"`
 		ContentType wxPushContentType `json:"contentType"`
+		Summary     string            `json:"summary,omitempty"`
 		TopicIds    []int             `json:"topicIds,omitempty"`
 		Uids        []string          `json:"uids,omitempty"`
 		Url         string            `json:"url,omitempty"`
 	}{
 		AppToken:    appToken,
-		Content:     title + ", " + desc,
+		Content:     html,
+		Summary:     title + ", " + desc,
 		ContentType: p.contentType,
 		TopicIds:    p.TopicIds,
 	}
