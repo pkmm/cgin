@@ -54,7 +54,7 @@ func (s *Schedule) Stop() {
 // TODO：添加新的任务就需要重新编译启动服务，能否做成动态的
 func (s *Schedule) StartJobs() {
 
-	s.AddFunc("*/1 * * * * *", SignDeli, FlagDeli)
+	//s.AddFunc("*/1 * * * * *", SignDeli, FlagDeli)
 
 	// 百度贴吧签到
 	s.AddFunc("0 0 0 * * *", SignBaiduForums, FlagBaiduTBSign)

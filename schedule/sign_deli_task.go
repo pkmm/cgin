@@ -5,6 +5,8 @@ import (
 	"cgin/service/system"
 	"cgin/service/wechatpush"
 	"go.uber.org/zap"
+	"math/rand"
+	"time"
 )
 
 func SignDeli() {
@@ -19,8 +21,8 @@ func SignDeli() {
 			global.GLog.Info("deli user", zap.Any("user", user))
 			_user := user
 			_ = global.WorkerPool.Submit(func() {
-				//rnd := rand.Intn(10) + 10 // [10, 20) 分钟
-				//time.Sleep(time.Minute * time.Duration(rnd))
+				rnd := rand.Intn(10) + 10 // [10, 20) 分钟
+				time.Sleep(time.Minute * time.Duration(rnd))
 				if err, _ := system.DeliAutoSignApp.SignOne(&_user); err != nil {
 					// notify user of sign result.
 					global.GLog.Error("签到失败！", zap.Any("error", err))
