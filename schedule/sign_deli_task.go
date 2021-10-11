@@ -3,6 +3,7 @@ package schedule
 import (
 	"cgin/global"
 	"cgin/service/system"
+	"go.uber.org/zap"
 	"math/rand"
 	"time"
 )
@@ -22,10 +23,13 @@ func SignDeli() {
 				time.Sleep(time.Minute * time.Duration(rnd))
 				if err, _ := system.DeliAutoSignApp.SignOne(&_user); err != nil {
 					// notify user of sign result.
+					global.GLog.Error("签到失败！", zap.Any("error", err))
 				} else {
 					// send html as result.
 				}
 			})
 		}
+	} else {
+		global.GLog.Error("获取deli用户失败！", zap.Any("error", err))
 	}
 }

@@ -1,8 +1,10 @@
 package system
 
 import (
+	"cgin/global"
 	"cgin/model/common/resposne"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type SystemApi struct {
@@ -19,6 +21,7 @@ func (s *SystemApi) Index(c *gin.Context) {
 		c.Data(200, "text/html", []byte(html))
 		return
 	} else {
+		global.GLog.Error("未找到指定的用户", zap.Any("username:", name))
 		resposne.FailWithMsg(err.Error(), c)
 	}
 }
