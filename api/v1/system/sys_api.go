@@ -22,6 +22,17 @@ func (s *SystemApi) Index(c *gin.Context) {
 	}
 	if err, html := deliAutoSignService.SignOne(user); err == nil {
 		c.Data(200, "text/html", []byte(html))
+		// 如果设置了 xwpusher的通知UID，发送微信通知
+		if len(user.Uid) > 0 {
+			global.WorkerPool.Submit(func() {
+				msg := model.NewMessage(global.Config.Wxpusher.AppToken).
+					SetSummary("签到成功: " + user.Username).
+					SetContent(html).
+					SetContentType(2).
+					AddUId(user.Uid)
+				wxpusher.SendMessage(msg)
+			})
+		}
 		return
 	} else {
 		global.GLog.Error("未找到指定的用户", zap.Any("username:", name))
