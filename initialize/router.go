@@ -13,6 +13,19 @@ func Routers() *gin.Engine {
 	// 静态文件的地址
 	Router.StaticFS(global.Config.Local.Path, http.Dir(global.Config.Local.Path))
 
+	// 默认页面的地址
+	Router.Any("/img", func(c *gin.Context) {
+		c.File("static/images/2019-06-10.webp")
+	})
+
+	Router.Any("", func(c *gin.Context) {
+		c.String(200, `欢迎访问cgin服务！
+得力签到：https://api.qwesde.com/user/sign/<username>
+获取微信通知：https://api.qwesde.com/user/qrcode/<username>
+上述的<username>请更换成自己的名字
+`)
+	})
+
 	// 获取响应的路由实例
 	systemRouter := router.RouterGroupApp.System
 	PublicRouter := Router.Group("")
