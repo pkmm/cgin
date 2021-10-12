@@ -12,8 +12,13 @@ golang 版本是 1.17
 
 别的版本golang可能需要使用 `go get github.com/pilu/fresh`
 
-swagger 命令 swag init
+##### API 文档的生成  
+    `swagger 命令 swag init`
 
-部署：
-    build_linux.bat 生成可执行文件，上传到服务器，同时上传config.yaml文件
-使用supervisor启动程序，使用nginx反向代理程序。
+### 部署：
+    `build_linux.bat` 生成可执行文件，上传到服务器，同时上传`config.yaml`文件  
+    使用supervisor启动程序，使用nginx反向代理程序。
+
+#### development:  
+    `git update-index --skip-worktree "config.yaml"` 暂时忽略配置文件  
+    `git update-index --no-skip-worktree "config.yaml"`
