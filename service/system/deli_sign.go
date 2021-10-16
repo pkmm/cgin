@@ -108,6 +108,15 @@ func (d *DeliAutoSignService) CreateUser(username, token string, useAutoSign boo
 	return err
 }
 
+func (d *DeliAutoSignService) SetAutoSign(username string, autoSign bool) (err error) {
+	c := 1
+	if autoSign {
+		c = 0
+	}
+	err = global.DB.Where("username = ?", username).Updates(system.DeliUser{Cancel: c}).Error
+	return err
+}
+
 func (d *DeliAutoSignService) Login(mobile, password string) (err error, result LoginRes) {
 	type loginData struct {
 		Mobile   string `json:"mobile"`

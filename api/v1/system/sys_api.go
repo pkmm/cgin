@@ -12,6 +12,7 @@ import (
 )
 
 type SystemApi struct {
+	// TODO：权限检查
 }
 
 func (s *SystemApi) Index(c *gin.Context) {
@@ -98,4 +99,14 @@ func (s *SystemApi) DeliLogin(c *gin.Context) {
 		resposne.FailWithMsg("登陆签到平台失败！" + err.Error(), c)
 		return
 	}
+}
+
+func (s *SystemApi) SetAutoSign(c *gin.Context) {
+	name := c.Param("name")
+	sign := c.GetBool("autoSign")
+	if err := deliAutoSignService.SetAutoSign(name, sign); err != nil {
+		resposne.FailWithMsg("操作失败！", c)
+		return
+	}
+	resposne.OkWithData("操作成功！", c)
 }

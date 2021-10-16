@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
+
 // 初始化所有的路由
 func Routers() *gin.Engine {
 	var Router = gin.Default()
@@ -22,6 +23,8 @@ func Routers() *gin.Engine {
 		c.String(200, `欢迎访问cgin服务！
 得力签到：https://api.qwesde.com/user/sign/<username>
 获取微信通知：https://api.qwesde.com/user/qrcode/<username>
+设置是否使用自动签到：https://api.qwesde.com/user/setAutoSign/<username>?autoSign=<false|true>
+登陆签到系统：https://api.qwesde.com/user/deliLogin [POST] {"mobile"": "<phone>", "password": "<password>"}
 上述的<username>请更换成自己的名字
 `)
 	})
