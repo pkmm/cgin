@@ -15,5 +15,6 @@ func (a *ApiRouter) InitApiRouter(r *gin.RouterGroup) {
 		apiRouter.GET("sign/:name", api.Index)
 		apiRouter.POST("wxpusher/cb", api.WXPushCallBack)
 		apiRouter.GET("qrcode/:name", api.GenerateQRCode)
+		apiRouter.POST("deliLogin", api.DeliLogin)
 	}
 }

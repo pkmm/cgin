@@ -3,6 +3,7 @@ package system
 import (
 	"cgin/global"
 	"cgin/model/common/resposne"
+	"cgin/model/system"
 	"cgin/model/system/request"
 	"github.com/gin-gonic/gin"
 	"github.com/wxpusher/wxpusher-sdk-go"
@@ -65,4 +66,36 @@ func (s *SystemApi) GenerateQRCode(c *gin.Context) {
 		return
 	}
 	resposne.OkWithData(resp, c)
+}
+
+func (s *SystemApi) DeliLogin(c *gin.Context) {
+	reqData := system.DeliLoginData{}
+	if err := c.ShouldBindJSON(&reqData); err != nil {
+		resposne.FailWithMsg("解析参数失败!", c)
+		return
+	}
+	if err, data := deliAutoSignService.Login(reqData.Mobile, reqData.Password); err == nil {
+		// 登陆成功，更新token
+
+		if deliAutoSignService.UserExists(reqData.Mobile) { // 用户已经存在的
+			if err = deliAutoSignService.UpdateUserToken(reqData.Mobile, data.Data.Token); err == nil {
+				resposne.OkWithMsg("操作成功！", c)
+				return
+			} else {
+				resposne.FailWithMsg("更新用户token,操作失败！", c)
+				return
+			}
+		} else { // 用户还不存在，是第一次登陆到系统，需要创建一个user
+			if err = deliAutoSignService.CreateUser(reqData.Mobile, data.Data.Token, false); err == nil {
+				resposne.OkWithMsg("创建用户成功！", c)
+				return
+			} else {
+				resposne.FailWithMsg("创建用户失败！", c)
+				return
+			}
+		}
+	} else {
+		resposne.FailWithMsg("登陆签到平台失败！" + err.Error(), c)
+		return
+	}
 }
