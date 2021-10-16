@@ -113,7 +113,7 @@ func (d *DeliAutoSignService) SetAutoSign(username string, autoSign bool) (err e
 	if autoSign {
 		c = 0
 	}
-	err = global.DB.Where("username = ?", username).Updates(system.DeliUser{Cancel: c}).Error
+	err = global.DB.Model(system.DeliUser{}).Where("username = ?", username).Update("cancel", c).Error
 	return err
 }
 
