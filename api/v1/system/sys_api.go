@@ -103,8 +103,8 @@ func (s *SystemApi) DeliLogin(c *gin.Context) {
 
 func (s *SystemApi) SetAutoSign(c *gin.Context) {
 	name := c.Param("name")
-	sign := c.GetBool("autoSign")
-	if err := deliAutoSignService.SetAutoSign(name, sign); err != nil {
+	sign := c.DefaultQuery("autoSign", "false")
+	if err := deliAutoSignService.SetAutoSign(name, sign == "true"); err != nil {
 		resposne.FailWithMsg("操作失败！", c)
 		return
 	}
