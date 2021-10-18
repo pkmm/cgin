@@ -9,3 +9,8 @@ type DeliUser struct {
 	Cancel   int    `json:"cancel" gorm:"default:0;comment:不使用自动签到"`
 	Uid      string `json:"uid" gorm:"comment:wxpusher UID"`
 }
+
+type DeliLoginData struct {
+	Mobile   string `json:"mobile"`
+	Password string `json:"password"`
+}

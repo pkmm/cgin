@@ -3,8 +3,12 @@ package system
 import (
 	"cgin/global"
 	"cgin/model/system"
+	"cgin/util"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"github.com/parnurzeal/gorequest"
+	"gorm.io/gorm"
 	"net/http"
 )
 
@@ -20,6 +24,18 @@ type CheckResult struct {
 	Data   CheckResultUrl `json:"data"`
 	Errno  int            `json:"errno"`
 	Errmsg string         `json:"errmsg"`
+}
+
+type LoginResultData struct {
+	Expire string `json:"expire"`
+	Token  string `json:"token"`
+	UserId string `json:"user_id"`
+}
+
+type LoginRes struct {
+	Code int             `json:"code"`
+	Msg  string          `json:"msg"`
+	Data LoginResultData `json:"data"`
 }
 
 func (d *DeliAutoSignService) SignOne(user *system.DeliUser) (err error, html string) {
@@ -71,4 +87,54 @@ func (d *DeliAutoSignService) GetUserByName(name string) (user *system.DeliUser)
 func (d *DeliAutoSignService) UpdateUserWxpushUID(username, uid string) (err error) {
 	err = global.DB.Where("username = ?", username).Updates(&system.DeliUser{Uid: uid}).Error
 	return err
+}
+
+func (d *DeliAutoSignService) UpdateUserToken(username, token string) (err error) {
+	err = global.DB.Where("username = ?", username).Updates(&system.DeliUser{Token: token}).Error
+	return err
+}
+
+func (d *DeliAutoSignService) UserExists(username string) (ok bool) {
+	err := global.DB.Where("username = ?", username).First(&system.DeliUser{}).Error
+	return !errors.Is(err, gorm.ErrRecordNotFound)
+}
+
+func (d *DeliAutoSignService) CreateUser(username, token string, useAutoSign bool) (err error) {
+	cancel := 1 // cancel == 0 表示使用自动签到
+	if useAutoSign {
+		cancel = 0
+	}
+	err = global.DB.Create(&system.DeliUser{Username: username, Token: token, Cancel: cancel}).Error
+	return err
+}
+
+func (d *DeliAutoSignService) SetAutoSign(username string, autoSign bool) (err error) {
+	c := 1
+	if autoSign {
+		c = 0
+	}
+	err = global.DB.Model(system.DeliUser{}).Where("username = ?", username).Update("cancel", c).Error
+	return err
+}
+
+func (d *DeliAutoSignService) Login(mobile, password string) (err error, result LoginRes) {
+	type loginData struct {
+		Mobile   string `json:"mobile"`
+		Password string `json:"password"`
+	}
+	ver := loginData{mobile, util.MD5(password)}
+
+	_, _, errs := gorequest.New().Post("https://v2-app.delicloud.com/api/v2.0/auth/loginMobile").
+		Set("client_id", "eplus_app").
+		Set("X-Service-Id", "userauth").
+		Set("User-Agent", "SmartOffice/2.4.4 (iPhone; iOS 15.0.1; Scale/3.00)").
+		Send(ver).EndStruct(&result)
+	fmt.Printf("data： %v\n", result)
+	if len(errs) > 0 {
+		err = errs[0]
+		return
+	} else if result.Code != 0 {
+		return errors.New(result.Msg), result
+	}
+	return err, result
 }
