@@ -1,0 +1,58 @@
+
+name: "Build and Deploy"
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CheckOut
+        uses: actions/checkout@v2
+
+      - name: Step Golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Build Cgin
+        run: SET CGO_ENABLED=0 && SET GOOS=linux && SET GOARCH=amd64 && go build .
+
+      - name: Test Cgin
+        run: go test -v .
+
+      - name: Login VPS & Backup
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            whoami
+            mv cgin cgin_backup
+
+      - name: SCP Files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}  # Secrets中的配置：vps IP地址
+          username: ${{ secrets.USERNAME }}  # Secrets中的配置：vps 登录用户名
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }} # Secrets中的配置：vps 端口
+          source: 'cgin'  # 编译出的二进制文件名
+          target: '/root/cgin2/' # Secrets中的配置：scp 到 vps 上的的目录
+
+      - name: Stop & Run
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            whoami
+            supervisorctl stop cgin2
+            supervisorctl start cgin2
