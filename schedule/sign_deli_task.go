@@ -22,7 +22,8 @@ func SignDeli() {
 			global.GLog.Info("deli user", zap.Any("user", user))
 			_user := user
 			_ = global.WorkerPool.Submit(func() {
-				rnd := rand.Intn(10) + 10 // [10, 20) 分钟
+				r := rand.New(rand.NewSource(time.Now().UnixNano()))
+				rnd := r.Intn(10) + 10 // [10, 20) 分钟
 				time.Sleep(time.Minute * time.Duration(rnd))
 				if err, html := system.DeliAutoSignApp.SignOne(&_user); err != nil {
 					// notify user of sign result.
