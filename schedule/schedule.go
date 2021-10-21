@@ -58,6 +58,7 @@ func (s *Schedule) StartJobs() {
 
 	// 百度贴吧签到
 	s.AddFunc("0 0 0 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 5 * * *", SignBaiduForums, FlagBaiduTBSign)
 
 	// am
 	s.AddFunc("0 2 8,12 * * 1-6", SignDeli, FlagDeli)
