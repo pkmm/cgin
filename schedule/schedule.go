@@ -50,8 +50,8 @@ func (s *Schedule) Stop() {
 }
 
 // StartJobs 启动配置
-// 需要作为定位的任务，只需要添加在这个文件中即可，
-// TODO：添加新的任务就需要重新编译启动服务，能否做成动态的
+// 需要作为定位的任务，只需要添加在这个文件中即可
+// 配置文件修改之后，本函数会被重新执行，实现了热加载
 func (s *Schedule) StartJobs() {
 
 	//s.AddFunc("*/1 * * * * *", SignDeli, FlagDeli)
