@@ -75,11 +75,11 @@ func (s *SystemApi) DeliLogin(c *gin.Context) {
 		resposne.FailWithMsg("解析参数失败!", c)
 		return
 	}
-	if err, data := deliAutoSignService.Login(reqData.Mobile, reqData.Password); err == nil {
+	if err, token := deliAutoSignService.Login(reqData.Mobile, reqData.Password); err == nil {
 		// 登陆成功，更新token
 
 		if deliAutoSignService.UserExists(reqData.Mobile) { // 用户已经存在的
-			if err = deliAutoSignService.UpdateUserToken(reqData.Mobile, data.Data.Token); err == nil {
+			if err = deliAutoSignService.UpdateUserToken(reqData.Mobile, token); err == nil {
 				resposne.OkWithMsg("操作成功！", c)
 				return
 			} else {
@@ -87,7 +87,7 @@ func (s *SystemApi) DeliLogin(c *gin.Context) {
 				return
 			}
 		} else { // 用户还不存在，是第一次登陆到系统，需要创建一个user
-			if err = deliAutoSignService.CreateUser(reqData.Mobile, data.Data.Token, false); err == nil {
+			if err = deliAutoSignService.CreateUser(reqData.Mobile, token, false); err == nil {
 				resposne.OkWithMsg("创建用户成功！", c)
 				return
 			} else {

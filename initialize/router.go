@@ -2,14 +2,21 @@ package initialize
 
 import (
 	"cgin/global"
+	"cgin/middleware"
 	"cgin/router"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-// 初始化所有的路由
+// Routers 初始化所有的路由
 func Routers() *gin.Engine {
 	var Router = gin.Default()
+	Router.Use(middleware.GinRecovery())
+
+	//// 404 Not Found.
+	//Router.NoRoute(func(c *gin.Context) {
+	//
+	//})
 
 	// 静态文件的地址
 	Router.StaticFS(global.Config.Local.Path, http.Dir(global.Config.Local.Path))
@@ -19,14 +26,16 @@ func Routers() *gin.Engine {
 		c.File("static/images/2019-06-10.webp")
 	})
 
+	// 默认的简短的介绍
 	Router.Any("", func(c *gin.Context) {
-		c.String(200, `欢迎访问cgin服务！
-得力签到：https://api.qwesde.com/user/sign/<username>
-获取微信通知：https://api.qwesde.com/user/qrcode/<username>
-设置是否使用自动签到：https://api.qwesde.com/user/setAutoSign/<username>?autoSign=<false|true>
-登陆签到系统：https://api.qwesde.com/user/deliLogin [POST] {"mobile"": "<phone>", "password": "<password>"}
-上述的<username>请更换成自己的名字
-`)
+		c.String(200, `
+			欢迎访问cgin服务！
+			得力签到：https://api.qwesde.com/user/sign/<username>
+			获取微信通知：https://api.qwesde.com/user/qrcode/<username>
+			设置是否使用自动签到：https://api.qwesde.com/user/setAutoSign/<username>?autoSign=<false|true>
+			登陆签到系统：https://api.qwesde.com/user/deliLogin [POST] {"mobile"": "<phone>", "password": "<password>"}
+			上述的<username>请更换成自己的名字
+		`)
 	})
 
 	// 获取响应的路由实例
