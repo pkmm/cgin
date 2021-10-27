@@ -58,5 +58,5 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             whoami
-            /www/server/panel/pyenv/bin/supervisorctl stop cgin2
-            /www/server/panel/pyenv/bin/supervisorctl start cgin2
+            /www/server/panel/pyenv/bin/supervisorctl stop cgin2:cgin2_00
+            /www/server/panel/pyenv/bin/supervisorctl start cgin2:cgin2_00
