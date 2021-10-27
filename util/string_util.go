@@ -26,6 +26,10 @@ func GUID() string {
 	return snowflakeNode.Generate().String()
 }
 
+func GetInt64() int64 {
+	return snowflakeNode.Generate().Int64()
+}
+
 // 实用函数
 func Signature(params map[string]string) string {
 	var keys []string
@@ -117,5 +121,3 @@ func TimeString() string {
 }
 
 // time func end
-
-

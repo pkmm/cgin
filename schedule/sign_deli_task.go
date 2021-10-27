@@ -3,10 +3,10 @@ package schedule
 import (
 	"cgin/global"
 	"cgin/service/system"
+	"cgin/util"
 	"github.com/wxpusher/wxpusher-sdk-go"
 	"github.com/wxpusher/wxpusher-sdk-go/model"
 	"go.uber.org/zap"
-	"math/rand"
 	"time"
 )
 
@@ -22,9 +22,20 @@ func SignDeli() {
 			global.GLog.Info("deli user", zap.Any("user", user))
 			_user := user
 			_ = global.WorkerPool.Submit(func() {
-				r := rand.New(rand.NewSource(time.Now().UnixNano()))
-				rnd := r.Intn(10) + 10 // [10, 20) 分钟
-				time.Sleep(time.Minute * time.Duration(rnd))
+
+				x := util.GetInt64()
+				x %= 25
+				if x < 7 {
+					x += 10
+				}
+
+				if x < 10 || x > 25 {
+					x = 18
+				}
+
+				// 时间的范围在[10, 25)之间
+				time.Sleep(time.Minute * time.Duration(x))
+
 				if err, html := system.DeliAutoSignApp.SignOne(&_user); err != nil {
 					// notify user of sign result.
 					global.GLog.Error("签到失败！", zap.Any("error", err))
