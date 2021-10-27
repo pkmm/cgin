@@ -60,18 +60,24 @@ func (s *Schedule) StartJobs() {
 	s.AddFunc("0 0 0 * * *", SignBaiduForums, FlagBaiduTBSign)
 	s.AddFunc("0 40 5 * * *", SignBaiduForums, FlagBaiduTBSign)
 
-	// am
-	s.AddFunc("0 2 8,12 * * 1-6", SignDeli, FlagDeli)
+	// 上午签到
+	s.AddFunc("0 2 8,12 * * 1-6", func() {
+		SignDeli(ALL, true)
+	}, FlagDeli)
 
-	// pm
+	// 下午签退
 	if global.Config.Deli.Season == "winter" {
-		// winter
+		// winter 冬季
 		fmt.Println("winter")
-		s.AddFunc("0 32 13,17 * * 1-6", SignDeli, FlagDeli)
+		s.AddFunc("0 32 13,17 * * 1-6", func() {
+			SignDeliWinter(false)
+		}, FlagDeli)
 	} else {
-		// summer
+		// summer 夏季
 		fmt.Println("summer")
-		s.AddFunc("0 2 14,18 * * 1-6", SignDeli, FlagDeli)
+		s.AddFunc("0 2 14,18 * * 1-6", func() {
+			SignDeliSummer(false)
+		}, FlagDeli)
 	}
 
 	/// 在此函数上面进行任务的配置

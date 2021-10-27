@@ -10,7 +10,22 @@ import (
 	"time"
 )
 
-func SignDeli() {
+const (
+	ALL = 1 << 1
+	SUMMER
+	WINTER
+)
+
+func SignDeliSummer(signIn bool) {
+	SignDeli(SUMMER, signIn)
+}
+
+func SignDeliWinter(signIn bool) {
+	SignDeli(WINTER, signIn)
+}
+
+// SignDeli 季节，签到
+func SignDeli(season int, signIn bool) {
 
 	// 关闭了这个功能
 	if global.Config.Deli.Stop {
@@ -19,18 +34,24 @@ func SignDeli() {
 
 	if err, users := system.DeliAutoSignApp.GetAllUsers(); err == nil {
 		for _, user := range users {
+
 			global.GLog.Info("deli user", zap.Any("user", user))
+
 			_user := user
 			_ = global.WorkerPool.Submit(func() {
 
 				x := util.GetInt64()
 				x %= 25
 				if x < 10 {
-					x += 10
+					x += 14
 				}
 
 				if x < 10 || x > 25 {
-					x = 18
+					x = 23
+				}
+
+				if !signIn { // 如果是签退的话，就尽量早点签退
+					x %= 6
 				}
 
 				global.GLog.Info("用户签到deli休眠的时间是：", zap.Any("username", _user.Username), zap.Any("time sleep", x))
