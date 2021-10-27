@@ -33,6 +33,8 @@ func SignDeli() {
 					x = 18
 				}
 
+				global.GLog.Info("用户签到deli休眠的时间是：", zap.Any("username", _user.Username), zap.Any("time sleep", x))
+
 				// 时间的范围在[10, 25)之间
 				time.Sleep(time.Minute * time.Duration(x))
 
