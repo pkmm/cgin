@@ -60,22 +60,38 @@ func (s *Schedule) StartJobs() {
 	s.AddFunc("0 0 0 * * *", SignBaiduForums, FlagBaiduTBSign)
 	s.AddFunc("0 40 5 * * *", SignBaiduForums, FlagBaiduTBSign)
 
+	// ===== 上午不分季节都是一样的 ======
 	// 上午签到
-	s.AddFunc("0 2 8,12 * * 1-6", func() {
+	s.AddFunc("0 2 8 * * 1-6", func() {
 		SignDeli(ALL, true)
 	}, FlagDeli)
+
+	// 上午签退
+	s.AddFunc("0 2 12 * * 1-6", func() {
+		SignDeli(ALL, false)
+	}, FlagDeli)
+	// ===== =====
 
 	// 下午签退
 	if global.Config.Deli.Season == "winter" {
 		// winter 冬季
 		fmt.Println("winter")
-		s.AddFunc("0 32 13,17 * * 1-6", func() {
+		s.AddFunc("0 32 13 * * 1-6", func() {
+			SignDeliWinter(true)
+		}, FlagDeli)
+
+		s.AddFunc("0 32 17 * * 1-6", func() {
 			SignDeliWinter(false)
 		}, FlagDeli)
 	} else {
 		// summer 夏季
 		fmt.Println("summer")
-		s.AddFunc("0 2 14,18 * * 1-6", func() {
+		// 签到
+		s.AddFunc("0 2 14 * * 1-6", func() {
+			SignDeliSummer(true)
+		}, FlagDeli)
+		// 签退
+		s.AddFunc("0 2 18 * * 1-6", func() {
 			SignDeliSummer(false)
 		}, FlagDeli)
 	}
