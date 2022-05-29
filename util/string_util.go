@@ -30,7 +30,7 @@ func GetInt64() int64 {
 	return snowflakeNode.Generate().Int64()
 }
 
-// 实用函数
+// Signature 实用函数
 func Signature(params map[string]string) string {
 	var keys []string
 	for key := range params {
@@ -76,7 +76,7 @@ func GenerateToken(key uint64) string {
 	return MD5(newKey)
 }
 
-// 获取当前代码的路径
+// GetCurrentCodePath 获取当前代码的路径
 func GetCurrentCodePath() string {
 	_, filename, _, _ := runtime.Caller(1)
 	return path.Dir(filename)
@@ -87,13 +87,13 @@ func GetExecPath() string {
 	return dir
 }
 
-// 获取当前代码的路径
+// GetExecutableCodePath 获取当前代码的路径
 func GetExecutableCodePath() string {
 	dir, _ := os.Executable()
 	return filepath.Dir(dir)
 }
 
-// 成员相同的结构体进行拷贝
+// BeanDeepCopy 成员相同的结构体进行拷贝
 func BeanDeepCopy(src, des interface{}) {
 	retstring, err := json.Marshal(src)
 	if err != nil {
@@ -105,7 +105,7 @@ func BeanDeepCopy(src, des interface{}) {
 	}
 }
 
-// like PHP data('Y-m-d H:i:s')
+// DateTime like PHP data('Y-m-d H:i:s')
 func DateTime() string {
 	now := time.Now()
 	return now.Format("2006-01-02 15:04:05")

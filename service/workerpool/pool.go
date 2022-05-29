@@ -191,6 +191,7 @@ func (p *Pool) purge() {
 	}
 }
 
+// Close 关闭
 func (p *Pool) Close() {
 	atomic.StoreInt32(&p.stopped, 1)
 	p.lock.Lock()
@@ -200,6 +201,7 @@ func (p *Pool) Close() {
 	p.cond.Broadcast()
 }
 
+// Submit 提交任务
 func (p *Pool) Submit(task func()) error {
 	if p.IsClosed() {
 		return errors.New("Pool is closed. ")

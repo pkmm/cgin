@@ -58,7 +58,18 @@ func (s *Schedule) StartJobs() {
 
 	// 百度贴吧签到
 	s.AddFunc("0 0 0 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 10 0 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 0 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 1 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 2 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 3 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 4 * * *", SignBaiduForums, FlagBaiduTBSign)
 	s.AddFunc("0 40 5 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 6 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 7 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 8 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 9 * * *", SignBaiduForums, FlagBaiduTBSign)
+	s.AddFunc("0 40 14 * * *", SignBaiduForums, FlagBaiduTBSign)
 
 	// ===== 上午不分季节都是一样的 ======
 	// 上午签到

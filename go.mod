@@ -3,11 +3,11 @@ module cgin
 go 1.13
 
 require (
-	github.com/PuerkitoBio/goquery v1.5.1
+	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/elazarl/goproxy v0.0.0-20191011121108-aa519ddbe484 // indirect
-	github.com/ewalker544/libsvm-go v0.0.0-20140912030911-ec8445221ede
+	github.com/ewalker544/libsvm-go v0.0.0-20140912030911-ec8445221ede // indirect
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/gin-gonic/gin v1.7.0
 	github.com/go-openapi/spec v0.19.5 // indirect
@@ -28,7 +28,7 @@ require (
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.19.1
 	golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac // indirect
-	golang.org/x/text v0.3.6
+	golang.org/x/text v0.3.6 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gorm.io/driver/mysql v1.1.2
 	gorm.io/gorm v1.21.15
