@@ -1,6 +1,6 @@
 package model
 
-// 赞助者
+// Sponsor 赞助者
 type Sponsor struct {
 	Id         uint64 `json:"id" gorm:"primary_key;auto_increment;"`
 	UserId     uint64 `json:"user_id" gorm:"index"`

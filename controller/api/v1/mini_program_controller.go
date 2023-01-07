@@ -69,7 +69,7 @@ func (m *miniProgramController) CreateMenus(c *gin.Context) {
 	helper.Response(dbMenus)
 }
 
-// @summary 首页的配置
+// IndexPreference @summary 首页的配置
 // @Tags Mini program
 // @router /mini_program/index_preferences [get]
 // @Security ApiKeyAuth
@@ -88,7 +88,7 @@ func (m *miniProgramController) IndexPreference(c *gin.Context) {
 	helper.Response(data)
 }
 
-// @Summary 首页slogan image等的配置信息
+// CreateIndexConfig @Summary 首页slogan image等的配置信息
 // @Tags Mini program
 // @Router /mini_program/index_config [post]
 // @Param config body co.IndexConfig true "小程序首页配置"
@@ -112,7 +112,7 @@ func (m *miniProgramController) CreateIndexConfig(c *gin.Context) {
 	helper.Response(savedConfig)
 }
 
-// @Security ApiKeyAuth
+// GetNotifications @Security ApiKeyAuth
 // @Tags Mini program
 // @Summary 获取notifications 分页查询
 // @Router /mini_program/notifications [get]
@@ -130,7 +130,7 @@ func (m *miniProgramController) GetNotifications(c *gin.Context) {
 	helper.Response(gin.H{"notifications": notifications, "total": total})
 }
 
-// @Security ApiKeyAuth
+// UpdateOrCreateNotification @Security ApiKeyAuth
 // @Tags Mini program
 // @Summary 更新创建一个notification
 // @Router /mini_program/notifications [put]
@@ -157,7 +157,7 @@ func (m *miniProgramController) UpdateOrCreateNotification(c *gin.Context) {
 	}
 }
 
-// @Summary 查看赞助我的人
+// GetSponsors @Summary 查看赞助我的人
 // @Tags Mini program
 // @Security ApiKeyAuth
 // @Router /mini_program/sponsors [get]

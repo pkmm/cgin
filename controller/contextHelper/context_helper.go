@@ -69,7 +69,7 @@ func (b *contextHelper) GetString(key string) string {
 
 // 获取body 或者是 query中参数方法结束
 
-//--- 获取当前认证的用户id ----
+// GetAuthUserId --- 获取当前认证的用户id ----
 func (b *contextHelper) GetAuthUserId() uint64 {
 	if b.UserId != 0 {
 		return b.UserId
@@ -83,21 +83,21 @@ func (b *contextHelper) GetAuthUserId() uint64 {
 	return b.UserId
 }
 
-// 处理成功的请求
+// Response 处理成功的请求
 func (b *contextHelper) Response(responseData interface{}) {
 	service.SendResponseSuccess(b.ctx, responseData)
 }
 
-func (c *contextHelper) ResponseWithStatus(err error, data interface{}, code int) {
-	service.SendResponseWithStatus(c.ctx, err, data, code)
+func (b *contextHelper) ResponseWithStatus(err error, data interface{}, code int) {
+	service.SendResponseWithStatus(b.ctx, err, data, code)
 }
 
-// 需要认证的 check
+// NeedAuthOrPanic 需要认证的 check
 func (b *contextHelper) NeedAuthOrPanic() {
 	b.GetAuthUserId()
 }
 
-// 获取 path params
+// GetPathInt 获取 path params
 func (b *contextHelper) GetPathInt(key string) int {
 	i, err := strconv.Atoi(b.ctx.Param(key))
 	if err != nil {

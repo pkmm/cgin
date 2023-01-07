@@ -13,7 +13,7 @@ type cronTaskController struct{}
 
 var CronTaskController = cronTaskController{}
 
-// @Summary 定时任务触发器
+// IndexTriggerTask @Summary 定时任务触发器
 // @Tags Trigger
 // @Security ApiKeyAuth
 // @Produce json

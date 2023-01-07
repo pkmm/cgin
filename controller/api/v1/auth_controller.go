@@ -17,7 +17,7 @@ type authController struct{}
 
 var AuthController = &authController{}
 
-// @Summary 登录
+// Login @Summary 登录
 // @Tags Auth
 // @Produce json
 // @Accept json

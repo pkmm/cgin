@@ -2,11 +2,9 @@ package task
 
 // 后台运行的任务
 import (
-	"cgin/conf"
 	"cgin/service/workerpool"
 	"cgin/util"
 	"github.com/robfig/cron"
-	"time"
 )
 
 const (
@@ -45,12 +43,12 @@ func init() {
 	//})
 
 	// 测试用
-	c.AddFunc("0 */10 * * * *", func() {
-		task := workerpool.NewTask(func() {
-			conf.Logger.Info("测试task任务: %s", time.Now().Format("2006-01-02 15:04:05"))
-		})
-		pool.AddTasks([]*workerpool.Task{task})
-	})
+	//c.AddFunc("0 */10 * * * *", func() {
+	//	task := workerpool.NewTask(func() {
+	//		conf.Logger.Info("测试task任务: %s", time.Now().Format("2006-01-02 15:04:05"))
+	//	})
+	//	pool.AddTasks([]*workerpool.Task{task})
+	//})
 
 	// 百度贴吧签到
 	c.AddFunc("0 0 0 * * *", taskWrapper(SignBaiduForums, FlagBaiduTiebaSign))
@@ -63,7 +61,8 @@ func init() {
 	//})
 
 	// 数据库备份
-	c.AddFunc("0 0 3 * * *", taskWrapper(backupMysql, FlagBackupMysql))
+	// 2021.10.07 注释掉，会产生僵尸进程
+	//c.AddFunc("0 0 3 * * *", taskWrapper(backupMysql, FlagBackupMysql))
 
 	//  开始任务
 	c.Start()

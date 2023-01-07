@@ -2,7 +2,8 @@ package workerpool
 
 import (
 	"cgin/conf"
-	"fmt"
+	"log"
+	"os"
 	"runtime"
 	"sync"
 	"time"
@@ -102,10 +103,18 @@ func (s *SimplePool) Stop() {
 //////////////////////////////////////////////
 //// new worker pool inspired from fast http//
 //////////////////////////////////////////////
+
+var (
+	defaultLogger = Logger(log.New(os.Stderr, "[workerPool]", log.LstdFlags))
+)
+
+type Logger interface {
+	Printf(format string, args ...interface{})
+}
+
 type workerPool struct {
-	MaxWorkersCount        int
-	MaxIdleWorkersCount    int
-	MaxIdleWorkersDuration time.Duration
+	maxWorkersCount        int
+	maxIdleWorkersDuration time.Duration
 	workersCount           int
 	lock                   sync.Locker
 	mustStop               bool
@@ -117,6 +126,8 @@ type workerPool struct {
 	workerChanPool sync.Pool
 
 	cond *sync.Cond
+
+	Logger Logger
 }
 
 type workerChan struct {
@@ -124,16 +135,34 @@ type workerChan struct {
 	ch          chan func()
 }
 
+func NewWorkerPool(maxWorkersCount int) *workerPool {
+	wp := &workerPool{maxWorkersCount: maxWorkersCount, lock: &sync.Mutex{}, Logger: defaultLogger}
+	wp.cond = sync.NewCond(wp.lock)
+	return wp
+}
+
+func (wp *workerPool) SetIdleTime(seconds time.Duration) {
+	wp.maxIdleWorkersDuration = seconds * time.Second
+}
+
+func (wp *workerPool) GetActiveWorkerCount() int {
+	wp.lock.Lock()
+	ans := wp.workersCount
+	wp.lock.Unlock()
+	return ans
+}
+
 func (wp *workerPool) Start() {
 	if wp.stopChan != nil {
 		panic("BUG: worker pool already started")
 	}
 	wp.stopChan = make(chan struct{})
+	wp.mustStop = false
 	stopChan := wp.stopChan
 	wp.workerChanPool.New = func() interface{} {
 		return &workerChan{ch: make(chan func(), workerChanCap)}
 	}
-	// 单独一个协成清理过期的
+
 	go func() {
 		var scratch []*workerChan
 		for {
@@ -166,29 +195,36 @@ func (wp *workerPool) Stop() {
 	wp.lock.Unlock()
 }
 
-func (wp *workerPool) Serve(f func()) bool {
+func (wp *workerPool) Execute(f func()) bool {
 	ch := wp.getCh()
 	if ch == nil {
 		return false
 	}
-	ch.ch <- f
+	ch.ch <- func() {
+		defer func() {
+			if e := recover(); e != nil {
+				wp.Logger.Printf("Task Error: %s\n", e)
+			}
+		}()
+		f()
+	}
 	return true
 }
 
 func (wp *workerPool) getCh() *workerChan {
 	var ch *workerChan
-	createWorker := false
-
 	wp.lock.Lock()
 Reentry:
+	if wp.mustStop {
+		wp.lock.Unlock()
+		return nil
+	}
 	ready := wp.ready
 	n := len(ready) - 1
 	if n < 0 {
-		if wp.workersCount < wp.MaxWorkersCount {
-			createWorker = true
+		if wp.workersCount < wp.maxWorkersCount {
 			wp.workersCount++
 		} else {
-			// 阻塞等待
 			wp.cond.Wait()
 			goto Reentry
 		}
@@ -200,18 +236,10 @@ Reentry:
 	wp.lock.Unlock()
 
 	if ch == nil {
-		if !createWorker {
-			fmt.Println("已经超过负载,等待可用协程")
-			return nil // todo 满负荷应该怎么做
-		}
 		vch := wp.workerChanPool.Get()
 		ch = vch.(*workerChan)
 		go func() {
 			wp.workerFunc(ch)
-			// run to wait task
-			// do something
-
-			// revert
 			wp.workerChanPool.Put(ch)
 		}()
 	}
@@ -220,15 +248,13 @@ Reentry:
 }
 
 func (wp *workerPool) workerFunc(ch *workerChan) {
-	// todo add defer handle panic
 	var c func()
 	for c = range ch.ch {
 		if c == nil {
 			break
 		}
-		// todo
-		c() // execute func
-		if ok := wp.release(ch); !ok {
+		c()
+		if ok := wp.pushback(ch); !ok {
 			break
 		}
 	}
@@ -237,11 +263,11 @@ func (wp *workerPool) workerFunc(ch *workerChan) {
 	wp.lock.Unlock()
 }
 
-func (wp *workerPool) release(ch *workerChan) bool {
-	fmt.Printf("call release\n")
+func (wp *workerPool) pushback(ch *workerChan) bool {
 	ch.lastUseTime = time.Now()
 	wp.lock.Lock()
 	if wp.mustStop {
+		wp.cond.Broadcast()
 		wp.lock.Unlock()
 		return false
 	}
@@ -259,8 +285,8 @@ func (wp *workerPool) clean(scratch *[]*workerChan) {
 	ready := wp.ready
 	n := len(ready)
 	l, r, mid := 0, n-1, 0
-	for l <= r {
-		mid = l + (r-l)/2
+	for l < r {
+		mid = (l + r) >> 1
 		if criticalTime.After(ready[mid].lastUseTime) {
 			l = mid + 1
 		} else {
@@ -268,11 +294,11 @@ func (wp *workerPool) clean(scratch *[]*workerChan) {
 		}
 	}
 	i := r
-	if i == -1 { // 是空的
+	if i == -1 {
 		wp.lock.Unlock()
 		return
 	}
-	*scratch = append((*scratch)[:0], ready[:i+1]...) // 需要删除的
+	*scratch = append((*scratch)[:0], ready[:i+1]...)
 	m := copy(ready, ready[i+1:])
 	for i := m; i < n; i++ {
 		ready[i] = nil
@@ -280,7 +306,7 @@ func (wp *workerPool) clean(scratch *[]*workerChan) {
 	wp.ready = ready[:m]
 	wp.lock.Unlock()
 
-	tmp := *scratch // 关闭空闲超时的
+	tmp := *scratch
 	for i := range tmp {
 		tmp[i].ch <- nil
 		tmp[i] = nil
@@ -288,10 +314,10 @@ func (wp *workerPool) clean(scratch *[]*workerChan) {
 }
 
 func (wp *workerPool) getMaxIdleWorkersDuration() time.Duration {
-	if wp.MaxIdleWorkersDuration <= 0 {
+	if wp.maxIdleWorkersDuration <= 0 {
 		return 10 * time.Second
 	}
-	return wp.MaxIdleWorkersDuration
+	return wp.maxIdleWorkersDuration
 }
 
 var workerChanCap = func() int {

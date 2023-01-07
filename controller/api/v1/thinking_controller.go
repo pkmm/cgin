@@ -11,7 +11,7 @@ type thinkController struct{}
 
 var ThinkingController = new(thinkController)
 
-// @Summary 值得深思的句子
+// Index @Summary 值得深思的句子
 // @Tags 思考
 // @Accept json
 // @Produce json

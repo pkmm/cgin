@@ -10,7 +10,7 @@ type authService struct{}
 
 var AuthService = &authService{}
 
-// 小程序的注册方式
+// LoginFromMiniProgram 小程序的注册方式
 func (a *authService) LoginFromMiniProgram(openid string) (error, *model.User) {
 	user := model.GetUserByOpenId(openid)
 	if user != nil {
