@@ -13,7 +13,6 @@ type WxpushCbData struct {
 }
 
 type WxpushCb struct {
-	Action string `json:"action"`
-	Data WxpushCbData `json:"data"`
+	Action string       `json:"action"`
+	Data   WxpushCbData `json:"data"`
 }
-
