@@ -1,7 +1,6 @@
 package service
 
 import (
-	"cgin/conf"
 	"cgin/model"
 	"cgin/util"
 )
