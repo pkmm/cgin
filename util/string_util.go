@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/bwmarrin/snowflake"
 	"net"
 	"os"
 	"path"
@@ -13,6 +12,8 @@ import (
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/bwmarrin/snowflake"
 )
 
 var snowflakeNode *snowflake.Node

@@ -4,11 +4,12 @@ import (
 	"cgin/global"
 	"cgin/util"
 	"fmt"
+	"os"
+	"time"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
-	"time"
 )
 
 var level zapcore.Level
