@@ -23,4 +23,4 @@ golang 版本是 1.17
     git update-index --skip-worktree "config.yaml" 暂时忽略配置文件  
     git update-index --no-skip-worktree "config.yaml"
 #### build status
-[![Build and Deploy](https://github.com/pkmm/cgin/actions/workflows/build_deploy.yml/badge.svg?event=push)](https://github.com/pkmm/cgin/actions/workflows/build_deploy.yml)
+[![Build and Deploy](https://github.com/pkmm/cgin/actions/workflows/go.yml/badge.svg?event=push)](https://github.com/pkmm/cgin/actions/workflows/build_deploy.yml)
