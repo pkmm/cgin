@@ -1,7 +1,3 @@
-gin + gorm
-
-golang 版本是 1.17
-
 `go mod tidy `安装依赖
 下载遇到网络问题，可以查看main.go首部的注释，在goland中可以直接执行
 
